@@ -1,1 +1,32 @@
-/* You can add global styles to this file, and also import other style files */
+/* Base Styles */
+:root {
+    --primary-color: #4361ee;
+    --secondary-color: #3f37c9;
+    --accent-color: #4cc9f0;
+    --light-color: #f8f9fa;
+    --dark-color: #212529;
+    --success-color: #4bb543;
+    --warning-color: #f0ad4e;
+    --danger-color: #d9534f;
+    --gray-color: #6c757d;
+    --light-gray: #e9ecef;
+    
+    --sidebar-width: 280px;
+    --top-nav-height: 70px;
+    --border-radius: 12px;
+    --box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    --transition: all 0.3s ease;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f5f7fb;
+    color: var(--dark-color);
+    line-height: 1.6;
+}
