@@ -4,6 +4,7 @@
     width: var(--sidebar-width);
     background: white;
     box-shadow: var(--box-shadow);
+    position: relative;
     display: flex;
     flex-direction: column;
     z-index: 10;
