@@ -1,0 +1,115 @@
+<div class="participation-form-container">
+ <form [formGroup]="participationForm" (ngSubmit)="onSubmit()">
+    <!-- En-tête -->
+    <div class="form-header">
+      <h1>Participer à un projet</h1>
+      <p>Remplissez ce formulaire pour contribuer à ce projet collaboratif et démontrer vos compétences</p>
+    </div>
+
+    <!-- Ligne 1 - Informations de base -->
+    <div class="form-row">
+      <div class="form-group">
+        <label for="fullname" class="form-label required-field">Nom complet</label>
+        <input type="text" id="fullname" formControlName="fullname" class="form-control" required>
+        <div *ngIf="participationForm.get('fullname')?.invalid && participationForm.get('fullname')?.touched" 
+             class="error-message">
+          Ce champ est requis
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label for="email" class="form-label required-field">Email professionnel</label>
+        <input type="email" id="email" formControlName="email" class="form-control" required>
+        <div *ngIf="participationForm.get('email')?.invalid && participationForm.get('email')?.touched" 
+             class="error-message">
+          Email invalide
+        </div>
+      </div>
+    </div>
+
+    <!-- Ligne 2 - Portfolio et spécialité -->
+    <div class="form-row">
+      <div class="form-group">
+        <label for="portfolio" class="form-label">Lien vers portfolio/profil</label>
+        <input type="url" id="portfolio" formControlName="portfolio" class="form-control" placeholder="https://">
+      </div>
+      
+      <div class="form-group">
+        <label for="specialty" class="form-label">Spécialité principale</label>
+        <input type="text" id="specialty" formControlName="specialty" class="form-control" placeholder="Ex: React, UX Design, Agile...">
+      </div>
+    </div>
+
+    <!-- Rôle souhaité -->
+    <div class="form-group">
+      <label class="form-label required-field">Je souhaite contribuer en tant que :</label>
+      <div class="role-options">
+        <!-- Développeur -->
+        <label class="role-card" [class.selected]="participationForm.get('role')?.value === 'developer'">
+          <input type="radio" formControlName="role" value="developer" required>
+          <div class="role-icon"><i class="fas fa-code"></i></div>
+          <div class="role-title">Développeur</div>
+          <div class="role-desc">Apportez vos compétences techniques pour concevoir et implémenter des fonctionnalités clés du projet</div>
+        </label>
+        
+        <!-- Designer -->
+        <label class="role-card" [class.selected]="participationForm.get('role')?.value === 'designer'">
+          <input type="radio" formControlName="role" value="designer">
+          <div class="role-icon"><i class="fas fa-paint-brush"></i></div>
+          <div class="role-title">Designer</div>
+          <div class="role-desc">Créez des interfaces utilisateur intuitives et des expériences engageantes pour le produit final</div>
+        </label>
+        
+        <!-- Gestionnaire -->
+        <label class="role-card" [class.selected]="participationForm.get('role')?.value === 'manager'">
+          <input type="radio" formControlName="role" value="manager">
+          <div class="role-icon"><i class="fas fa-tasks"></i></div>
+          <div class="role-title">Chef de projet</div>
+          <div class="role-desc">Organisez les ressources, planifiez les livrables et coordonnez l'équipe pour atteindre les objectifs</div>
+        </label>
+      </div>
+      <div *ngIf="participationForm.get('role')?.invalid && participationForm.get('role')?.touched" 
+           class="error-message">
+        Veuillez sélectionner un rôle
+      </div>
+    </div>
+
+    <!-- Motivations -->
+    <div class="form-group">
+      <label for="motivation" class="form-label required-field">Vos motivations</label>
+      <textarea id="motivation" formControlName="motivation" class="form-control" required
+                placeholder="Pourquoi souhaitez-vous participer à ce projet? Qu'est-ce qui vous motive particulièrement?"></textarea>
+      <span class="char-counter">{{ participationForm.get('motivation')?.value?.length || 0 }}/600 caractères minimum</span>
+      <div *ngIf="participationForm.get('motivation')?.invalid && participationForm.get('motivation')?.touched" 
+           class="error-message">
+        Minimum 600 caractères requis
+      </div>
+    </div>
+
+    <!-- Expérience -->
+    <div class="form-group">
+      <label for="experience" class="form-label required-field">Votre expérience pertinente</label>
+      <textarea id="experience" formControlName="experience" class="form-control" required
+                placeholder="Décrivez vos compétences, projets similaires et ce que vous pourriez apporter à ce projet"></textarea>
+      <span class="char-counter">{{ participationForm.get('experience')?.value?.length || 0 }}/400 caractères minimum</span>
+      <div *ngIf="participationForm.get('experience')?.invalid && participationForm.get('experience')?.touched" 
+           class="error-message">
+        Minimum 400 caractères requis
+      </div>
+    </div>
+
+    <!-- Test de compétences -->
+    <div class="test-info">
+      <h3><i class="fas fa-clipboard-check"></i> Processus de sélection</h3>
+      <p>Après soumission de ce formulaire, vous accéderez à un test technique adapté à votre rôle :</p>
+      <p><strong>Développeurs :</strong> Test de codage en temps réel (45 min)</p>
+      <p><strong>Designers :</strong> Dossier créatif à préparer</p>
+      <p><strong>Chefs de projet :</strong> Étude de cas avec scénario réaliste</p>
+    </div>
+
+    <!-- Soumission -->
+    <button type="submit" class="submit-btn" [disabled]="participationForm.invalid">
+      <i class="fas fa-paper-plane"></i> Soumettre ma candidature et passer le test
+    </button>
+  </form>
+</div>
