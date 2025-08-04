@@ -1,1 +1,80 @@
-<p>ajout-projet works!</p>
+<div class="modal">
+    <div class="modal-header">
+      <h2>Partager une idée de projet</h2>
+      <button class="close-btn">×</button>
+    </div>
+
+    <form class="project-form">
+      <div class="form-group">
+        <label for="title">Titre du projet *</label>
+        <input type="text" id="title" placeholder="Donnez un titre clair à votre projet" required>
+      </div>
+
+      <div class="form-group">
+        <label for="description">Descriptions *</label>
+        <textarea id="description" rows="4" placeholder="Décrivez en détail votre projet, ses objectifs et sa valeur ajoutée" required></textarea>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="domaine">Domaine</label>
+          <select id="domaine">
+            <option selected disabled>Sélectionnez un domaine</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="secteur">Secteur *</label>
+          <select id="secteur" required>
+            <option selected disabled>Sélectionnez un secteur</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Votre rôle dans le projet *</label>
+        <div class="role-options">
+          <label class="role-card active">
+            <input type="radio" name="role" checked>
+            <div class="icon">💡</div>
+            <strong>Ideateur</strong>
+            <span>Je partage juste l’idée et cherche un gestionnaire</span>
+          </label>
+          <label class="role-card">
+            <input type="radio" name="role">
+            <div class="icon">📄</div>
+            <strong>Gestionnaire</strong>
+            <span>Je veux gérer le projet moi-même</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Cahier des charges (optionnel)</label>
+        <div class="file-upload">
+          <label for="file">📎 Choisir un fichier</label>
+          <input type="file" id="file" hidden>
+          <span id="file-name">Aucun fichier sélectionné</span>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="button" class="cancel-btn">Annuler</button>
+        <button type="button" class="quiz-btn">Joindre quiz</button>
+        <button type="submit" class="submit-btn">Partager le projet</button>
+      </div>
+    </form>
+  </div>
+  <!-- <script>
+    document.getElementById('file').addEventListener('change', function () {
+      const fileName = this.files[0] ? this.files[0].name : 'Aucun fichier sélectionné';
+      document.getElementById('file-name').textContent = fileName;
+    });
+
+    document.querySelectorAll('.role-card').forEach(card => {
+      card.addEventListener('click', () => {
+        document.querySelectorAll('.role-card').forEach(c => c.classList.remove('active'));
+        card.classList.add('active');
+        card.querySelector('input[type="radio"]').checked = true;
+      });
+    });
+  </script> -->
