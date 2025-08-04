@@ -1,6 +1,6 @@
 .card{
     height: auto;
-    width: 320px;
+    width: 315px;
     box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.1);
     background-color: white;
     border-radius: 10px;
@@ -45,12 +45,12 @@
     margin-top: 10px;
 }
 .info h1{
-    font-size: 1.2rem;
+    font-size: 1.0rem;
     color: #333;
     margin-bottom: 10px;
 }
 .info p{
-    font-size: 0.9rem;
+    font-size: 0.7rem;
     color: #666;
     margin-bottom: 20px;
 }
@@ -71,6 +71,10 @@
     align-items: center;
     gap: 10px;
 }
+.details span{
+    font-size: 0.8rem;
+    color: #666;
+} 
 .details .taches{
     display: flex;
     align-items: center;
