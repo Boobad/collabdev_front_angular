@@ -1,0 +1,40 @@
+  <div class="modal">
+    <div class="modal-header">
+      <h2>Gestion des Fonctionnalites</h2>
+      <button class="close-btn">×</button>
+    </div>
+
+    <form class="task-form">
+      <div class="form-group">
+        <label for="title">Titre de la tache *</label>
+        <input type="text" id="title" placeholder="Donnez un titre  à tache" required>
+      </div>
+
+      <div class="form-group">
+        <label for="description">Descriptions *</label>
+        <textarea id="description" rows="4" placeholder="Décrivez en détail la tache, ses objectifs et sa valeur ajoutée" required></textarea>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="participant">Attribuer à</label>
+          <select id="participant">
+            <option selected disabled>Choisir Participant</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="status">Statut*</label>
+          <select id="status" required>
+            <option selected disabled>A Faire</option>
+            <option>En cours</option>
+            <option>Terminée</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="submit-btn">Enregistrer</button>
+      </div>
+    </form>
+  </div>
