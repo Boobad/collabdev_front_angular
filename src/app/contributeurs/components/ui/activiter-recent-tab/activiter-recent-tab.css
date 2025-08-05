@@ -1,0 +1,69 @@
+/* Project Activity */
+.activity-list {
+    margin-top: 15px;
+}
+
+.activity-item {
+    display: flex;
+    padding: 15px 0;
+    border-bottom: 1px solid var(--light-gray);
+}
+
+.activity-item:last-child {
+    border-bottom: none;
+}
+
+.activity-avatar {
+    margin-right: 15px;
+}
+
+.activity-avatar img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.activity-content {
+    flex: 1;
+}
+
+.activity-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 5px;
+}
+
+.activity-user {
+    font-weight: 600;
+    color: var(--dark-color);
+}
+
+.activity-time {
+    font-size: 0.8rem;
+    color: var(--gray-color);
+}
+
+.activity-text {
+    font-size: 0.9rem;
+    margin-bottom: 8px;
+}
+
+.activity-comment {
+    font-size: 0.9rem;
+    padding: 10px;
+    background-color: var(--light-gray);
+    border-radius: var(--border-radius);
+    margin-top: 5px;
+}
+
+.activity-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.8rem;
+    padding: 3px 8px;
+    border-radius: 30px;
+    background-color: rgba(76, 201, 240, 0.1);
+    color: var(--accent-color);
+}

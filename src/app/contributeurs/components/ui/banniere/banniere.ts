@@ -7,5 +7,17 @@ import { Component } from '@angular/core';
   styleUrl: './banniere.css'
 })
 export class Banniere {
+openModal() {
+    const modal = document.getElementById('projectModal');
+    if (modal) {
+      modal.classList.add('active'); // Ajoute .active
+    }
+  }
 
+  closeModal() {
+    const modal = document.getElementById('projectModal');
+    if (modal) {
+      modal.classList.remove('active'); // Enlève .active
+    }
+  }
 }

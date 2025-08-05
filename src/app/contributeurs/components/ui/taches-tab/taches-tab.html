@@ -1,0 +1,82 @@
+             <!-- Tasks Tab -->
+<div id="tasks" class="tab-content">
+    <div class="tasks-header">
+        <h2>Tâches du Projet</h2>
+        <button class="btn btn-primary"><i class="fas fa-plus"></i> Nouvelle Tâche</button>
+    </div>
+    
+    <div class="tasks-filters">
+        <div class="filter-group">
+            <label for="status-filter">Statut :</label>
+            <select id="status-filter" class="form-select">
+                <option value="all">Toutes</option>
+                <option value="todo">À faire</option>
+                <option value="in-progress">En cours</option>
+                <option value="done">Terminées</option>
+            </select>
+        </div>
+        <div class="filter-group">
+            <label for="priority-filter">Priorité :</label>
+            <select id="priority-filter" class="form-select">
+                <option value="all">Toutes</option>
+                <option value="high">Haute</option>
+                <option value="medium">Moyenne</option>
+                <option value="low">Basse</option>
+            </select>
+        </div>
+        <div class="filter-group">
+            <label for="assignee-filter">Assignée à :</label>
+            <select id="assignee-filter" class="form-select">
+                <option value="all">Tous</option>
+                <option value="me">Moi</option>
+                <option value="marie">Marie Lambert</option>
+                <option value="pierre">Pierre Martin</option>
+                <option value="sophie">Sophie Dubois</option>
+            </select>
+        </div>
+    </div>
+    
+    <div class="tasks-list">
+        <div class="task-card high-priority">
+            <div class="task-checkbox">
+                <input type="checkbox" id="task-1">
+                <label for="task-1"></label>
+            </div>
+            <div class="task-content">
+                <h3>Concevoir l'interface de consultation</h3>
+                <p>Créer les maquettes pour la consultation vidéo entre médecin et patient</p>
+                <div class="task-meta">
+                    <span class="task-status in-progress">En cours</span>
+                    <span class="task-due"><i class="far fa-calendar-alt"></i> Échéance: 25/07/2023</span>
+                    <span class="task-assignee"><i class="fas fa-user"></i> Sophie Dubois</span>
+                </div>
+            </div>
+            <div class="task-actions">
+                <button class="btn btn-icon"><i class="fas fa-ellipsis-v"></i></button>
+            </div>
+        </div>
+        
+        <div class="task-card medium-priority">
+            <div class="task-checkbox">
+                <input type="checkbox" id="task-2" checked>
+                <label for="task-2"></label>
+            </div>
+            <div class="task-content">
+                <h3>Implémenter l'authentification</h3>
+                <p>Mettre en place le système d'authentification sécurisé pour médecins et patients</p>
+                <div class="task-meta">
+                    <span class="task-status todo">À faire</span>
+                    <span class="task-due"><i class="far fa-calendar-alt"></i> Échéance: 30/07/2023</span>
+                    <span class="task-assignee"><i class="fas fa-user"></i> Pierre Martin</span>
+                </div>
+            </div>
+            <div class="task-actions">
+                <button class="btn btn-icon"><i class="fas fa-ellipsis-v"></i></button>
+            </div>
+        </div>
+        
+       
+        
+      
+    </div>
+</div>

@@ -19,12 +19,18 @@
                             <span>5</span>
                         </div>
                     </div>
-                    <button class="notification-btn">
+                    <button class="notification-btn" (click)="toggleNotifications()">
                         <i class="fas fa-bell"></i>
                         <span class="notification-badge">3</span>
                     </button>
-                    <button class="new-project-btn pulse">
+                    <button class="new-project-btn pulse" (click)="openModal()">
                         <i class="fas fa-plus"></i> Nouveau Projet
                     </button>
                 </div>
             </header>
+
+
+            <app-modal-create-project ></app-modal-create-project>
+  <ng-container *ngIf="showNotifications">
+  <app-notification-modal (close)="toggleNotifications()"></app-notification-modal>
+</ng-container>

@@ -1,0 +1,37 @@
+<!-- Project Tabs -->
+<nav class="project-tabs">
+  <ul>
+    <li [class.active]="activeTab === 'overview'">
+      <a  (click)="setTab('overview')"><i class="fas fa-home"></i> Aperçu</a>
+    </li>
+    <li [class.active]="activeTab === 'tasks'">
+      <a  (click)="setTab('tasks')"><i class="fas fa-tasks"></i> Tâches</a>
+    </li>
+    <li [class.active]="activeTab === 'team'">
+      <a  (click)="setTab('team')"><i class="fas fa-users"></i> Équipe</a>
+    </li>
+    <li [class.active]="activeTab === 'discussions'">
+      <a  (click)="setTab('discussions')"><i class="fas fa-comments"></i> Discussions</a>
+    </li>
+    <li [class.active]="activeTab === 'documents'">
+      <a  (click)="setTab('documents')"><i class="fas fa-file-alt"></i> Documents</a>
+    </li>
+    <li [class.active]="activeTab === 'settings'">
+      <a (click)="setTab('settings')"><i class="fas fa-cog"></i> Paramètres</a>
+    </li>
+  </ul>
+</nav>
+
+<!-- Contenu des tabs -->
+ <div class="project-content">
+                <app-apercu-tab  *ngIf="activeTab === 'overview'"></app-apercu-tab>
+                <app-taches-tab *ngIf="activeTab === 'tasks'"></app-taches-tab>
+                <app-equipes-details-tab *ngIf="activeTab === 'team'"></app-equipes-details-tab>
+                <app-discussion-details-tab *ngIf="activeTab === 'discussions'"></app-discussion-details-tab>
+            </div>
+<!-- <div class="tab-content" *ngIf="activeTab === 'overview'">Contenu Aperçu</div>
+<div class="tab-content" *ngIf="activeTab === 'tasks'">Contenu Tâches</div>
+<div class="tab-content" *ngIf="activeTab === 'team'">Contenu Équipe</div>
+<div class="tab-content" *ngIf="activeTab === 'discussions'">Contenu Discussions</div>
+<div class="tab-content" *ngIf="activeTab === 'documents'">Contenu Documents</div>
+<div class="tab-content" *ngIf="activeTab === 'settings'">Contenu Paramètres</div> -->

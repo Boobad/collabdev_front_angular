@@ -1,0 +1,13 @@
+<!-- card-badges.html -->
+<div *ngFor="let badge of badges" class="card_badges">
+  <div class="lines" [ngStyle]="{ 'background-color': badge.color }"></div>
+  <div class="madjess">
+    <div class="iconSS" [ngStyle]="{ 'background-color': badge.color }">
+      <i class="fas fa-trophy"></i>
+    </div>
+    <div class="info">
+      <h1>{{ badge.title }}</h1>
+      <p>{{ badge.description }}</p>
+    </div>
+  </div>
+</div>

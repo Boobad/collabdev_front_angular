@@ -1,0 +1,49 @@
+
+.card_badges{
+    width: 320px;
+    height: auto;
+    background-color: white;
+    position: relative;
+    display: flex;
+    margin-right: 10px;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+    box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.1);
+}
+.card_badges .lines{
+    width: 10px;
+    height: auto;
+    background-color: yellow;
+  
+}
+.madjess {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 15px;
+    position: relative;
+}
+.madjess .iconSS{
+    width: 70px;
+    height: 70px;
+    background-color: yellow;
+    border-radius: 50px;
+    display: flex;
+    align-items: center;
+    position: absolute;
+    justify-content: center;
+    left: 20px;
+}
+.madjess .info{
+    margin-left: 100px;
+}
+.madjess .info h1{
+    font-size: 1.2rem;
+    color: #333;
+    margin-bottom: 5px;
+}
+.madjess .info p{
+    font-size: 0.8rem;
+    color: #666;
+    margin-bottom: 10px;
+}

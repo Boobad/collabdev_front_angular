@@ -1,0 +1,47 @@
+/* Overview Grid */
+app-resumer-projet,app-progression-tab,app-activiter-recent-tab,app-equipe-projet-tab{
+    background: white;
+    padding: 20px;
+    border-radius: 20px;
+}
+.overview-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto;
+    gap: 20px;
+    grid-template-areas:
+        "summary progress"
+        "activity team";
+}
+
+.project-summary {
+    grid-area: summary;
+    background-color: white;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    padding: 20px;
+}
+
+.project-progress {
+    grid-area: progress;
+    background-color: white;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    padding: 20px;
+}
+
+.project-activity {
+    grid-area: activity;
+    background-color: white;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    padding: 20px;
+}
+
+.project-team {
+    grid-area: team;
+    background-color: white;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    padding: 20px;
+}

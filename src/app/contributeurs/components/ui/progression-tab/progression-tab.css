@@ -1,0 +1,74 @@
+
+/* Project Progress */
+.progress-stats {
+    display: flex;
+    justify-content: space-between;
+    margin: 20px 0;
+}
+
+.stat-card {
+    text-align: center;
+    padding: 15px;
+    border-radius: var(--border-radius);
+    background-color: rgba(67, 97, 238, 0.05);
+    flex: 1;
+    margin: 0 5px;
+}
+
+.stat-value {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+.stat-label {
+    font-size: 0.8rem;
+    color: var(--gray-color);
+}
+
+.chart-container {
+    height: 200px;
+    margin: 20px 0;
+}
+
+.progress-bars {
+    margin-top: 30px;
+}
+
+.progress-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+.progress-chart{
+    display: flex
+;
+    align-items: center;
+    justify-content: center;
+}
+.progress-bar {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.3s ease;
+}
+
+.progress-label {
+    width: 180px;
+    font-size: 0.9rem;
+    color: var(--dark-color);
+}
+
+.progress-container {
+    flex: 1;
+    height: 8px;
+    background-color: var(--light-gray);
+    border-radius: 4px;
+    margin: 0 15px;
+}
+
+.progress-percent {
+    width: 40px;
+    text-align: right;
+    font-size: 0.8rem;
+    color: var(--gray-color);
+}
