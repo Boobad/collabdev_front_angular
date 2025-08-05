@@ -6,7 +6,7 @@ import { ProjectsRecommander } from '../../components/ui/projects-recommander/pr
 
 @Component({
   selector: 'app-home',
-  imports: [Banniere,CardProjectActif,ProjectsRecommander ],
+  imports: [Banniere,CardProjectActif,ProjectsRecommander,RouterLink],
   templateUrl: './home.html',
   styleUrl: './home.css'
 })

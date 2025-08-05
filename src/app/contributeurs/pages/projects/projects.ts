@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
-import { ProjectsRecommander } from '../../components/ui/projects-recommander/projects-recommander';
+import { MesCardProject } from '../../components/ui/mes-card-project/mes-card-project';
 
 @Component({
   selector: 'app-projects',
-  imports: [ProjectsRecommander],
+  imports: [MesCardProject],
   templateUrl: './projects.html',
   styleUrl: './projects.css'
 })

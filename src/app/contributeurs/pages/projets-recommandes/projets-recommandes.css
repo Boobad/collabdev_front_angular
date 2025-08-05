@@ -1,0 +1,22 @@
+
+.title{
+    margin: 20px 30px;
+    font-size: 15px;
+    color: black;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.title span {
+    color: var(--primary-color);
+    font-weight: 500;
+    cursor: pointer;
+}
+
+ .project_active{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    padding: 0 30px;
+    margin-bottom: 20px;}
+
