@@ -10,7 +10,7 @@
     --danger-color: #d9534f;
     --gray-color: #6c757d;
     --light-gray: #e9ecef;
-    
+
     --sidebar-width: 280px;
     --top-nav-height: 70px;
     --border-radius: 12px;
@@ -24,12 +24,14 @@
     box-sizing: border-box;
 }
 
-body {
+html, body {
     font-family: 'Poppins', sans-serif;
     background-color: #f5f7fb;
     color: var(--dark-color);
     line-height: 1.6;
-    overflow-y: hidden;
+    overflow:auto;
+    margin: 0;
+    padding: 0;
     width: 100%;
     height: 100vh;
 }

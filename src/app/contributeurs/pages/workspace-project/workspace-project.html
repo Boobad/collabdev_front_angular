@@ -1,0 +1,32 @@
+<app-wspace-page-header></app-wspace-page-header>
+
+<main class="page-layout">
+  <!-- Colonne gauche : Avancement du projet -->
+  <section class="kanban">
+    <div class="column">
+      <h2>À faire <span class="count">3</span></h2>
+      <app-card-task></app-card-task>
+
+      <app-card-task></app-card-task>
+
+      <app-card-task></app-card-task>
+    </div>
+
+    <div class="column">
+      <h2>En cours <span class="count">2</span></h2>
+      <app-card-task></app-card-task>
+
+      <app-card-task></app-card-task>
+    </div>
+
+    <div class="column">
+      <h2>Terminé <span class="count">2</span></h2>
+      <app-card-task></app-card-task>
+
+      <app-card-task></app-card-task>
+    </div>
+  </section>
+
+  <!-- Colonne droite : Discussion -->
+  <app-wspace-page-right-side></app-wspace-page-right-side>
+</main>
