@@ -1,12 +1,15 @@
 import { Component, signal } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { RouterLink, RouterOutlet } from '@angular/router';
 import { Navebar } from './contributeurs/components/shared/navebar/navebar';
 import { Sidebar } from './contributeurs/components/shared/sidebar/sidebar';
 import { ForgetPassword } from "./contributeurs/pages/forget-password/forget-password";
+import { Login } from './contributeurs/pages/login/login';
+import { Home } from "./contributeurs/pages/home/home";
+
 
 @Component({
   selector: 'app-root',
-  imports: [ ForgetPassword],
+  imports: [RouterOutlet, Navebar, Sidebar, RouterLink, Home],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })

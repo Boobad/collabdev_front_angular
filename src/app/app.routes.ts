@@ -1,12 +1,21 @@
 import { Routes } from '@angular/router';
 import { Home } from './contributeurs/pages/home/home';
 import { Projects } from './contributeurs/pages/projects/projects';
+import { ForgetPassword } from './contributeurs/pages/forget-password/forget-password';
+import { Login } from './contributeurs/pages/login/login';
 
 export const routes: Routes = [
 {
-    path: '', component: Home
+    path: '', component: Login
 },
 {
     path: 'projects', component: Projects
+},
+{
+    path: 'forget-password', component: ForgetPassword
+},
+{
+    path: 'home', component: Home
 }
+
 ];
