@@ -82,6 +82,10 @@
 .souvenir  span{
     font-size: 20px;
 }
+.pass{
+    position: relative;
+    left: 17%;
+}
       button {
         width: 100%;
         margin-top: 80px;
