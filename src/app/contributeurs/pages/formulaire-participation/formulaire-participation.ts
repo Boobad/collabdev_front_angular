@@ -1,66 +1,61 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { Router, RouterModule } from '@angular/router';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-formulaire-participation',
+  standalone: true,
+  imports: [CommonModule, FormsModule, RouterModule],
   templateUrl: './formulaire-participation.html',
-  styleUrls: ['./formulaire-participation.scss']
+  styleUrls: ['./formulaire-participation.css'],
 })
-export class ParticipationFormComponent implements OnInit {
-  participationForm: FormGroup;
+export class FormulaireParticipation {
+  formData = {
+    fullname: '',
+    email: '',
+    portfolio: '',
+    role: '',
+    motivation: '',
+    experience: '',
+  };
 
-  constructor(private fb: FormBuilder) {
-    this.participationForm = this.fb.group({
-      fullname: ['', [Validators.required]],
-      email: ['', [Validators.required, Validators.email]],
-      portfolio: [''],
-      specialty: [''],
-      role: ['', [Validators.required]],
-      motivation: ['', [Validators.required, Validators.minLength(600)]],
-      experience: ['', [Validators.required, Validators.minLength(400)]]
-    });
+  motivationMessage: string = '200 caractères restants (min. 200)';
+
+  constructor(private router: Router) {}
+
+  selectRole(role: string) {
+    this.formData.role = role;
   }
 
-  ngOnInit(): void {
-    // Écoute les changements pour le comptage des caractères
-    this.participationForm.get('motivation')?.valueChanges.subscribe(() => {
-      // Le template gère déjà l'affichage
-    });
-
-    this.participationForm.get('experience')?.valueChanges.subscribe(() => {
-      // Le template gère déjà l'affichage
-    });
-  }
-
-  onSubmit(): void {
-    if (this.participationForm.valid) {
-      const formData = this.participationForm.value;
-      const roleNames: { [key: string]: string } = {
-        developer: 'Développeur',
-        designer: 'Designer',
-        manager: 'Chef de projet'
-      };
-
-      // En production, vous pourriez utiliser un service pour envoyer les données
-      console.log('Formulaire soumis:', formData);
-      
-      // Redirection simulée
-      alert(`Formulaire validé ! Préparation du test ${roleNames[formData.role]}...`);
-      
-      // En production: this.router.navigate(['/test', formData.role], { queryParams: { email: formData.email } });
+  updateMotivationCount() {
+    const count = this.formData.motivation.length;
+    const min = 200;
+    if (count < min) {
+      this.motivationMessage = `${
+        min - count
+      } caractères restants (min. ${min})`;
     } else {
-      // Marque tous les champs comme touchés pour afficher les erreurs
-      this.markFormGroupTouched(this.participationForm);
+      this.motivationMessage = 'Motivation suffisante';
     }
   }
 
-  private markFormGroupTouched(formGroup: FormGroup): void {
-    Object.values(formGroup.controls).forEach(control => {
-      control.markAsTouched();
+  onSubmit() {
+    if (!this.formData.role) {
+      alert('Veuillez sélectionner un rôle');
+      return;
+    }
 
-      if (control instanceof FormGroup) {
-        this.markFormGroupTouched(control);
-      }
+    if (this.formData.motivation.length < 200) {
+      alert('Veuillez décrire vos motivations en au moins 200 caractères');
+      return;
+    }
+
+    alert(
+      `Formulaire validé ! Redirection vers le test ${this.formData.role}...`
+    );
+    this.router.navigate(['/test', this.formData.role], {
+      queryParams: { email: this.formData.email },
     });
   }
 }
