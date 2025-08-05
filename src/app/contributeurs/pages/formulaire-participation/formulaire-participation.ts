@@ -51,11 +51,9 @@ export class FormulaireParticipation {
       return;
     }
 
-    alert(
-      `Formulaire validé ! Redirection vers le test ${this.formData.role}...`
-    );
-    this.router.navigate(['/test', this.formData.role], {
-      queryParams: { email: this.formData.email },
+    // Redirection vers la page demarrage-quiz (avec ou sans paramètres selon besoin)
+    this.router.navigate(['/demarrage-quiz'], {
+      queryParams: { role: this.formData.role, email: this.formData.email },
     });
   }
 }
