@@ -10,6 +10,6 @@ export class ForgetPassword {
  constructor(private router: Router) {} 
 
   redirectToLogin() {
-    this.router.navigate(['/login']);
+    this.router.navigate(['/']);
   }
 }
