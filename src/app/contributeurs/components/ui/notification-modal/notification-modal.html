@@ -1,0 +1,21 @@
+<div class="notification">
+  <div class="titre">
+    <h1>Notifications</h1>
+    <i class="fa fa-times" (click)="closeNotification()"></i>
+  </div>
+
+  <div class="lines"></div>
+
+  <ng-container *ngFor="let notif of [1, 2, 3, 4]">
+    <div class="details">
+      <div class="icon">
+        <i class="fa fa-bell"></i>
+      </div>
+      <div class="info">
+        <h1>Contenu de la notification</h1>
+        <p>Il y a 2 heures</p>
+      </div>
+    </div>
+    <div class="lines"></div>
+  </ng-container>
+</div>

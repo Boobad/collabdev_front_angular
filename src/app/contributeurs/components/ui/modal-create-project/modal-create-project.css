@@ -1,4 +1,5 @@
 /* Modal Styles */
+
 .modal-overlay {
     position: fixed;
     top: 0;
@@ -10,13 +11,13 @@
     align-items: center;
     justify-content: center;
     z-index: 100;
-    opacity: 0;
+    
     visibility: hidden;
     transition: var(--transition);
 }
 
 .modal-overlay.active {
-    opacity: 1;
+    
     visibility: visible;
 }
 

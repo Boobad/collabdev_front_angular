@@ -18,3 +18,13 @@
     gap: 20px;
     padding: 0 30px;
     margin-bottom: 20px;}
+
+
+    app-card-badges{
+    position: relative;
+    display: flex;
+}
+
+app-card-project-actif{
+    cursor: pointer;
+}

@@ -1,30 +1,33 @@
 import { Component } from '@angular/core';
 import { ModalCreateProject } from '../../ui/modal-create-project/modal-create-project';
+import { NotificationModal } from '../../ui/notification-modal/notification-modal';
+import { CommonModule } from '@angular/common';
+
 
 @Component({
   selector: 'app-navebar',
-  imports: [ModalCreateProject],
+  imports: [ModalCreateProject,NotificationModal, CommonModule],
   templateUrl: './navebar.html',
   styleUrls: ['./navebar.css']
 })
 export class Navebar {
-  openModal() {
-    // Logic to open modal
-    const modal = document.querySelector('#projectModal') as HTMLElement;
-    if (modal !== null) {
-      modal.classList.add('active');
-      modal.style.visibility = 'visible';
-      modal.style.opacity = '1';
+showNotifications = false;
+
+  toggleNotifications() {
+    this.showNotifications = !this.showNotifications;
+  }
+  
+ openModal() {
+    const modal = document.getElementById('projectModal');
+    if (modal) {
+      modal.classList.add('active'); // Ajoute .active
     }
   }
 
   closeModal() {
-    // Logic to close modal
-    const modal = document.querySelector('#projectModal') as HTMLElement;
-    if (modal !== null) {
-      modal.classList.remove('active');
-      modal.style.visibility = 'hidden';
-      modal.style.opacity = '0';
+    const modal = document.getElementById('projectModal');
+    if (modal) {
+      modal.classList.remove('active'); // Enlève .active
     }
   }
 }

@@ -1,0 +1,48 @@
+/* Project Content */
+.project-content {
+    padding: 20px 30px;
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+/* Project Tabs */
+.project-tabs {
+    margin: 0 30px;
+    border-bottom: 1px solid var(--light-gray);
+}
+
+.project-tabs ul {
+    display: flex;
+    list-style: none;
+    gap: 5px;
+}
+
+.project-tabs li {
+    margin-bottom: -1px;
+}
+
+.project-tabs a {
+    display: flex;
+    align-items: center;
+    padding: 15px 20px;
+    color: var(--gray-color);
+    text-decoration: none;
+    transition: var(--transition);
+    gap: 10px;
+    font-weight: 500;
+    border-bottom: 3px solid transparent;
+}
+
+.project-tabs a:hover {
+    color: var(--primary-color);
+}
+
+.project-tabs .active a {
+    color: var(--primary-color);
+    border-bottom-color: var(--primary-color);
+}

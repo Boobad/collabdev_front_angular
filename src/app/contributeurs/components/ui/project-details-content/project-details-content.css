@@ -1,0 +1,12 @@
+/* Project Content */
+.project-content {
+    padding: 20px 30px;
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
