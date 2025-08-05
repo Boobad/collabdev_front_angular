@@ -1,14 +1,14 @@
-import { Component } from '@angular/core';
-import { ModalCreateProject } from '../../ui/modal-create-project/modal-create-project';
+import { NgIf } from '@angular/common';
+import { Component, Input } from '@angular/core';
 
 @Component({
-  selector: 'app-navebar',
-  imports: [ModalCreateProject],
-  templateUrl: './navebar.html',
-  styleUrls: ['./navebar.css']
+  selector: 'app-modal-create-project',
+  imports: [],
+  templateUrl: './modal-create-project.html',
+  styleUrl: './modal-create-project.css'
 })
-export class Navebar {
-  openModal() {
+export class ModalCreateProject {
+   openModal() {
     // Logic to open modal
     const modal = document.querySelector('#projectModal') as HTMLElement;
     if (modal !== null) {

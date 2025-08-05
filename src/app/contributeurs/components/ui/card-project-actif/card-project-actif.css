@@ -1,0 +1,115 @@
+.card{
+    height: auto;
+    width: 315px;
+    box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.1);
+    background-color: white;
+    border-radius: 10px;
+    
+}
+
+.card .titres{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px;
+}
+.card .titres .category{
+    background-color: #FFEBEE;
+    width: 75px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50px;
+    color: #C62828;
+    font-weight: 800;
+}
+
+.card .titres .coins{
+    
+    width: auto;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50px;
+    color: #FF9800;
+    font-weight: 800;
+}
+.card .titres .coins i{
+    margin-right: 10px;
+}
+
+.info{
+    padding: 0 20px;
+    margin-top: 10px;
+}
+.info h1{
+    font-size: 1.0rem;
+    color: #333;
+    margin-bottom: 10px;
+}
+.info p{
+    font-size: 0.7rem;
+    color: #666;
+    margin-bottom: 20px;
+}
+
+.details{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    margin-top: 10px;
+}
+.details i{
+    color: #4CAF50;
+    font-size: 1.2rem;
+    margin-right: 10px;}
+.details .collaborateurs{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.details span{
+    font-size: 0.8rem;
+    color: #666;
+} 
+.details .taches{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.divider{
+    height: 1px;
+    background-color: #E0E0E0;
+    margin: 20px 20px 0px 20px;
+    padding: 0 20px;
+}
+
+.progressbar {
+    width: 90%;
+    height: 10px;
+    background-color: #E0E0E0;
+    border-radius: 5px;
+    overflow: hidden;
+    margin: 20px auto;
+}
+.progressbar .bar {
+    height: 100%;
+     background: linear-gradient(90deg, #4CC9F0, var(--primary-color)); /* ✅ CORRECT */
+    width: 70%; /* Adjust this value to represent progress */
+    transition: width 0.3s ease;
+    border-radius: 5px;
+}
+.complet{
+    padding: 0 20px;
+    margin-top: 10px;
+    position: relative;
+    top: -10px;
+   
+}
+.complet span{
+ margin-bottom: 10px;
+}

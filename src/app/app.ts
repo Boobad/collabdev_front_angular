@@ -2,7 +2,11 @@ import { Component, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { Navebar } from './contributeurs/components/shared/navebar/navebar';
 import { Sidebar } from './contributeurs/components/shared/sidebar/sidebar';
+
 import { Coins } from './contributeurs/pages/coins/coins';
+
+import { ModalCreateProject } from './contributeurs/components/ui/modal-create-project/modal-create-project';
+
 
 @Component({
   selector: 'app-root',
@@ -12,4 +16,5 @@ import { Coins } from './contributeurs/pages/coins/coins';
 })
 export class App {
   protected readonly title = signal('collabdev_frontend');
+  
 }

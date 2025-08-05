@@ -76,7 +76,7 @@
 }
 
 .new-project-btn {
-    background-color: var(--primary-color);
+    background: linear-gradient(90deg, #4CC9F0, var(--primary-color)); /* ✅ CORRECT */
     color: white;
     border: none;
     padding: 10px 20px;
