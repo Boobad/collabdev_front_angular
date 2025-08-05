@@ -1,23 +1,57 @@
-<main>
-  <div>
-    <img src="" alt="retour" />
-    <h1>Gestion des badges</h1>
+<main class="container">
+  <header class="header">
+    <button class="back-button">←</button>
+    <h1>Badges Obtenus</h1>
+  </header>
 
-    <div>
-      <app-cards-badge></app-cards-badge>
-      <app-cards-badge></app-cards-badge>
-      <app-cards-badge></app-cards-badge>
-      <app-cards-badge></app-cards-badge>
+  <section class="badges-container">
+    <div class="badge-card">
+      <img src="BadgeBronze.png" alt="Badge Bronze" class="badge-image" />
+      <p class="badge-name">Badge Bronze</p>
     </div>
+    <div class="badge-card">
+      <img src="BadgeArgent.png" alt="Badge Argent" class="badge-image" />
+      <p class="badge-name">Badge Argent</p>
+    </div>
+    <div class="badge-card">
+      <img src="BadgeOr.png" alt="Badge en Or" class="badge-image" />
+      <p class="badge-name">Badge en Or</p>
+    </div>
+    <div class="badge-card">
+      <img src="platine.png" alt="Badge Platine" class="badge-image locked" />
+      <p class="badge-name">Badge Platine</p>
+    </div>
+  </section>
 
-    <!--Badge-->
-  </div>
-  <div>
-    <!--Barre de progression-->
-  </div>
-  <div>
-    <!--Badges details-->
+  <section class="progression">
+    <p class="progress-label">Progression vers les prochains badges</p>
+    <p class="progress-status">Badge “Platine” - <strong>70%</strong></p>
+    <div class="progress-bar">
+      <div class="progress" style="width: 70%"></div>
+    </div>
+  </section>
 
-    <app-cards-badge-detail></app-cards-badge-detail>
-  </div>
+  <section class="rewards">
+    <div class="rewards-header">
+      <h2>Détails des récompenses</h2>
+      <a href="#" class="voir-tout">Voir tout</a>
+    </div>
+    <div class="rewards-list">
+      <div class="reward-card silver">
+        <h3>Badge Argent</h3>
+        <p>attribué après la soumission de 5 contributions validées</p>
+        <span class="date">Gagné le 15/03/2025</span>
+      </div>
+      <div class="reward-card gold">
+        <h3>Badge en Or</h3>
+        <p>attribué après la soumission de 10 contributions validées</p>
+        <span class="date">Gagné le 29/06/2025</span>
+      </div>
+      <div class="reward-card bronze">
+        <h3>Badge Bronze</h3>
+        <p>attribué après la soumission de 2 contributions validées</p>
+        <span class="date">Gagné le 05/01/2025</span>
+      </div>
+    </div>
+  </section>
 </main>

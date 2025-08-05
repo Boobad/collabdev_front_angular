@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-page-contribution',
-  imports: [PageContribution],
+  imports: [],
   templateUrl: './page-contribution.html',
   styleUrl: './page-contribution.css',
 })

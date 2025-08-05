@@ -7,7 +7,7 @@ import { RecompenseBadge } from './contributeurs/pages/recompense-badge/recompen
 
 @Component({
   selector: 'app-root',
-  imports: [Sidebar, Navebar, RecompenseBadge],
+  imports: [Sidebar, Navebar, RecompenseBadge, PageContribution, RouterOutlet],
   templateUrl: './app.html',
   styleUrl: './app.css',
 })
