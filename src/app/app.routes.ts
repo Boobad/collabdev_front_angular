@@ -1,15 +1,18 @@
 import { Routes } from '@angular/router';
 import { Home } from './contributeurs/pages/home/home';
 import { Projects } from './contributeurs/pages/projects/projects';
-import { DetailsPages } from './contributeurs/pages/details-pages/details-pages';
-import { Coinssolde } from './contributeurs/pages/coinssolde/coinssolde';
-import { ForgetPassword } from './contributeurs/pages/forget-password/forget-password';
 import { Login } from './contributeurs/pages/login/login';
-
+import { ProjetsRecommandes } from './contributeurs/pages/projets-recommandes/projets-recommandes';
+import { GestionFonctionnalite } from './contributeurs/pages/gestion-fonctionnalite/gestion-fonctionnalite';
+import { Container } from './contributeurs/pages/container/container';
 export const routes: Routes = [
 {
     path: '', component: Login
 },
+{
+    path: 'container', component: Container
+},
+
 {
     path: 'home', component: Home
 },
@@ -17,13 +20,9 @@ export const routes: Routes = [
     path: 'projects', component: Projects
 },
 {
-    path: 'details', component: DetailsPages
+    path : 'gestion-fonctionnalite', component : GestionFonctionnalite
 },
 {
-    path: 'coins', component: Coinssolde
-},
-{
-    path: 'forget-password', component: ForgetPassword
-},
-
+    path : 'projets-recommandes', component: ProjetsRecommandes
+}
 ];

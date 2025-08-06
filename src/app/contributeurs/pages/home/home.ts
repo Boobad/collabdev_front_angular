@@ -9,7 +9,7 @@ import { Sidebar } from "../../components/shared/sidebar/sidebar";
 
 @Component({
   selector: 'app-home',
-  imports: [Banniere, CardProjectActif, ProjectsRecommander, CardBadges, Navebar, Sidebar],
+  imports: [Banniere, CardProjectActif, ProjectsRecommander, CardBadges, Navebar, Sidebar, RouterLink],
   templateUrl: './home.html',
   styleUrl: './home.css'
 })

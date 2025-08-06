@@ -17,7 +17,7 @@ showNotifications = false;
   toggleNotifications() {
     this.showNotifications = !this.showNotifications;
   }
-  
+
  openModal() {
     const modal = document.getElementById('projectModal');
     if (modal) {

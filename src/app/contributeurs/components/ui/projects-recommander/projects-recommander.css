@@ -1,10 +1,11 @@
 .card{
     height: auto;
-    width: 315px;
+
+    width: 290px;
     box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.1);
     background-color: white;
     border-radius: 10px;
-    
+
 }
 
 .card .titres{
@@ -26,7 +27,7 @@
 }
 
 .card .titres .coins{
-    
+
     width: auto;
     height: 30px;
     display: flex;
@@ -108,7 +109,7 @@
     align-items: center;
     justify-content: center;
     width: 100%;
-   
+
 }
 .buttons button{
 /* ✅ CORRECT */
