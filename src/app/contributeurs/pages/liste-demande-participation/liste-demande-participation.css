@@ -4,8 +4,8 @@ body {
   margin: 0;
   padding: 20px 80px; 
   color: #333;
+  height: auto;
 }
-
 
 /* Titre */
 .title {
@@ -18,6 +18,7 @@ body {
   font-size: 20px;
   font-weight: bold;
 }
+
 
 /* Conteneur stylé */
 .search-bar {
@@ -44,7 +45,6 @@ body {
   background: white url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' fill='gray' viewBox='0 0 24 24'><path d='M10 2a8 8 0 105.293 14.293l4.707 4.707 1.414-1.414-4.707-4.707A8 8 0 0010 2zm0 2a6 6 0 110 12A6 6 0 0110 4z'/></svg>") no-repeat 12px center;
   background-size: 16px; /* taille icône */
 }
-
 
 /* Sélecteur de statut */
 .search-bar select.filter {
@@ -81,7 +81,6 @@ body {
     width: 100%;
   }
 }
-
 
 
 /* Liste des candidats */
@@ -195,12 +194,13 @@ button {
   display: flex;
   justify-content: space-between; /* bouton à gauche, pagination à droite */
   align-items: center;
-  margin-top: 30px;
-  padding: 0 40px;
+  margin-top: 10px;
+  /* padding: 0 40px; */
 }
 
 /* Bouton Retour */
 .back {
+  margin-top: 2px;
   background: linear-gradient(to right, #0047FF, #4A90E2); 
   color: white;
   font-size: 14px;
@@ -247,3 +247,5 @@ button {
     justify-content: center;
   }
 }
+
+

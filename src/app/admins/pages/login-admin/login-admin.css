@@ -8,7 +8,7 @@
 
 body {
   display: flex;
-  height: 100vh;
+  height: 99vh;
   background-color: #f7f9fc;
 }
 
@@ -21,19 +21,31 @@ body {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 40px;
+  /* padding: 40px; */
   text-align: center;
+  
 }
+
 
 .logo {
   display: flex;
   align-items: center;
-  margin-bottom: 20px;
+  margin-bottom: 150px;
 }
 
 .logo img {
-  width: 70px;
+  width: 270px;
   margin-right: 10px;
+   margin-bottom: -220px;
+}
+.description {
+  
+  font-size: 0.95rem;
+  line-height: 1.5;
+  max-width: 350px;
+  margin-bottom: 120px;
+  
+
 }
 
 .logo-text {
@@ -49,12 +61,7 @@ body {
   color: white;
 }
 
-.description {
-  margin-top: 15px;
-  font-size: 0.95rem;
-  line-height: 1.5;
-  max-width: 350px;
-}
+
 
 /* Partie droite */
 .right {
@@ -67,10 +74,10 @@ body {
 
 .login-container {
   background: white;
-  padding: 40px;
+  /* padding: 40px; */
   border-radius: 12px;
   box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
-  width: 350px;
+  width: 400px;
   text-align: center;
 }
 
