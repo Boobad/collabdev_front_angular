@@ -13,6 +13,11 @@
   align-items: center;
   justify-content: space-between;
 }
+.header-title {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
 
 .header h2 {
   font-size: 18px;

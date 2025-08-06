@@ -1,9 +1,9 @@
 import { Component, signal } from '@angular/core';
-import { SubmitContribution } from './contributeurs/pages/submit-contribution/submit-contribution';
+import { TaskDetails } from "./contributeurs/pages/task-details/task-details";
 
 @Component({
   selector: 'app-root',
-  imports: [SubmitContribution],
+  imports: [TaskDetails],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
