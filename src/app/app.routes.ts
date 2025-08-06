@@ -12,6 +12,7 @@ import { ParametrageCoins } from './component_admin_param/parametrage-coins/para
 import { RecompenseBadge } from './contributeurs/pages/recompense-badge/recompense-badge';
 import { PageContribution } from './contributeurs/pages/page-contribution/page-contribution';
 import { ProfilUser } from './contributeurs/pages/profil-user/profil-user';
+import { Quiz } from './contributeurs/pages/quiz/quiz';
 
 export const routes: Routes = [
 {
@@ -56,6 +57,9 @@ export const routes: Routes = [
 ,
 {
   path: 'profil-user', component: ProfilUser,
+},
+{
+  path : 'quiz', component: Quiz,
 },
 {
   path: '**',

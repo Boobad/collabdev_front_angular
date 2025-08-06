@@ -13,12 +13,12 @@
     position: relative;
     /* width: 357px; */
     /* height: 547px; */
-     height: 695px; 
+     height: 695px;
     flex-direction: column;
     display: flex;
     align-items: center;
     padding: 20px;
-    
+
 }
 .container .gauche .img{
     width: 200px;
@@ -26,7 +26,7 @@
     border-radius: 50%;
     position: relative;
     margin-top: 30px;
-    
+
 }
 .container .gauche .img img{
     width: 100%;
@@ -84,7 +84,7 @@ button{
     background: #3b82f6;
     margin-right: 10px;
     margin-left: 30%;
-    
+
 }
 
 .cartes {
@@ -117,12 +117,12 @@ button{
     display: inline-flex;
     align-items: center;
     gap: 5px;
-} 
+}
 
 .education {
     background: #FFEBEE;
     color: #E53935;
-   
+
 }
 
 .sante {
@@ -133,7 +133,7 @@ button{
 .role {
     background: #E3F2FD;
     color: #1E88E5;
-    margin-left:40%;
+    margin-left:45%;
 }
 
 .titre {
