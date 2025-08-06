@@ -3,10 +3,15 @@ import { Home } from './contributeurs/pages/home/home';
 import { Projects } from './contributeurs/pages/projects/projects';
 import { DetailsPages } from './contributeurs/pages/details-pages/details-pages';
 import { Coinssolde } from './contributeurs/pages/coinssolde/coinssolde';
+import { ForgetPassword } from './contributeurs/pages/forget-password/forget-password';
+import { Login } from './contributeurs/pages/login/login';
 
 export const routes: Routes = [
 {
-    path: '', component: Home
+    path: '', component: Login
+},
+{
+    path: 'home', component: Home
 },
 {
     path: 'projects', component: Projects
@@ -16,5 +21,9 @@ export const routes: Routes = [
 },
 {
     path: 'coins', component: Coinssolde
-}
+},
+{
+    path: 'forget-password', component: ForgetPassword
+},
+
 ];

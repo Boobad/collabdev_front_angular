@@ -1,0 +1,47 @@
+<div class="login">
+  <div class="section-gauche">
+            <img src="logo.png" alt="">
+    <p>Accédez à votre espace personnel, gérez vos projets, <br> suivez vos contributions et collaborez avec la  communauté</p>
+  </div>
+
+  <div class="section-droit">
+    <form class="contour">
+      <h2>Content de vous revoir !</h2>
+
+      <label>Email</label>
+      <div class="input-icon">
+        <i class="fa-solid fa-envelope"></i>
+         <input type="email" placeholder="votre@email.com" />
+      </div>
+
+      <label>Mot de passe</label>
+      <div class="input-icon">
+        <i class="fa fa-lock"></i>
+        <input type="password" />
+      </div>
+      <div class="souvenir">
+        <input type="checkbox" name="souvenir" value="souvenir">
+        <span> se souvenir </span>
+        <a class="pass" routerLink= '/forget-password'>Mot de passe oublié ?</a>
+      </div>
+
+      <button type="submit" (click)="redirectToLogin()">Se connecter</button>
+<div class="divider">
+  <span>Ou continuer avec</span>
+</div>
+
+<div class="social-buttons">
+  <a href="#"  class="social google" title="Google">
+    <img src="google.png" alt="Google">
+  </a>
+  <a href="#"  class="social github" title="GitHub">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg" alt="GitHub">
+  </a>
+  <a href="#" class="social facebook" title="Facebook">
+    <img src="Facebook.png" alt="Facebook">
+  </a>
+</div>
+
+    </form>
+  </div>
+</div>

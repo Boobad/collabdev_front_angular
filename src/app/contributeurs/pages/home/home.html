@@ -1,28 +1,42 @@
-<app-banniere></app-banniere>
-<div class="title">
-    <h1>Mes Projets Actifs</h1>
-    
+<div class="app-container">
+  <app-sidebar></app-sidebar>
+   <main class="main-content">
+    <!-- Top Navigation -->
+    <app-navebar></app-navebar>
+
+   </main>
+
 </div>
 
-<div class="project_active">
-<app-card-project-actif></app-card-project-actif>
-<app-card-project-actif></app-card-project-actif>
-<app-card-project-actif></app-card-project-actif>
-</div>
+<section>
+  <app-banniere></app-banniere>
+  <div class="title">
+      <h1>Mes Projets Actifs</h1>
 
-<div class="title">
-    <h1>Projets Recommandes</h1>
-    <span>Voir tous</span>
-</div>
-<div class="project_active">
-<app-projects-recommander></app-projects-recommander>
-<app-projects-recommander></app-projects-recommander>
-<app-projects-recommander></app-projects-recommander>
-</div>
-<div class="title">
-    <h1>Mes Badges Recent</h1>
-    <span>Voir tous</span>
-</div>
-<div class="project_active">
-    <app-card-badges></app-card-badges>
-</div>
+  </div>
+
+  <div class="project_active">
+  <app-card-project-actif></app-card-project-actif>
+  <app-card-project-actif></app-card-project-actif>
+  <app-card-project-actif></app-card-project-actif>
+  </div>
+
+  <div class="title">
+      <h1>Projets Recommandes</h1>
+      <span>Voir tous</span>
+  </div>
+  <div class="project_active">
+  <app-projects-recommander></app-projects-recommander>
+  <app-projects-recommander></app-projects-recommander>
+  <app-projects-recommander></app-projects-recommander>
+  </div>
+  <div class="title">
+      <h1>Mes Badges Recent</h1>
+      <span>Voir tous</span>
+  </div>
+  <div class="project_active">
+      <app-card-badges></app-card-badges>
+  </div>
+</section>
+
+
