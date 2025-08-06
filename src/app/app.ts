@@ -3,10 +3,11 @@ import { RouterOutlet } from '@angular/router';
 import { Navebar } from './contributeurs/components/shared/navebar/navebar';
 import { Sidebar } from './contributeurs/components/shared/sidebar/sidebar';
 import { ModalCreateProject } from './contributeurs/components/ui/modal-create-project/modal-create-project';
+import { ListeDemandeParticipation } from './contributeurs/pages/liste-demande-participation/liste-demande-participation';
 
 @Component({
   selector: 'app-root',
-  imports: [Navebar,RouterOutlet],
+  imports: [Navebar,ListeDemandeParticipation],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
