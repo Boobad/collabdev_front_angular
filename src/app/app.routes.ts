@@ -9,6 +9,8 @@ import { FormulaireParticipation } from './contributeurs/pages/formulaire-partic
 import { DemarrageQuiz } from './contributeurs/pages/demarrage-quiz/demarrage-quiz';
 import { Coins } from './contributeurs/pages/coins/coins';
 import { ParametrageCoins } from './component_admin_param/parametrage-coins/parametrage-coins';
+import { RecompenseBadge } from './contributeurs/pages/recompense-badge/recompense-badge';
+import { PageContribution } from './contributeurs/pages/page-contribution/page-contribution';
 
 export const routes: Routes = [
 {
@@ -45,8 +47,14 @@ export const routes: Routes = [
   path: 'parametre-coins', component: ParametrageCoins,
 },
 {
+  path: 'badge-recompense', component: RecompenseBadge,
+},
+{
+  path: 'hist_contribution', component: PageContribution,
+}
+,
+{
   path: '**',
   redirectTo: '',
 }
-
 ];
