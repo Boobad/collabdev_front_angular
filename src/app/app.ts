@@ -3,10 +3,11 @@ import { RouterOutlet } from '@angular/router';
 import { Navebar } from './contributeurs/components/shared/navebar/navebar';
 import { Sidebar } from './contributeurs/components/shared/sidebar/sidebar';
 import { ModalCreateProject } from './contributeurs/components/ui/modal-create-project/modal-create-project';
+import { ProfilUser } from "./contributeurs/pages/profil-user/profil-user";
 
 @Component({
   selector: 'app-root',
-  imports: [Sidebar,Navebar, RouterOutlet],
+  imports: [ProfilUser, Navebar, Sidebar],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
