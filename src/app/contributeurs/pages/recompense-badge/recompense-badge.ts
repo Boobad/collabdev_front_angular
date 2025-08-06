@@ -1,10 +1,9 @@
 import { Component } from '@angular/core';
-import { CardsBadgeDetail } from '../../components/ui/cards-badge-detail/cards-badge-detail';
-import { CardsBadge } from '../../components/ui/cards-badge/cards-badge';
+import { Navebar } from "../../components/shared/navebar/navebar";
 
 @Component({
   selector: 'app-recompense-badge',
-  imports: [CardsBadgeDetail, CardsBadge],
+  imports: [Navebar],
   templateUrl: './recompense-badge.html',
   styleUrl: './recompense-badge.css',
 })

@@ -11,6 +11,7 @@ import { Coins } from './contributeurs/pages/coins/coins';
 import { ParametrageCoins } from './component_admin_param/parametrage-coins/parametrage-coins';
 import { RecompenseBadge } from './contributeurs/pages/recompense-badge/recompense-badge';
 import { PageContribution } from './contributeurs/pages/page-contribution/page-contribution';
+import { ProfilUser } from './contributeurs/pages/profil-user/profil-user';
 
 export const routes: Routes = [
 {
@@ -53,6 +54,9 @@ export const routes: Routes = [
   path: 'hist_contribution', component: PageContribution,
 }
 ,
+{
+  path: 'profil-user', component: ProfilUser,
+},
 {
   path: '**',
   redirectTo: '',
