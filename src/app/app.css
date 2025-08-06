@@ -1,12 +1,58 @@
 /* App Layout */
 .app-container {
-    display: flex;
-    min-height: 100vh;
+  display: flex;
+  min-height: 100vh;
 }
 
 /* Main Content Styles */
 .main-content {
-    flex: 1;
-    overflow-y: auto;
-    padding-bottom: 40px;
+  /* Flexbox pour occuper l'espace disponible */
+  flex: 1;
+
+  /* Gestion du défilement */
+  overflow-y: auto;
+  scroll-behavior: smooth; /* Animation fluide */
+  -webkit-overflow-scrolling: touch; /* Fluidité sur iOS */
+
+  /* Taille minimale (meilleure que height: 100vh avec flex) */
+  height: 100vh;
+
+  /* Optimisation des performances */
+  will-change: transform;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+
+  /* Empêcher les conflits de scroll */
+  overscroll-behavior-y: contain;
+
+  /* Style de la barre de défilement (optionnel) */
+  scrollbar-width: thin; /* Firefox */
+  scrollbar-color: #888 transparent; /* Firefox */
+}
+
+/* Barre de défilement pour WebKit (Chrome/Safari) */
+.main-content::-webkit-scrollbar {
+  width: 8px;
+}
+.main-content::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+}
+.main-content::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Correction pour les appareils tactiles */
+@media (pointer: coarse) {
+  .main-content {
+    touch-action: pan-y; /* Seul le défilement vertical est autorisé */
+    padding-bottom: env(safe-area-inset-bottom); /* Safe Area pour iPhone */
+  }
+}
+
+/* Désactiver les animations pour les préférences réduites */
+@media (prefers-reduced-motion: reduce) {
+  .main-content {
+    scroll-behavior: auto;
+  }
 }

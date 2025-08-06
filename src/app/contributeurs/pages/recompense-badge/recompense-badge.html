@@ -1,57 +1,142 @@
-<main class="container">
-  <header class="header">
-    <button class="back-button">←</button>
-    <h1>Badges Obtenus</h1>
-  </header>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Collabdev - Badges Obtenus</title>
+  <link rel="stylesheet" href="recompense-badge.css" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Material+Icons+Outlined"
+    rel="stylesheet"
+  />
+</head>
 
-  <section class="badges-container">
-    <div class="badge-card">
-      <img src="BadgeBronze.png" alt="Badge Bronze" class="badge-image" />
-      <p class="badge-name">Badge Bronze</p>
+<div class="container">
+  <div class="content-area">
+    <div class="badges-header">
+      <a href="#" class="back-link">
+        <i class="material-icons-outlined">arrow_back</i>
+      </a>
+      <h2>Badges Obtenus</h2>
     </div>
-    <div class="badge-card">
-      <img src="BadgeArgent.png" alt="Badge Argent" class="badge-image" />
-      <p class="badge-name">Badge Argent</p>
-    </div>
-    <div class="badge-card">
-      <img src="BadgeOr.png" alt="Badge en Or" class="badge-image" />
-      <p class="badge-name">Badge en Or</p>
-    </div>
-    <div class="badge-card">
-      <img src="platine.png" alt="Badge Platine" class="badge-image locked" />
-      <p class="badge-name">Badge Platine</p>
-    </div>
-  </section>
 
-  <section class="progression">
-    <p class="progress-label">Progression vers les prochains badges</p>
-    <p class="progress-status">Badge “Platine” - <strong>70%</strong></p>
-    <div class="progress-bar">
-      <div class="progress" style="width: 70%"></div>
-    </div>
-  </section>
-
-  <section class="rewards">
-    <div class="rewards-header">
-      <h2>Détails des récompenses</h2>
-      <a href="#" class="voir-tout">Voir tout</a>
-    </div>
-    <div class="rewards-list">
-      <div class="reward-card silver">
-        <h3>Badge Argent</h3>
-        <p>attribué après la soumission de 5 contributions validées</p>
-        <span class="date">Gagné le 15/03/2025</span>
+    <div class="badges-grid">
+      <div class="badge-card">
+        <div class="badge-image-container">
+          <img src="BadgeBronze.png" alt="Badge Bronze" />
+        </div>
+        <span class="badge-title">Badge Bronze</span>
       </div>
-      <div class="reward-card gold">
-        <h3>Badge en Or</h3>
-        <p>attribué après la soumission de 10 contributions validées</p>
-        <span class="date">Gagné le 29/06/2025</span>
+      <div class="badge-card">
+        <div class="badge-image-container">
+          <img src="BadgeArgent.png" alt="Badge Argent" />
+        </div>
+        <span class="badge-title">Badge Argent</span>
       </div>
-      <div class="reward-card bronze">
-        <h3>Badge Bronze</h3>
-        <p>attribué après la soumission de 2 contributions validées</p>
-        <span class="date">Gagné le 05/01/2025</span>
+      <div class="badge-card">
+        <div class="badge-image-container">
+          <img src="BadgeOr.png" alt="Badge en Or" />
+        </div>
+        <span class="badge-title">Badge en Or</span>
+      </div>
+      <div class="badge-card platinum">
+        <div class="badge-image-container">
+          <img src="platine.png" alt="Badge Platine" />
+          <i class="material-icons-outlined download-icon">file_download</i>
+        </div>
+        <span class="badge-title">Badge Platine</span>
       </div>
     </div>
-  </section>
-</main>
+
+    <div class="progression-section">
+      <h3>Progression vers les prochains badges</h3>
+      <p>Badge "Platine" -70%</p>
+      <div class="progress-bar-container">
+        <div class="progress-bar" style="width: 70%"></div>
+      </div>
+    </div>
+
+    <div class="reward-details-section">
+      <div class="reward-header">
+        <h3>Détails des récompenses</h3>
+        <a href="#" class="view-all-link">Voir tout</a>
+      </div>
+      <div class="reward-cards">
+        <div class="reward-card argent">
+          <div class="reward-badge-icon">
+            <img src="BadgeArgent.png" alt="Badge Argent" />
+          </div>
+          <div class="reward-info">
+            <span class="reward-title">Badge Argent</span>
+            <span class="reward-description"
+              >Attribué après la soumission de 5 contributions valide</span
+            >
+            <span class="reward-date">Gagné le 15/07/2025</span>
+          </div>
+        </div>
+        <div class="reward-card or">
+          <div class="reward-badge-icon">
+            <img src="BadgeOr.png" alt="Badge en Or" />
+          </div>
+          <div class="reward-info">
+            <span class="reward-title">Badge en Or</span>
+            <span class="reward-description"
+              >Attribué après la soumission de 15 contributions valide</span
+            >
+            <span class="reward-date">Gagné le 10/08/2025</span>
+          </div>
+        </div>
+
+        <div class="reward-card bronze">
+          <div class="reward-badge-icon">
+            <img src="BadgeBronze.png" alt="Badge Bronze" />
+          </div>
+          <div class="reward-info">
+            <span class="reward-title">Badge Bronze</span>
+            <span class="reward-description"
+              >Attribué après la soumission de 25 contributions valide</span
+            >
+            <span class="reward-date">En cours</span>
+          </div>
+        </div>
+      </div>
+      <div class="reward-cards" style="margin-top: 20px;">
+        <div class="reward-card argent">
+          <div class="reward-badge-icon">
+            <img src="BadgeArgent.png" alt="Badge Argent" />
+          </div>
+          <div class="reward-info">
+            <span class="reward-title">Badge Argent</span>
+            <span class="reward-description"
+              >Attribué après la soumission de 5 contributions valide</span
+            >
+            <span class="reward-date">Gagné le 15/07/2025</span>
+          </div>
+        </div>
+        <div class="reward-card or">
+          <div class="reward-badge-icon">
+            <img src="BadgeOr.png" alt="Badge en Or" />
+          </div>
+          <div class="reward-info">
+            <span class="reward-title">Badge en Or</span>
+            <span class="reward-description"
+              >Attribué après la soumission de 15 contributions valide</span
+            >
+            <span class="reward-date">Gagné le 10/08/2025</span>
+          </div>
+        </div>
+
+        <div class="reward-card bronze">
+          <div class="reward-badge-icon">
+            <img src="BadgeBronze.png" alt="Badge Bronze" />
+          </div>
+          <div class="reward-info">
+            <span class="reward-title">Badge Bronze</span>
+            <span class="reward-description"
+              >Attribué après la soumission de 25 contributions valide</span
+            >
+            <span class="reward-date">En cours</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

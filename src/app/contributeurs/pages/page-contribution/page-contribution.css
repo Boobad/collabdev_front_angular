@@ -12,7 +12,7 @@ body {
 .app-container {
   display: flex;
   min-height: 100vh;
-  width: 100%; /* S'assurer que le conteneur principal prend toute la largeur */
+  width: 100%;
 }
 
 .material-icons-outlined {
@@ -31,17 +31,13 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* Suppression des styles de la barre latérale et de l'en-tête */
-.sidebar,
-.header {
-  display: none;
-}
-
 /* Le content-area doit s'étendre sur toute la largeur */
 .content-area {
   flex: 1;
   padding: 30px;
   overflow-y: auto;
+  margin: 0 auto;
+  max-width: 900px;
 }
 
 .contributions-header {
@@ -71,11 +67,14 @@ body {
 }
 
 /* Contributions Section */
+.contributions-container {
+  margin-bottom: 40px;
+}
+
 .contribution-cards {
   display: flex;
   flex-direction: column;
   gap: 15px;
-  margin-bottom: 40px;
 }
 
 .contribution-card {
@@ -159,7 +158,7 @@ body {
   justify-content: space-between;
   align-items: center;
   background-color: #f8f9fa;
-  border-left: 5px solid #4754f2; /* Bordure bleue comme dans l'image */
+  border-left: 5px solid #4754f2;
   border-radius: 10px;
   padding: 15px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
