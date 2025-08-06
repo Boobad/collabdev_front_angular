@@ -1,0 +1,114 @@
+/* Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Arial', sans-serif;
+}
+
+body {
+  display: flex;
+  height: 100vh;
+  background-color: #f7f9fc;
+}
+
+/* Partie gauche */
+.left {
+  flex: 1;
+  background: linear-gradient(to bottom, #1e3cfd, #5faaff);
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 40px;
+  text-align: center;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.logo img {
+  width: 70px;
+  margin-right: 10px;
+}
+
+.logo-text {
+  font-size: 2.5rem;
+  font-weight: bold;
+}
+
+.logo-text span:first-child {
+  color: orange;
+}
+
+.logo-text span:last-child {
+  color: white;
+}
+
+.description {
+  margin-top: 15px;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  max-width: 350px;
+}
+
+/* Partie droite */
+.right {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #f7f9fc;
+}
+
+.login-container {
+  background: white;
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
+  width: 350px;
+  text-align: center;
+}
+
+.login-container h2 {
+  margin-bottom: 30px;
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #000;
+}
+
+.login-container input {
+  width: 100%;
+  padding: 14px;
+  margin-bottom: 18px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  outline: none;
+  font-size: 1rem;
+  transition: border 0.3s;
+}
+
+.login-container input:focus {
+  border-color: #1e3cfd;
+}
+
+.login-container button {
+  width: 100%;
+  padding: 14px;
+  border: none;
+  border-radius: 6px;
+  background: linear-gradient(to right, #1e3cfd, #5faaff);
+  color: white;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.login-container button:hover {
+  transform: scale(1.02);
+}

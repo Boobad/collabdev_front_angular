@@ -6,7 +6,7 @@ import { ModalCreateProject } from './contributeurs/components/ui/modal-create-p
 
 @Component({
   selector: 'app-root',
-  imports: [Sidebar,Navebar, RouterOutlet],
+  imports: [Navebar,RouterOutlet],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
