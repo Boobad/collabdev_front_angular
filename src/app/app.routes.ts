@@ -18,6 +18,9 @@ import { WorkspaceProjectResources } from './contributeurs/pages/workspace-proje
 import { FormSuscribe } from './contributeurs/pages/form-suscribe/form-suscribe';
 import { SubmitContribution } from './contributeurs/pages/submit-contribution/submit-contribution';
 import { TaskDetails } from './contributeurs/pages/task-details/task-details';
+import { DetailsPages } from './contributeurs/pages/details-pages/details-pages';
+import { ListeDemandeParticipation } from './contributeurs/pages/liste-demande-participation/liste-demande-participation';
+import { LoginAdmin } from './admins/pages/login-admin/login-admin';
 
 export const routes: Routes = [
 {
@@ -82,7 +85,17 @@ export const routes: Routes = [
   path: 'task-details', component: TaskDetails,
 },
 {
+  path: 'details', component: DetailsPages,
+},
+{
+   path: 'list-demande-participation', component: ListeDemandeParticipation,
+},
+{
+  path: 'logAdmin', component:LoginAdmin,
+},
+{
   path: '**',
   redirectTo: '',
 }
+
 ];

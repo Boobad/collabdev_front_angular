@@ -1,0 +1,249 @@
+body {
+  font-family: Arial, sans-serif;
+  background: #f9f9f9;
+  margin: 0;
+  padding: 20px 80px; 
+  color: #333;
+}
+
+
+/* Titre */
+.title {
+  text-align: center;
+  background: linear-gradient(to right, #0047FF, #4A90E2); 
+  color: white;
+  padding: 15px;
+  border-radius: 8px;
+  margin: 0 0 20px 0;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+/* Conteneur stylé */
+.search-bar {
+  margin-bottom: 20px; 
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  background: #f2f3f5; 
+  border-radius: 12px;
+  padding: 8px;
+  border: 1px solid #e0e0e0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+/* Champ recherche avec icône loupe */
+.search-bar input {
+  flex: 1;
+  padding: 10px 15px 10px 38px; /* espace à gauche pour la loupe */
+  border: 1px solid #ccc;
+  border-radius: 12px;
+  font-size: 14px;
+  outline: none;
+  background: white url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' fill='gray' viewBox='0 0 24 24'><path d='M10 2a8 8 0 105.293 14.293l4.707 4.707 1.414-1.414-4.707-4.707A8 8 0 0010 2zm0 2a6 6 0 110 12A6 6 0 0110 4z'/></svg>") no-repeat 12px center;
+  background-size: 16px; /* taille icône */
+}
+
+
+/* Sélecteur de statut */
+.search-bar select.filter {
+  padding: 10px 40px 10px 15px; /* espace à droite pour la flèche */
+  border-radius: 25px;
+  border: 1px solid #ccc;
+  background: white;
+  font-weight: bold;
+  font-size: 14px;
+  color: black;
+  cursor: pointer;
+  outline: none;
+
+  /* enlève la flèche native */
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+
+  /* ajoute flèche personnalisée */
+  background-image: url("data:image/svg+xml;utf8,<svg fill='black' height='16' viewBox='0 0 24 24' width='16' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 12px center; /* positionne la flèche */
+  background-size: 16px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .search-bar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .search-bar input,
+  .search-bar select {
+    width: 100%;
+  }
+}
+
+
+
+/* Liste des candidats */
+.candidats {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+.card {
+  background: white;
+  padding: 15px;
+  border-radius: 12px;
+  border: 1px solid #ddd;
+  position: relative;
+}
+.card .name { font-weight: bold; font-size: 16px; }
+.card .email { font-size: 14px; color: #555; }
+.card .date { font-size: 13px; color: #777; }
+.card .status { font-weight: bold; margin: 5px 0; }
+.status.orange { color: #f59e0b; }
+.status.blue { color: #3b82f6; }
+.status.red { color: #ef4444; }
+.card .score {
+   position: absolute;
+  top: 15px;
+  right: 200px; /* reculé pour laisser plus d’espace */
+  font-weight: bold;
+  font-size: 14px;
+}
+.actions {
+  position: absolute;
+  top: 12px;
+  right: 15px;
+  display: flex;
+  gap: 10px;
+}
+
+/* Boutons */
+button {
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+  padding: 8px 14px;
+  border-radius: 20px;
+}
+.valider {
+  background: linear-gradient(to right, #2563EB, #1D4ED8);
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.valider:hover {
+  box-shadow: 0 0 12px rgba(37, 99, 235, 0.6); /* halo bleu */
+  transform: scale(1.05); /* grossit légèrement */
+}
+.valider:active {
+  transform: scale(0.95); /* effet clic */
+}
+.rejeter {
+  background: #DC2626;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.rejeter:hover {
+  box-shadow: 0 0 12px rgba(220, 38, 38, 0.6); /* halo rouge */
+  transform: scale(1.05); /* grossit légèrement */
+}
+.rejeter:active {
+  transform: scale(0.95); /* effet clic */
+}
+.notifier {
+  background: #F97316;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  animation: pulse 1.5s infinite; /* ✅ animation continue */
+}
+
+/* Effet hover : halo plus fort */
+.notifier:hover {
+  box-shadow: 0 0 15px rgba(249, 115, 22, 0.7);
+  transform: scale(1.05);
+}
+
+.notifier:active {
+  transform: scale(0.95);
+}
+.notif-count {
+  background: red;
+  color: white;
+  border-radius: 50%;
+  padding: 2px 6px;
+  font-size: 12px;
+  margin-left: 4px;
+}
+
+/* Navigation bas de page */
+.footer-nav {
+  display: flex;
+  justify-content: space-between; /* bouton à gauche, pagination à droite */
+  align-items: center;
+  margin-top: 30px;
+  padding: 0 40px;
+}
+
+/* Bouton Retour */
+.back {
+  background: linear-gradient(to right, #0047FF, #4A90E2); 
+  color: white;
+  font-size: 14px;
+  font-weight: bold;
+  padding: 10px 25px;
+  border-radius: 20px;
+  border: none;
+  cursor: pointer;
+}
+
+/* Pagination */
+.pagination {
+  display: flex;
+  gap: 8px;
+}
+.pagination button {
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  background: #f3f3f3;
+  cursor: pointer;
+}
+.pagination .active {
+  background: #3b82f6;
+  color: white;
+  font-weight: bold;
+}
+
+/* 🎯 Responsive : mobile & tablette */
+@media (max-width: 768px) {
+  .search-bar {
+    flex-direction: column;
+    align-items: center;
+  }
+  .search-bar input {
+    width: 90%;
+  }
+  .footer-nav {
+    flex-direction: column;
+    gap: 15px;
+    padding: 0;
+  }
+  .pagination {
+    justify-content: center;
+  }
+}
