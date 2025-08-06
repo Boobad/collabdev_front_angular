@@ -1,10 +1,9 @@
 import { Component, signal } from '@angular/core';
-import { FormLogin } from './contributeurs/pages/form-login/form-login';
-import { WorkspaceProject } from './contributeurs/pages/workspace-project/workspace-project';
+import { SubmitContribution } from './contributeurs/pages/submit-contribution/submit-contribution';
 
 @Component({
   selector: 'app-root',
-  imports: [WorkspaceProject],
+  imports: [SubmitContribution],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
