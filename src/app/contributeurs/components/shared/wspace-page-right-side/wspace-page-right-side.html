@@ -1,0 +1,77 @@
+<aside class="discussion-panel">
+
+  <!-- HEADER -->
+  <div class="discussion-header">
+    <img src="assets/message-ico.png" alt="Messages" class="icon" />
+    <h1>Discussion</h1>
+    <span class="comment-count">4</span>
+  </div>
+
+  <!-- BODY / COMMENTAIRES -->
+  <div class="discussion-content">
+
+    <!-- Commentaire intégré via composant -->
+    <app-comment></app-comment>
+
+    <!-- Commentaire #2 -->
+    <div class="comment">
+      <div class="comment-header">
+        <span class="user-badge">MT</span>
+        <div class="comment-meta">
+          <span class="user-name">Mohamed Traoré</span>
+          <span class="user-role">Designeur</span>
+          <span class="timestamp">05 août, 14:15</span>
+        </div>
+        <button class="comment-options">
+          <i class="fas fa-ellipsis-h"></i>
+        </button>
+      </div>
+      <p class="comment-text">
+        J'ai terminé la maquette du dashboard médecin. Vous pouvez la consulter dans Figma. J'attends vos retours avant de commencer l'intégration.
+      </p>
+    </div>
+
+    <!-- Commentaire #3 -->
+    <div class="comment reply">
+      <div class="comment-header">
+        <span class="user-badge">BD</span>
+        <div class="comment-meta">
+          <span class="user-name">Bakary Diallo</span>
+          <span class="timestamp">05 août, 14:45</span>
+        </div>
+      </div>
+      <p class="comment-text">
+        Excellent travail Mohamed ! J'ai quelques suggestions mineures sur l'espacement. Je vais les ajouter directement dans Figma.
+      </p>
+    </div>
+
+    <!-- Commentaire #4 -->
+    <div class="comment">
+      <div class="comment-header">
+        <span class="user-badge">MS</span>
+        <div class="comment-meta">
+          <span class="user-name">Tenen M. Sylla</span>
+          <span class="user-role">Développeuse</span>
+          <span class="timestamp">05 août, 16:31</span>
+        </div>
+        <button class="comment-options">
+          <i class="fas fa-ellipsis-h"></i>
+        </button>
+      </div>
+      <p class="comment-text">
+        L'API de gestion des rendez-vous est prête pour les tests. J'ai documenté tous les endpoints dans Swagger. Qui peut s'occuper des tests d'intégration ?
+      </p>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <div class="discussion-footer">
+    <span class="user-badge">Vous</span>
+    <input type="text" placeholder="Écrire un message..." class="comment-input" />
+    <button class="send-button">
+      <i class="fas fa-paper-plane"></i>
+    </button>
+  </div>
+
+</aside>

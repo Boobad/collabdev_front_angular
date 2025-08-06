@@ -1,0 +1,73 @@
+<div class="submit-contribution-container">
+  <header class="submit-contribution-header">
+    <div class="header-title">
+      <h1><i class="fa fa-paper-plane ico-size"></i>Soumettre une contribution</h1>
+      <p>Partagez votre travail et contribuez à ce projet innovant</p>
+    </div>
+    <button class="cancel-button"><i class="fa-solid fa-arrow-left ico-margin"></i>Retour au projet</button>
+  </header>
+
+  <!-- Fichiers de contribution -->
+  <section class="contribution-section">
+
+    <h2><i class="fa-solid fa-file-upload ico-title"></i>Fichiers de contribution</h2>
+    <div class="file-upload">
+      <i class="fas fa-cloud-upload-alt ico-cloud"></i>
+      <p>Glissez-déposez vos fichiers ici</p>
+      <input type="file" name="file" id="file" class="upload-button" multiple />
+      <!-- <input type="file" name="file" id="file" class="upload-button" multiple (change)="onFileSelected($event)" />
+
+      <ul class="file-list" *ngIf="selectedFiles.length > 0">
+        <li *ngFor="let file of selectedFiles">{{ file.name }}</li>
+      </ul> -->
+    </div>
+  </section>
+
+  <!-- Liens vers repositories -->
+  <section class="contribution-section">
+    <h2><i class="fa-brands fa-github ico-title"></i>Liens vers repositories</h2>
+    <label for="repo-link">URL d’un dépôt Git (facultatif)</label>
+    <div class="repo-input">
+      <input
+      type="url"
+      id="repo-link"
+      placeholder="Ajouter un autre repository"
+    />
+    <i class="fa-solid fa-xmark"></i>
+    </div>
+
+  </section>
+
+  <!-- Description de la contribution -->
+  <section class="contribution-section">
+
+    <h2><i class="fa-solid fa-align-left ico-title"></i>Description de la contribution</h2>
+
+    <div class="contribution-title">
+      <label for="contribution-title">Titre de la contribution</label>
+      <input type="text" name="contribution-title" id="contribution-title" placeholder="Ex: Implémentation de la fonctionnalité X">
+    </div>
+
+    <div>
+      <label for="contribution-desc">Décrivez la contribution</label>
+      <textarea
+        id="contribution-desc"
+        rows="4"
+        placeholder="Expliquez ce que vous avez contribué, mentionnez les fichiers ajoutés ou modifiés, etc."
+      ></textarea>
+    </div>
+
+
+    <div class="warning-box">
+      <h3>
+        <i class="fa-solid fa-medal ico-size medal"></i>
+        <strong>Récompenses potentielle :</strong></h3>
+      <p>Votre contribution sera évaluée par l'équipe du projet. Si elle est acceptée, vous pourriez gagner entre 50 et 200 points d'XP et des coins en fonction de la qualité et de l'importance de votre travail.</p>
+    </div>
+  </section>
+
+  <div class="action-buttons">
+    <button class="cancel-button">Annuler</button>
+    <button class="submit-button">Soumettre la contribution</button>
+  </div>
+</div>

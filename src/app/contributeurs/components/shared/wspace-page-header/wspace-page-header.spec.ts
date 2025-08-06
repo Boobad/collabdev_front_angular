@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { Projects } from './projects';
+import { WspacePageHeader } from './wspace-page-header';
 
-describe('Projects', () => {
-  let component: Projects;
-  let fixture: ComponentFixture<Projects>;
+describe('WspacePageHeader', () => {
+  let component: WspacePageHeader;
+  let fixture: ComponentFixture<WspacePageHeader>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [Projects]
+      imports: [WspacePageHeader]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(Projects);
+    fixture = TestBed.createComponent(WspacePageHeader);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

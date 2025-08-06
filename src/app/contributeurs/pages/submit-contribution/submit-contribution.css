@@ -1,0 +1,157 @@
+.submit-contribution-container {
+  font-family: "Poppins", sans-serif;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 1.5rem;
+  background: #F3F4F6;
+  border-radius: 8px;
+  box-shadow: 0 0 8px rgba(0,0,0,0.1);
+}
+
+.submit-contribution-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.submit-contribution-header h1 {
+  font-size: 1.2rem;
+}
+
+.header-title{
+  display: flex;
+  flex-direction: column;
+}
+
+.header-title p{
+  font-size: .7rem;
+  margin-left: 33px;
+}
+
+
+.cancel-button {
+  background: transparent;
+  border: 2px solid #4361EE;
+  color: #4361EE;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 700;
+  border-radius: 20px;
+  padding: 0.6rem;
+}
+
+.contribution-section {
+  margin-bottom: 1.5rem;
+  border-radius: 20px;
+  background-color: white;
+  padding: 1rem 2rem;
+}
+
+.contribution-section h2 {
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.file-upload {
+  border: 2px dashed #b3b3b3;
+  border-radius: 8px;
+  padding: 2rem;
+  text-align: center;
+}
+
+.file-upload p {
+  margin-bottom: 1rem;
+}
+
+.ico-cloud {
+  font-size: 2.4rem;
+  color: #3B82F6;
+}
+.ico-margin {
+  margin-right: 0.5rem;
+}
+
+.ico-size {
+  font-size: 1.5rem;
+  margin-right: .5rem;
+}
+
+.ico-title{
+  font-size: 1.3rem;
+  color: #3B82F6;
+  padding-right: .5rem;
+}
+
+.upload-button {
+  background-color: #4b5cff;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+}
+
+.repo-input {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.contribution-title {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: .9rem;
+}
+
+.contribution-title input {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #d3d3d3;
+  border-radius: 6px;
+}
+
+input[type="url"],
+textarea {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #d3d3d3;
+  border-radius: 6px;
+  margin-top: 0.5rem;
+}
+
+.warning-box {
+  display: flex;
+  flex-direction: column;
+  background: #a9e8fc;
+  border-left: 4px solid #4b5cff;
+  border-radius: 6px;
+  padding: 0.75rem;
+  margin-top: 1rem;
+  font-size: 0.85rem;
+  color: #333;
+}
+.warning-box p {
+  margin-left: 2rem;
+  font-size: small;
+  font-weight: 100;
+}
+
+.action-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.medal {
+  color: #4CC9F0;
+}
+
+.submit-button {
+  background-color: #170BF5;
+  color: #fff;
+  border: none;
+  border-radius: 20px;
+  padding: 0.6rem 1.2rem;
+  cursor: pointer;
+}
