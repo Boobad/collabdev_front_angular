@@ -1,0 +1,119 @@
+<div class="quiz-container">
+  <div class="quiz-header" *ngIf="!quizCompleted">
+    <div class="question-counter" id="questionCounter">
+      {{ questionCountText }}
+    </div>
+    <div class="timer" id="timer">
+      <div class="timer-icon" id="timerIcon">🕐</div>
+      <span id="timeDisplay"></span>
+    </div>
+  </div>
+
+  <div class="progress-container" *ngIf="!quizCompleted">
+    <div class="progress-label">
+      <span class="progress-text">Progression</span>
+      <span class="progress-percentage" id="progressPercentage"
+        >{{ progress | number : "1.0-0" }}%</span
+      >
+    </div>
+    <div class="progress-bar">
+      <div
+        class="progress-fill"
+        id="progressFill"
+        [style.width]="progress + '%'"
+      ></div>
+    </div>
+  </div>
+
+  <div class="question-card" *ngIf="!quizCompleted">
+    <h2 class="question-title">{{ quizData[currentQuestion].question }}</h2>
+    <p class="question-subtitle">{{ quizData[currentQuestion].subtitle }}</p>
+    <ul class="options-list">
+      <li
+        class="option-item"
+        *ngFor="let option of quizData[currentQuestion].options; let i = index"
+      >
+        <label class="option-label">
+          <input
+            type="radio"
+            name="currentQuestion"
+            [value]="i"
+            class="option-input"
+            (change)="saveAnswer(i)"
+            [checked]="userAnswers[currentQuestion] === i"
+          />
+          <div class="option-radio"></div>
+          <div class="option-content">
+            <div class="option-text">{{ option.text }}</div>
+            <div class="option-description">{{ option.description }}</div>
+          </div>
+        </label>
+      </li>
+    </ul>
+    <div class="navigation-buttons">
+      <button
+        class="btn-previous"
+        [disabled]="currentQuestion === 0"
+        (click)="previousQuestion()"
+      >
+        ← Précédent
+      </button>
+      <button
+        class="btn-next"
+        (click)="nextQuestion()"
+        [disabled]="quizCompleted"
+      >
+        {{ currentQuestion === quizData.length - 1 ? "Terminer" : "Suivant" }}
+      </button>
+    </div>
+  </div>
+
+  <div class="info-banner" *ngIf="!quizCompleted">
+    <div class="info-icon">i</div>
+    <div class="info-text">
+      <strong>Conseils :</strong> Prenez votre temps pour lire chaque question.
+      Vous pouvez revenir aux questions précédentes pour modifier vos réponses.
+      Score minimum requis : 70%
+    </div>
+  </div>
+
+  <div class="quiz-completed" *ngIf="quizCompleted">
+    <div class="success-icon">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+        <path
+          d="M9 12l2 2 4-4"
+          stroke="#10b981"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+    </div>
+    <h2 class="completion-title">Quiz terminé !</h2>
+    <p class="completion-subtitle">
+      Félicitations, vous avez terminé le quiz de sélection.
+    </p>
+    <div class="stats-container">
+      <div class="stat-item">
+        <div class="stat-value blue">{{ score }}%</div>
+        <div class="stat-label">Score final</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-value green">
+          {{ getCorrectAnswers() }}/{{ quizData.length }}
+        </div>
+        <div class="stat-label">Bonnes réponses</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-value purple">{{ getTimeUsed() }}</div>
+        <div class="stat-label">Temps utilisé</div>
+      </div>
+    </div>
+    <div class="error-message" *ngIf="score < 70">
+      <span class="error-icon">⚠</span>
+      <strong>Score insuffisant.</strong> Vous avez obtenu {{ score }}% mais le
+      minimum requis est de 70%. Vous pourrez refaire le quiz dans 24 heures.
+    </div>
+    <button class="retry-button" (click)="retryQuiz()">Retour au projet</button>
+  </div>
+</div>

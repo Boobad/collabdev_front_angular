@@ -3,7 +3,7 @@ import { Home } from './contributeurs/pages/home/home';
 import { Projects } from './contributeurs/pages/projects/projects';
 import { FormulaireParticipation } from './contributeurs/pages/formulaire-participation/formulaire-participation';
 import { DemarrageQuiz } from './contributeurs/pages/demarrage-quiz/demarrage-quiz';
-
+import { Quiz } from './contributeurs/pages/quiz/quiz';
 export const routes: Routes = [
   {
     path: '',
@@ -24,6 +24,10 @@ export const routes: Routes = [
   {
     path: 'demarrage-quiz', // Nouvelle route pour DemarrageQuiz
     component: DemarrageQuiz,
+  },
+  {
+    path: 'quiz',
+    component: Quiz,
   },
   {
     path: '**',
