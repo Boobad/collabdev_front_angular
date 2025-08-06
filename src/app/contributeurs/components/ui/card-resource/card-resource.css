@@ -1,0 +1,56 @@
+.resource-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.filter-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+select {
+  padding: 4px 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 0.9rem;
+}
+
+.resource-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+}
+
+.resource-card {
+  background-color: #fff;
+  padding: 1rem;
+  border-radius: 12px;
+  box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.08);
+  font-family: 'Poppins', sans-serif;
+}
+
+.resource-title {
+  font-size: 1.1rem;
+  font-weight: bold;
+  margin: 0 0 0.5rem 0;
+}
+
+.resource-meta {
+  font-size: 0.85rem;
+  color: #555;
+  margin: 4px 0;
+}
+
+.btn-download {
+  margin-top: 0.8rem;
+  background: #007bff;
+  color: white;
+  padding: 6px 14px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.85rem;
+}

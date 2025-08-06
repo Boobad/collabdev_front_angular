@@ -1,0 +1,20 @@
+<div class="resource-header">
+  <h2>Ressources</h2>
+  <div class="filter-bar">
+    <label>Filtrer par:</label>
+    <select [(ngModel)]="selectedFilter" (change)="applyFilter()">
+      <option value="name">Nom</option>
+      <option value="date">Date</option>
+      <option value="contributor">Contributeur</option>
+    </select>
+  </div>
+</div>
+
+<div class="resource-grid">
+  <div class="resource-card" *ngFor="let resource of filteredResources">
+    <h3 class="resource-title">{{ resource.title }}</h3>
+    <p class="resource-meta">📅 {{ resource.uploadDate | date:'dd MMM yyyy' }}</p>
+    <p class="resource-meta">👤 Contributeur: <strong>{{ resource.contributor }}</strong></p>
+    <button class="btn-download" (click)="downloadResource(resource)">⬇️ Télécharger</button>
+  </div>
+</div>
