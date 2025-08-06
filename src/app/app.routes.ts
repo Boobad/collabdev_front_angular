@@ -13,9 +13,7 @@ export const routes: Routes = [
 },
 {
     path: 'container', component: Container
-    
 },
-
 {
     path: 'home', component: Home
 },
@@ -28,14 +26,14 @@ export const routes: Routes = [
 {
     path : 'projets-recommandes', component: ProjetsRecommandes
 },
-  {
-    path: 'test/:role', component: FormulaireParticipation,
-  },
-  {
-    path: 'demarrage-quiz', component: DemarrageQuiz,
-  },
-  {
-    path: '**',
-    redirectTo: '',
-  }
+{
+  path: 'test/:role', component: FormulaireParticipation,
+},
+{
+  path: 'demarrage-quiz', component: DemarrageQuiz,
+},
+{
+  path: '**',
+  redirectTo: '',
+}
 ];
