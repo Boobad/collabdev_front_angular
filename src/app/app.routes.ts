@@ -5,6 +5,8 @@ import { Login } from './contributeurs/pages/login/login';
 import { ProjetsRecommandes } from './contributeurs/pages/projets-recommandes/projets-recommandes';
 import { GestionFonctionnalite } from './contributeurs/pages/gestion-fonctionnalite/gestion-fonctionnalite';
 import { Container } from './contributeurs/pages/container/container';
+import { FormulaireParticipation } from './contributeurs/pages/formulaire-participation/formulaire-participation';
+import { DemarrageQuiz } from './contributeurs/pages/demarrage-quiz/demarrage-quiz';
 export const routes: Routes = [
 {
     path: '', component: Login
@@ -24,5 +26,15 @@ export const routes: Routes = [
 },
 {
     path : 'projets-recommandes', component: ProjetsRecommandes
-}
+},
+  {
+    path: 'test/:role', component: FormulaireParticipation,
+  },
+  {
+    path: 'demarrage-quiz', component: DemarrageQuiz,
+  },
+  {
+    path: '**',
+    redirectTo: '',
+  }
 ];
