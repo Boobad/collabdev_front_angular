@@ -7,7 +7,7 @@ import { ListeDemandeParticipation } from './contributeurs/pages/liste-demande-p
 
 @Component({
   selector: 'app-root',
-  imports: [Navebar,ListeDemandeParticipation],
+  imports: [Navebar, ListeDemandeParticipation, RouterOutlet],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })

@@ -3,6 +3,7 @@ import { Home } from './contributeurs/pages/home/home';
 import { Projects } from './contributeurs/pages/projects/projects';
 import { DetailsPages } from './contributeurs/pages/details-pages/details-pages';
 import { ListeDemandeParticipation } from './contributeurs/pages/liste-demande-participation/liste-demande-participation';
+import { LoginAdmin } from './admins/pages/login-admin/login-admin';
 
 export const routes: Routes = [
 {
@@ -17,5 +18,8 @@ export const routes: Routes = [
 {
     path: 'list-demande-participation', component: ListeDemandeParticipation
 },
+{
+    path: 'logAdmin', component:LoginAdmin
+}
 
 ];
