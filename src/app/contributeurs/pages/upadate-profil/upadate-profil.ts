@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-upadate-profil',
@@ -8,4 +9,9 @@ import { Component } from '@angular/core';
 })
 export class UpadateProfil {
 
+constructor(private router: Router) {} 
+
+  redirectToLogin() {
+    this.router.navigate(['/']);
+  }
 }
