@@ -34,7 +34,7 @@
 }
 
 .total-points {
-  background-color: #6B46C1;
+  background: linear-gradient(to bottom, #1e3cfd, #6bbaff);
   color: white;
   padding: 5px 10px;
   border-radius: 5px;
@@ -48,7 +48,7 @@
 }
 
 .actions .history-btn {
-  background-color: #6B46C1;
+  background: linear-gradient(to bottom, #1e3cfd, #6bbaff);
   color: white;
   border: none;
   padding: 5px 15px;
@@ -69,10 +69,14 @@
   cursor: pointer;
 }
 
-.filter-section .view-all{
-  background-color: #4A90E2;
-  color: white;
+.filter-section .view-all:hover,.mois-ci:hover,.derniers-mois:hover {
+  transform: scale(1.15); /* Agrandissement persistant pendant le survol */
+    box-shadow: 0 6px 12px linear-gradient(to bottom, #1e3cfd, #6bbaff); /* Ombre pour effet de profondeur */
+ background: linear-gradient(to bottom, #1e3cfd, #6bbaff);
 }
+/* .filter-section .view-all.view-all:checked,.mois-ci:hover,.derniers-mois:hover{
+  background-color: #4A90E2;
+} */
 
 .search {
   flex-grow: 1;
@@ -82,7 +86,7 @@
 }
 
 .filter-btn {
-  background-color: #4A90E2;
+ background: linear-gradient(to bottom, #1e3cfd, #6bbaff);
   color: white;
 }
 
@@ -122,7 +126,7 @@
 }
 
 .level-tag.Intermédiaire {
-  background-color: #6B46C1;
+  background: linear-gradient(to bottom, #1e3cfd, #6bbaff);
 }
 
 .level-tag.Débutant {
@@ -140,7 +144,7 @@
 }
 
 .pagination {
-  margin-top: 50px;
+  margin-top: 40px;
   display: flex;
   align-items: center;
 }
@@ -151,25 +155,20 @@
 
 .pagination button {
   padding: 5px 10px;
-  border: 1px solid #4A90E2;
-  background-color: #4A90E2;
+  background: linear-gradient(to bottom, #1e3cfd, #6bbaff);
   color: white;
   border-radius: 5px;
   cursor: pointer;
 }
 
-.pagination button:disabled {
-  background-color: #ccc;
-  cursor: not-allowed;
-}
 .prev-btn:hover{
  /* animation: pulse 0.5s ease; Applique l'animation au survol */
  transform: scale(1.15); /* Agrandissement persistant pendant le survol */
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); /* Ombre pour effet de profondeur */
+    background: linear-gradient(to bottom, #1e3cfd, #6bbaff);/* Ombre pour effet de profondeur */
 }
 .next-btn:hover{
  transform: scale(1.15); /* Agrandissement persistant pendant le survol */
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); /* Ombre pour effet de profondeur */
+    background: linear-gradient(to bottom, #1e3cfd, #6bbaff);/* Ombre pour effet de profondeur */
 }
 /* @keyframes pulse {
     0% {
@@ -187,10 +186,14 @@
 } */
 .prev-btn{
     margin-right: 10px;
+    border: none;
+}
+.next-btn{
+  border: none;
 }
 .filter-btn:hover{
   transform: scale(1.15); /* Agrandissement persistant pendant le survol */
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); /* Ombre pour effet de profondeur */
+    box-shadow: 0 6px 12px linear-gradient(to bottom, #1e3cfd, #6bbaff); /* Ombre pour effet de profondeur */
 }
 
 @media (max-width: 600px) {

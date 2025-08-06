@@ -6,11 +6,12 @@ import { Sidebar } from './contributeurs/components/shared/sidebar/sidebar';
 import { Coins } from './contributeurs/pages/coins/coins';
 
 import { ModalCreateProject } from './contributeurs/components/ui/modal-create-project/modal-create-project';
+import { ParametrageCoins } from './component_admin_param/parametrage-coins/parametrage-coins';
 
 
 @Component({
   selector: 'app-root',
-  imports: [Sidebar,Navebar,Coins, RouterOutlet],
+  imports: [Sidebar,Navebar,Coins,ParametrageCoins, RouterOutlet],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
