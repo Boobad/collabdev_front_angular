@@ -1,0 +1,35 @@
+<aside class="sidebar" [class.collapsed]="isCollapsed">
+  <div class="sidebar-header">
+    <button class="sidebar-toggle" (click)="toggleSidebar()">
+      <i class="fas fa-bars"></i>
+    </button>
+    <h1 *ngIf="!isCollapsed">Admin</h1>
+  </div>
+
+  <nav class="sidebar-nav">
+    <ul>
+      <li  routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"><a  ><i class="fas fa-home"></i> <span *ngIf="!isCollapsed">Home</span></a></li>
+      <li routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"><a ><i class="fas fa-project-diagram"></i> <span *ngIf="!isCollapsed">Projets</span></a></li>
+      <li><a routerLink="/collaborators"><i class="fas fa-users"></i> <span *ngIf="!isCollapsed">Utilisateurs</span></a></li>
+      <li><a routerLink="/badges"><i class="fas fa-award"></i> <span *ngIf="!isCollapsed">Badges</span></a></li>
+      <li><a href="#"><i class="fas fa-cog"></i> <span *ngIf="!isCollapsed">Paramètres</span></a></li>
+    </ul>
+  </nav>
+
+  <div class="sidebar-footer" >
+    <div class="user-profile">
+      <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="User">
+      <div class="user-info" *ngIf="!isCollapsed">
+        <span class="user-name">Adama Dembele</span>
+        <span class="user-role">Administrateur</span>
+        <div class="user-level">
+          <div class="level-progress">
+            <div class="progress-bar" style="width: 65%;"></div>
+          </div>
+          <span class="level">Niveau 3</span>
+        </div>
+      </div>
+      <button class="logout-btn" *ngIf="!isCollapsed"><i class="fas fa-sign-out-alt"></i></button>
+    </div>
+  </div>
+</aside>

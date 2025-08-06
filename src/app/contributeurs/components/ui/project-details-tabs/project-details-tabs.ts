@@ -19,4 +19,5 @@ export class ProjectDetailsTabs {
   setTab(tab: string) {
     this.activeTab = tab;
   }
+  
 }
