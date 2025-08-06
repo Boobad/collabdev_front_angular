@@ -5,9 +5,10 @@ import { Sidebar } from './contributeurs/components/shared/sidebar/sidebar';
 import { ModalCreateProject } from './contributeurs/components/ui/modal-create-project/modal-create-project';
 import { ProfilUser } from "./contributeurs/pages/profil-user/profil-user";
 
+
 @Component({
   selector: 'app-root',
-  imports: [ProfilUser, Navebar, Sidebar],
+  imports: [ProfilUser, Navebar, Sidebar, RouterOutlet],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
