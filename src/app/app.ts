@@ -9,11 +9,7 @@ import { PageGestionnaire } from './contributeurs/pages/page-gestionnaire/page-g
 
 @Component({
   selector: 'app-root',
-<<<<<<< HEAD
   imports: [ProfilUser, Navebar, Sidebar, RouterOutlet],
-=======
-  imports: [PageGestionnaire, Navebar, Sidebar],
->>>>>>> 42bfea48d0c2c8b619ac9c2e39c182dd6f67e95c
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
