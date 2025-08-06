@@ -1,0 +1,208 @@
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  height: 95vh;
+  background-color: #f9f9f9;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.dashboard {
+  width: 100%;
+  max-width: 1200px;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  height: 100%;
+  overflow-y: hidden;
+  box-sizing: border-box;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.user-info h2 {
+  margin: 0;
+  font-size: 1.5em;
+}
+
+.total-points {
+  background: linear-gradient(to bottom, #1e3cfd, #6bbaff);
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+  margin-left: 10px;
+  vertical-align: middle;
+  font-size: 0.75em;
+}
+
+.level {
+  color: #666;
+}
+
+.actions .history-btn {
+  background: linear-gradient(to bottom, #1e3cfd, #6bbaff);
+  color: white;
+  border: none;
+  padding: 5px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.filter-section {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.filter-section button {
+  padding: 5px 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.filter-section .view-all:hover,.mois-ci:hover,.derniers-mois:hover {
+  transform: scale(1.15); /* Agrandissement persistant pendant le survol */
+    box-shadow: 0 6px 12px linear-gradient(to bottom, #1e3cfd, #6bbaff); /* Ombre pour effet de profondeur */
+ background: linear-gradient(to bottom, #1e3cfd, #6bbaff);
+}
+/* .filter-section .view-all.view-all:checked,.mois-ci:hover,.derniers-mois:hover{
+  background-color: #4A90E2;
+} */
+
+.search {
+  flex-grow: 1;
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.filter-btn {
+ background: linear-gradient(to bottom, #1e3cfd, #6bbaff);
+  color: white;
+}
+
+.activity-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+.activity-table th, .activity-table td {
+  padding: 10px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.activity-table th {
+  background-color: #f5f5f5;
+}
+
+.project-icon {
+  display: inline-block;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  color: white;
+  text-align: center;
+  line-height: 30px;
+  margin-right: 10px;
+}
+
+.level-tag {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 12px;
+  color: white;
+  margin-left: 10px;
+}
+
+.level-tag.Intermédiaire {
+  background: linear-gradient(to bottom, #1e3cfd, #6bbaff);
+}
+
+.level-tag.Débutant {
+  background-color: #6c757d;
+}
+
+.points {
+  color: #28A745;
+  font-weight: bold;
+}
+
+.reward {
+  font-size: 1.2em;
+  color: #DC3545;
+}
+
+.pagination {
+  margin-top: 40px;
+  display: flex;
+  align-items: center;
+}
+
+.pagination span {
+  margin-right: auto;
+}
+
+.pagination button {
+  padding: 5px 10px;
+  background: linear-gradient(to bottom, #1e3cfd, #6bbaff);
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.prev-btn:hover{
+ /* animation: pulse 0.5s ease; Applique l'animation au survol */
+ transform: scale(1.15); /* Agrandissement persistant pendant le survol */
+    background: linear-gradient(to bottom, #1e3cfd, #6bbaff);/* Ombre pour effet de profondeur */
+}
+.next-btn:hover{
+ transform: scale(1.15); /* Agrandissement persistant pendant le survol */
+    background: linear-gradient(to bottom, #1e3cfd, #6bbaff);/* Ombre pour effet de profondeur */
+}
+/* @keyframes pulse {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 0 0 rgba(0, 0, 0, 0.2);
+    }
+    50% {
+        transform: scale(1.15);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+    }
+    100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 rgba(0, 0, 0, 0.2);
+    }
+} */
+.prev-btn{
+    margin-right: 10px;
+    border: none;
+}
+.next-btn{
+  border: none;
+}
+.filter-btn:hover{
+  transform: scale(1.15); /* Agrandissement persistant pendant le survol */
+    box-shadow: 0 6px 12px linear-gradient(to bottom, #1e3cfd, #6bbaff); /* Ombre pour effet de profondeur */
+}
+
+@media (max-width: 600px) {
+  .user-info h2 {
+    display: block;
+  }
+  .total-points {
+    display: block;
+    margin-left: 0;
+    margin-top: 5px;
+  }
+}
