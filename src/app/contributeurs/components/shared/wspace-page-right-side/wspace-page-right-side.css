@@ -73,6 +73,7 @@
   justify-content: center;
   font-weight: bold;
   font-size: 0.8rem;
+  padding: 1.2rem;
 }
 
 .comment-meta {
@@ -124,16 +125,18 @@
 }
 
 .send-button {
-  background: none;
-  border: none;
   cursor: pointer;
   background-color: #3A5AFF;
+  width: 30px;
+  height: 30px;
+  align-items: center;
   border-radius: 8px;
+  border: none;
 }
 
 .send-button i {
   color: white;
   font-size: 1rem;
-  width: 10px;
-  height: 10px;
+  width: 20px;
+  height: 20px;
 }
