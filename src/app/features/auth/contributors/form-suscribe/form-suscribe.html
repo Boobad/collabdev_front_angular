@@ -1,0 +1,117 @@
+<div class="main-container">
+  <!-- Partie gauche avec informations -->
+  <div class="info-container">
+    <div class="rotating-container">
+      <div class="rotating-element">
+        <img src="logo.png" alt="Logo" class="rotating-logo">
+      </div>
+    </div>
+
+    <h1 class="info-title">Rejoignez notre communauté</h1>
+
+    <p class="info-description">
+      Créez votre compte pour accéder à toutes les fonctionnalités de notre plateforme.
+      Collaborez, innovez et développez vos projets avec notre solution complète.
+    </p>
+  </div>
+
+  <!-- Partie droite avec formulaire -->
+  <div class="register-container">
+    <div class="register-card">
+      <div class="register-header">
+        <h1>Commencer l'aventure</h1>
+        <p>Créez un compte pour accéder à toutes les fonctionnalités</p>
+      </div>
+
+      <form>
+        <!-- Nom et prénom -->
+        <div class="form-row">
+          <div class="form-group">
+            <label for="nom">Nom</label>
+            <div class="input-field" >
+              <input type="text" id="nom" name="nom" placeholder="Votre nom" required />
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="prenom">Prénom</label>
+            <div class="input-field">
+              <input type="text" id="prenom" name="prenom" placeholder="Votre prénom" required />
+            </div>
+          </div>
+        </div>
+
+        <!-- Email -->
+        <div class="form-group">
+          <label for="email">Email</label>
+          <div class="input-field">
+            <input type="email" id="email" name="email" placeholder="exemple@gmail.com" required />
+         
+          </div>
+        </div>
+
+        <!-- Mot de passe -->
+        <div class="form-group">
+          <label for="password">Mot de passe</label>
+          <div class="input-field">
+            <input type="password" id="password" name="password" placeholder="Votre mot de passe" required />
+          </div>
+          <div class="password-rules">
+            <p>Le mot de passe doit contenir :</p>
+            <ul>
+              <li>Minimum 8 caractères</li>
+              <li>1 lettre majuscule</li>
+              <li>1 chiffre</li>
+              <li>1 caractère spécial</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Confirmation mot de passe -->
+        <div class="form-group">
+          <label for="confirm-password">Confirmer le mot de passe</label>
+          <div class="input-field">
+            <input type="password" id="confirm-password" name="confirm-password" placeholder="Confirmer votre mot de passe" required />
+          </div>
+        </div>
+
+        <!-- Conditions -->
+        <div class="form-check">
+          <input type="checkbox" id="terms" name="terms" required />
+          <label for="terms">J'accepte les <a (click)="togglesModal(); $event.preventDefault()" href="#" >conditions d'utilisation</a></label>
+        </div>
+
+        <!-- Bouton d'inscription -->
+        <button type="submit" class="register-btn">S'inscrire</button>
+
+        <div class="login-link">
+          <span>Vous avez déjà un compte ?</span>
+          <a href="#">Se connecter</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<!-- MODAL Conditions d'utilisation -->
+<div class="modal-overlay" [class.show]="showModals">
+  <div class="modal">
+    <div class="modal-header">
+      <h2>Conditions d'utilisation</h2>
+      <button class="close-btn" (click)="togglesModal()">&times;</button>
+    </div>
+    <div class="modal-body">
+      <p>
+        Bienvenue sur notre plateforme ! En créant un compte, vous acceptez les conditions suivantes :
+      </p>
+      <ul>
+        <li>Respecter les autres utilisateurs</li>
+        <li>Ne pas partager d'informations fausses ou trompeuses</li>
+        <li>Protéger vos identifiants de connexion</li>
+        <li>Utiliser la plateforme de manière responsable</li>
+      </ul>
+      <p>Pour plus de détails, veuillez consulter notre site officiel.</p>
+    </div>
+    <div class="modal-footer">
+      <button class="agree-btn" (click)="togglesModal()">J'ai compris</button>
+    </div>
+  </div>
+</div>

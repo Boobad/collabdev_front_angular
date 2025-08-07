@@ -1,101 +1,76 @@
 import { Routes } from '@angular/router';
-import { Home } from './contributeurs/pages/home/home';
-import { Projects } from './contributeurs/pages/projects/projects';
-import { Login } from './contributeurs/pages/login/login';
-import { ProjetsRecommandes } from './contributeurs/pages/projets-recommandes/projets-recommandes';
-import { GestionFonctionnalite } from './contributeurs/pages/gestion-fonctionnalite/gestion-fonctionnalite';
-import { Container } from './contributeurs/pages/container/container';
-import { FormulaireParticipation } from './contributeurs/pages/formulaire-participation/formulaire-participation';
-import { DemarrageQuiz } from './contributeurs/pages/demarrage-quiz/demarrage-quiz';
-import { Coins } from './contributeurs/pages/coins/coins';
-import { ParametrageCoins } from './component_admin_param/parametrage-coins/parametrage-coins';
-import { RecompenseBadge } from './contributeurs/pages/recompense-badge/recompense-badge';
-import { PageContribution } from './contributeurs/pages/page-contribution/page-contribution';
-import { ProfilUser } from './contributeurs/pages/profil-user/profil-user';
-import { Quiz } from './contributeurs/pages/quiz/quiz';
-import { WorkspaceProject } from './contributeurs/pages/workspace-project/workspace-project';
-import { WorkspaceProjectResources } from './contributeurs/pages/workspace-project-resources/workspace-project-resources';
-import { FormSuscribe } from './contributeurs/pages/form-suscribe/form-suscribe';
-import { SubmitContribution } from './contributeurs/pages/submit-contribution/submit-contribution';
-import { TaskDetails } from './contributeurs/pages/task-details/task-details';
-import { DetailsPages } from './contributeurs/pages/details-pages/details-pages';
-import { ListeDemandeParticipation } from './contributeurs/pages/liste-demande-participation/liste-demande-participation';
-import { LoginAdmin } from './admins/pages/login-admin/login-admin';
+import { Login } from './features/auth/contributors/login/login';
+import { Home } from './features/contributors/pages/home/home';
+import { Projects } from './features/contributors/pages/projects/projects';
+import { GestionFonctionnalite } from './features/contributors/pages/gestion-fonctionnalite/gestion-fonctionnalite';
+import { ProjetsRecommandes } from './features/contributors/pages/projets-recommandes/projets-recommandes';
+import { FormulaireParticipation } from './features/contributors/pages/formulaire-participation/formulaire-participation';
+import { DemarrageQuiz } from './features/contributors/pages/demarrage-quiz/demarrage-quiz';
+import { Coins } from './features/contributors/pages/coins/coins';
+import { ParametrageCoins } from './features/admin/pages/parametrage-coins/parametrage-coins';
+import { RecompenseBadge } from './features/contributors/pages/recompense-badge/recompense-badge';
+import { PageContribution } from './features/contributors/pages/page-contribution/page-contribution';
+import { ProfilUser } from './features/contributors/pages/profil-user/profil-user';
+import { Quiz } from './features/contributors/pages/quiz/quiz';
+import { WorkspaceProject } from './features/contributors/pages/workspace-project/workspace-project';
+import { WorkspaceProjectResources } from './features/contributors/pages/workspace-project-resources/workspace-project-resources';
+import { FormSuscribe } from './features/auth/contributors/form-suscribe/form-suscribe';
+import { SubmitContribution } from './features/contributors/pages/submit-contribution/submit-contribution';
+import { DetailsPages } from './features/contributors/pages/details-pages/details-pages';
+import { ListeDemandeParticipation } from './features/contributors/pages/liste-demande-participation/liste-demande-participation';
+import { LoginAdmin } from './features/auth/admin/login-admin/login-admin';
+import { MainLayout } from './shared/layouts/main-layout/main-layout';
+import { AuthLayout } from './shared/layouts/auth-layout/auth-layout';
+import { TaskDetails } from './features/contributors/pages/task-details/task-details';
+import { authGuard } from './core/auth-guard';
+import { Oauth2RedirectComponent } from './core/oauth2-redirect/oauth2-redirect';
+import { ForgetPassword } from './features/auth/contributors/forget-password/forget-password';
+
 
 export const routes: Routes = [
-{
-    path: '', component: Login
-},
-{
-    path: 'container', component: Container
-},
-{
-    path: 'home', component: Home
-},
-{
-    path: 'projects', component: Projects
-},
-{
-    path : 'gestion-fonctionnalite', component : GestionFonctionnalite
-},
-{
-    path : 'projets-recommandes', component: ProjetsRecommandes
-},
-{
-  path: 'test/:role', component: FormulaireParticipation,
-},
-{
-  path: 'demarrage-quiz', component: DemarrageQuiz,
-},
-{
-  path: 'demarrage-quiz', component: DemarrageQuiz,
-},
-{
-  path: 'coins', component: Coins,
-},
-{
-  path: 'parametre-coins', component: ParametrageCoins,
-},
-{
-  path: 'badge-recompense', component: RecompenseBadge,
-},
-{
-  path: 'hist_contribution', component: PageContribution,
-}
-,
-{
-  path: 'profil-user', component: ProfilUser,
-},
-{
-  path : 'quiz', component: Quiz,
-},
-{
-  path: 'workspace-project', component: WorkspaceProject,
-},
-{
-  path: 'workspace-projetc-resource', component: WorkspaceProjectResources,
-},
-{
-  path: 'suscribe', component: FormSuscribe,
-},
-{
-  path: 'submit-contribution', component: SubmitContribution,
-},
-{
-  path: 'task-details', component: TaskDetails,
-},
-{
-  path: 'details', component: DetailsPages,
-},
-{
-   path: 'list-demande-participation', component: ListeDemandeParticipation,
-},
-{
-  path: 'logAdmin', component:LoginAdmin,
-},
-{
-  path: '**',
-  redirectTo: '',
-}
 
+  {
+    path:'',
+    component: MainLayout,
+    canActivate: [authGuard],
+    children: [
+      { path: 'home', component: Home },
+      { path: 'projects', component: Projects },
+      { path: 'profil-user', component: ProfilUser },
+      { path: 'demarrage-quiz', component: DemarrageQuiz },
+      { path: 'quiz', component: Quiz },
+      { path: 'workspace-projetc-resource', component: WorkspaceProjectResources },
+       { path: 'details', component: DetailsPages },
+      { path: 'workspace-project', component: WorkspaceProject },
+      { path: '', redirectTo: 'home', pathMatch: 'full' }
+    ]
+  },
+  {
+    path:'',
+    component: AuthLayout,
+     children: [
+      { path: '', redirectTo: 'login', pathMatch: 'full' },
+
+      { path: 'login', loadComponent: () => import('./features/auth/contributors/login/login').then(m => m.Login) },
+      { path: 'logAdmin', component: LoginAdmin },
+      { path: 'suscribe', component: FormSuscribe },
+       { path: 'forgot', component: ForgetPassword },
+      { path: 'oauth2-redirect', component: Oauth2RedirectComponent },
+
+
+      { path: 'submit-contribution', component: SubmitContribution },
+      { path: 'task-details', component: TaskDetails },
+      { path: 'coins', component: Coins },
+      { path: 'parametre-coins', component: ParametrageCoins },
+      { path: 'badge-recompense', component: RecompenseBadge },
+      { path: 'hist_contribution', component: PageContribution },
+      { path: 'projets-recommandes', component: ProjetsRecommandes },
+      { path: 'list-demande-participation', component: ListeDemandeParticipation },
+
+      { path: 'gestion-fonctionnalite', component : GestionFonctionnalite },
+      { path: 'test/:role', component: FormulaireParticipation },
+    ]
+  }
+,
+  { path: '**', redirectTo: '' } // Redirection pour les routes inconnues
 ];

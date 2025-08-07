@@ -1,0 +1,171 @@
+.telemedicine-header {
+  background-color: #ffffff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  padding-bottom: 0.5rem;
+}
+
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.4rem 1rem;
+  flex-wrap: wrap;
+}
+
+.header-left {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.header-left-top {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.header-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #333;
+}
+
+.back-icon {
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+}
+
+.header-left-bottom {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-size: 0.9rem;
+}
+
+.status-tag {
+  padding: 4px 8px;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+}
+
+.health-tag {
+  background-color: #e0f7fa;
+  color: #00796b;
+}
+
+.progress-tag {
+  background-color: #e3f2fd;
+  color: #1976d2;
+}
+
+.creator-text {
+  color: #666;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+
+.group-icon {
+  width: 24px;
+  height: 24px;
+}
+
+.user-badges {
+  display: flex;
+}
+
+.user-badge {
+  background-color: #007bff;
+  color: #fff;
+  font-size: 0.75rem;
+  padding: 6px 8px;
+  border-radius: 50%;
+  text-align: center;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.more-users {
+  font-size: 0.85rem;
+  color: #000;
+}
+
+.user-deadline {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #444;
+  background-color: #FFEBEE;
+  border-radius: 8px;
+  padding: 0.4rem 0.4rem;
+  font-size: 0.85rem;
+}
+
+.user-icon {
+  width: 20px;
+  height: 20px;
+}
+
+.settings-button {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 6px;
+}
+
+.settings-icon {
+  width: 24px;
+  height: 24px;
+}
+
+.main-nav {
+  border-top: 1px solid #eee;
+  padding: 0.5rem 2rem;
+}
+
+.nav-list {
+  display: flex;
+  gap: 2rem;
+  list-style: none;
+  font-size: .875rem;
+  padding: 0;
+  margin: 0;
+}
+
+.nav-item .nav-link {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+  font-weight: 400;
+  font-size: .8rem;
+  padding: 5px;
+  border-radius: 10px;
+  color: #666;
+  transition: all 0.3s ease;
+}
+
+.nav-item .nav-link:hover {
+  background-color: rgba(0, 0, 255, 0.1);
+}
+
+.nav-item .nav-link.active {
+  background-color: blue;
+  color: white;
+  font-weight: 600;
+}
+
+.nav-icon {
+  width: 20px;
+  height: 20px;
+}

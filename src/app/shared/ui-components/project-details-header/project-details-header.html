@@ -1,0 +1,33 @@
+<!-- Project Header Modernisé -->
+<section class="project-header">
+    <div class="info">
+        <div class="back-button" (click)="goBack()">
+            <i class="fas fa-chevron-left"></i>
+        </div>
+        <div class="project-title">
+            <h1>Plateforme de télémédecine</h1>
+            <div class="project-meta">
+                <span class="project-category health">
+                    <i class="fas fa-heartbeat"></i> Santé
+                </span>
+                <span class="project-status in-progress">
+                    <i class="fas fa-sync-alt fa-spin"></i> En cours
+                </span>
+                <span class="project-date">
+                    <i class="far fa-calendar-alt"></i> Lancé le 15/06/2023
+                </span>
+            </div>
+        </div>
+    </div>
+    <div class="project-actions">
+        <button class="btn btn-share" routerLink="/workspace-project">
+            <i class="fas fa-tasks"></i> Taches
+        </button>
+        <button class="btn btn-share">
+            <i class="fas fa-share-alt"></i> Partager
+        </button>
+        <button class="btn btn-favorite">
+            <i class="far fa-star"></i>
+        </button>
+    </div>
+</section>

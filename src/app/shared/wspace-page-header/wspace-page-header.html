@@ -1,0 +1,57 @@
+<header class="telemedicine-header">
+  <div class="header-container">
+    <!-- Gauche -->
+    <div class="header-left">
+      <div class="header-left-top">
+        <img class="back-icon" (click)="goBack()" src="assets/logo_return.png" alt="Retour" />
+        <h1 class="header-title">Plateforme de télémédecine</h1>
+      </div>
+
+      <div class="header-left-bottom">
+        <span class="status-tag health-tag">SANTÉ</span>
+        <span class="status-tag progress-tag">EN COURS</span>
+        <span class="creator-text">créé par <strong>Bakary Diallo</strong></span>
+      </div>
+    </div>
+
+    <!-- Droite -->
+    <div class="header-right">
+      <img class="group-icon" src="assets/logo_group_user.png" alt="Groupe utilisateur" />
+
+      <div class="user-badges">
+        <span class="user-badge">BD</span>
+        <span class="user-badge">MT</span>
+        <span class="user-badge">DM</span>
+        <span class="user-badge">MS</span>
+        <span class="user-badge">AD</span>
+      </div>
+
+      <span class="more-users">+4</span>
+
+      <div class="user-deadline">
+        <img class="user-icon" src="assets/calendar-ico.png" alt="Calendrier" />
+        <span class="deadline-text">Échéance : 15 Août 2025</span>
+      </div>
+
+      <button class="settings-button" title="Paramètres">
+        <img class="settings-icon" src="assets/logo_param.png" alt="Paramètres" />
+      </button>
+    </div>
+  </div>
+
+  <!-- Navigation -->
+  <nav class="main-nav">
+    <ul class="nav-list">
+      <li class="nav-item">
+        <a class="nav-link" routerLink="/workspace-project" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+          <img class="nav-icon" src="assets/task-ico.png" alt="Tâches" /> Tâches
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" routerLink="/workspace-projetc-resource" routerLinkActive="active">
+          <img class="nav-icon" src="assets/folder-ico.png" alt="Ressources" /> Ressources
+        </a>
+      </li>
+    </ul>
+  </nav>
+</header>

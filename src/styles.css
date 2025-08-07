@@ -16,6 +16,15 @@
   --border-radius: 12px;
   --box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
   --transition: all 0.3s ease;
+
+    --primary-color: #4361ee;
+    --secondary-color: #3a0ca3;
+    --dark-color: #2b2d42;
+    --gray-color: #8d99ae;
+    --light-gray: #edf2f4;
+    --border-radius: 12px;
+    --box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
 * {

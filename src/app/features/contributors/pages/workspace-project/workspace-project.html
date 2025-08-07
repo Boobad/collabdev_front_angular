@@ -1,0 +1,61 @@
+<!-- workspace-project.html -->
+<app-wspace-page-header></app-wspace-page-header>
+
+<main class="modern-page-layout">
+  <!-- Colonne gauche : Kanban -->
+  <section class="modern-kanban" cdkDropListGroup>
+    <!-- Colonne À faire -->
+    <div class="kanban-column todo"
+         cdkDropList
+         [cdkDropListData]="todoTasks"
+         (cdkDropListDropped)="drop($event)">
+      <div class="column-header">
+        <h2>À faire <span class="count-bubble">{{todoTasks.length}}</span></h2>
+        <button class="add-task-btn" (click)="addTask('todo')">+</button>
+      </div>
+      <div class="cards-container">
+        <app-card-task *ngFor="let task of todoTasks; trackBy: trackById"
+                      cdkDrag
+                      [task]="task">
+        </app-card-task>
+      </div>
+    </div>
+
+    <!-- Colonne En cours -->
+    <div class="kanban-column in-progress"
+         cdkDropList
+         [cdkDropListData]="inProgressTasks"
+         (cdkDropListDropped)="drop($event)">
+      <div class="column-header">
+        <h2>En cours <span class="count-bubble">{{inProgressTasks.length}}</span></h2>
+        <button class="add-task-btn" (click)="addTask('inProgress')">+</button>
+      </div>
+      <div class="cards-container">
+        <app-card-task *ngFor="let task of inProgressTasks; trackBy: trackById"
+                      cdkDrag
+                      [task]="task">
+        </app-card-task>
+      </div>
+    </div>
+
+    <!-- Colonne Terminé -->
+    <div class="kanban-column done"
+         cdkDropList
+         [cdkDropListData]="doneTasks"
+         (cdkDropListDropped)="drop($event)">
+      <div class="column-header">
+        <h2>Terminé <span class="count-bubble">{{doneTasks.length}}</span></h2>
+        <button class="add-task-btn" (click)="addTask('done')">+</button>
+      </div>
+      <div class="cards-container">
+        <app-card-task *ngFor="let task of doneTasks; trackBy: trackById"
+                      cdkDrag
+                      [task]="task">
+        </app-card-task>
+      </div>
+    </div>
+  </section>
+
+  <!-- Colonne droite : Discussion -->
+  <!-- <app-wspace-page-right-side></app-wspace-page-right-side> -->
+</main>
