@@ -1,3 +1,28 @@
+/* Ajoutez ces styles à votre fichier CSS */
+.login-btn {
+  position: relative;
+  /* ... autres styles existants ... */
+}
+
+.spinner {
+  width: 20px;
+  height: 20px;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: white;
+  animation: spin 1s ease-in-out infinite;
+  margin: 0 auto;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Optionnel: désactiver le bouton pendant le chargement */
+.login-btn:disabled {
+  background: linear-gradient(to right, #1e3cfd99, #0091ff99);
+  cursor: not-allowed;
+}
 /* Styles existants conservés */
 .rotating-container {
   perspective: 1000px;

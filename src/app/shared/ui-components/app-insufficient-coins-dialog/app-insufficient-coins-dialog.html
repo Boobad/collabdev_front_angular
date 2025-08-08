@@ -1,0 +1,29 @@
+<div class="dialog-container">
+  <div class="coin-animation">
+    <div class="coin pulse"></div>
+    <div class="coin pulse delay-1"></div>
+    <div class="coin pulse delay-2"></div>
+  </div>
+
+  <h2>Oups, il vous manque des coins!</h2>
+
+  <div class="content">
+    <p class="required">Coins nécessaires: <span>{{ data.requiredCoins }} <i class="fas fa-coins"></i></span></p>
+    <p class="current">Votre solde: <span>{{ data.userCoins }} <i class="fas fa-coins"></i></span></p>
+
+    <div class="difference">
+      Il vous manque <strong>{{ data.requiredCoins - data.userCoins }} coins</strong> pour participer
+    </div>
+  </div>
+
+  <div class="actions">
+    <button class="close-btn" (click)="onClose()">
+      <span>Plus tard</span>
+      <i class="fas fa-arrow-right"></i>
+    </button>
+    <button class="buy-btn" (click)="onBuyCoins()">
+      <span>Obtenir des coins</span>
+      <i class="fas fa-sparkles"></i>
+    </button>
+  </div>
+</div>

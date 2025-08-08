@@ -1,100 +1,59 @@
-<!-- Profil -->
-
-<div class="container">
-    <div class="gauche">
-        <div class="img">
-            <img src="profil.png" alt="">
-            <div class="icon">
+<div class="profile-container">
+    <!-- Section de gauche - Profil -->
+    <div class="profile-sidebar">
+        <div class="profile-avatar-container">
+            <img [src]="profileImage" alt="Photo de profil" class="profile-avatar">
+            <button class="avatar-edit-btn" (click)="triggerFileInput()">
                 <i class="fa-solid fa-camera"></i>
+            </button>
+        </div>
+
+        <h2 class="profile-username">Djeny</h2>
+        <p class="profile-title">Membre depuis 2023</p>
+
+        <div class="profile-stats">
+            <div class="stat-item">
+                <i class="fa-solid fa-diagram-project"></i>
+                <span>12 Projets</span>
+            </div>
+            <div class="stat-item">
+                <i class="fa-solid fa-users"></i>
+                <span>5 Collaborations</span>
             </div>
         </div>
-        <div class="titres">Nom utilisateur</div>
-        <button href="#"  routerLink="/update-profil" > Modifier Profil</button>
+
+        <button class="edit-profile-btn" routerLink="/update-profil">
+            <i class="fa-solid fa-pen-to-square"></i> Modifier le profil
+        </button>
     </div>
-    <!-- <div class="droite"></div> -->
 
-<div class="section">
-     <h1><span class="bar"></span>Participation Projet</h1>
-    <div class="cartes">
-   <!-- premiere carte -->
-          <div class="carte">
-              <div class="haut-carte">
-                  <span class="radus education">Education</span> 
-                  <span class=" radus role"><i class="fa-solid fa-user"></i> Ideateur</span> 
+    <!-- Section de droite - Contenu -->
+    <div class="profile-content">
+        <!-- Section À propos -->
+        <section class="profile-section">
+            <div class="section-header">
+                <div class="section-icon">
+                    <i class="fa-solid fa-user"></i>
                 </div>
-                <p class="titre">Plateforme de soutien scolaire</p>
-                <p class="description">Application web pour mettre en relation élèves et tuteurs qualifiés en ligne.</p>
-                <div class="carte-bas">
-                    <span><i class="fa-solid fa-users"></i> 8 Collaborateurs</span>
-                    <span class="status">Terminé</span>
-                </div>
-                <div class="barre"></div>
+                <h3>À propos de moi</h3>
             </div>
 
-   <!-- deuxieme carte -->
-            <div class="carte">
-                <div class="haut-carte">
-                    <span class="radus sante"> Santé</span>
-                    <span class=" radus role"><i class="fa-solid fa-code"></i> Développeur</span>
+            <div class="about-content">
+                <div class="info-field">
+                    <label>Nom d'utilisateur</label>
+                    <div class="info-value">Djeny</div>
                 </div>
-                <p class="titre">Plateforme de suivi des patients</p>
-                <p class="description">Système de suivi des ordonnances médicales et des rendez-vous.</p>
-                <div class="carte-bas">
-                    <span><i class="fa-solid fa-users"></i> 6 Collaborateurs</span>
-                    <span class="status">Terminé</span>
-                </div>
-                <div class="barre"></div>
-            </div>
 
-    <!-- troisieme carte -->
-            <div class="carte">
-                <div class="haut-carte">
-                    <span class="radus sante"> Santé</span>
-                    <span class="radus role"><i class="fa-solid fa-code"></i> Développeur</span>
+                <div class="info-field">
+                    <label>Email</label>
+                    <div class="info-value">djeny@email.com</div>
                 </div>
-                <p class="titre">Plateforme de suivi des patients</p>
-                <p class="description">Système de suivi des ordonnances médicales et des rendez-vous.</p>
-                <div class="carte-bas">
-                    <span><i class="fa-solid fa-users"></i> 6 Collaborateurs</span>
-                    <span class="status">Terminé</span>
-                </div>
-                <div class="barre"></div>
-            </div>
 
-    <!-- quatrieme carte -->
-           <div class="carte">
-                <div class="haut-carte">
-                    <span class="radus education">Education</span> 
-                    <span class="radus role"><i class="fa-solid fa-user"></i>  Ideateur</span> 
-                </div>
-                <p class="titre">Plateforme de soutien scolaire</p>
-                <p class="description">Application web pour mettre en relation élèves et tuteurs qualifiés en ligne.</p>
-                <div class="carte-bas">
-                    <span><i class="fa-solid fa-users"></i> 8 Collaborateurs</span>
-                    <span class="status">Terminé</span>
-                </div>
-                <div class="barre"></div>
-            </div>
-        </div>
-       <a href="" class="voir">Voir tout</a>
- 
-    <div class="section1">
-            <div class="groupe">
-                <label>User name</label>
-                <!-- <input type="text" placeholder="User name"> -->
-                 <input type="text" placeholder="Djeny" readonly>
-            </div>
-            <div class="groupe">
-                <label>Email</label>
-                <div class="icon">
-                    <input type="email" placeholder="djeny@email.com" readonly>
+                <div class="info-field bio-field">
+                    <label>Bio</label>
+                    <div class="info-value">Je suis un passionné de technologie avec un intérêt particulier pour le développement web et mobile. J'aime collaborer sur des projets innovants.</div>
                 </div>
             </div>
-            <div class="groupe largeur">
-                <label>A propos de moi</label>
-                <textarea placeholder="Je suis...." readonly></textarea>
-            </div>
-        </div>
-
- </div>
+        </section>
+    </div>
 </div>

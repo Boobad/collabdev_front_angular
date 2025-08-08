@@ -1,0 +1,339 @@
+<div class="settings-container" @fadeIn>
+  <!-- Navigation tabs -->
+  <nav class="tabs-nav">
+    <button [class.active]="activeTab === 'project'" (click)="setTab('project')">
+      <i class="fas fa-cog"></i> Paramètres
+    </button>
+    <button [class.active]="activeTab === 'features'" (click)="setTab('features')">
+      <i class="fas fa-list"></i> Fonctionnalités
+    </button>
+    <button [class.active]="activeTab === 'quiz'" (click)="setTab('quiz')">
+      <i class="fas fa-question-circle"></i> Quiz
+    </button>
+  </nav>
+
+  <!-- Project Settings Tab -->
+  <section class="settings-section" *ngIf="activeTab === 'project'" @fadeIn>
+    <h2><i class="fas fa-project-diagram"></i> Configuration du projet</h2>
+
+    <form [formGroup]="projectForm" (ngSubmit)="updateProject()">
+      <div class="form-group">
+        <label for="project-title">Titre du projet</label>
+        <input id="project-title" type="text" formControlName="title" class="form-control"
+               placeholder="Donnez un nom à votre projet">
+        @if (projectForm.get('title')?.invalid && projectForm.get('title')?.touched) {
+          <div class="error-hint">Le titre doit contenir au moins 3 caractères</div>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="project-description">Description</label>
+        <textarea id="project-description" formControlName="description" class="form-control"
+                  rows="4" placeholder="Décrivez les objectifs de votre projet"></textarea>
+        @if (projectForm.get('description')?.invalid && projectForm.get('description')?.touched) {
+          <div class="error-hint">La description doit contenir au moins 10 caractères</div>
+        }
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="project-deadline">Date d'échéance</label>
+          <input id="project-deadline" type="date" formControlName="deadline" class="form-control">
+        </div>
+
+        <div class="form-group">
+          <label for="project-category">Catégorie</label>
+          <select id="project-category" formControlName="category" class="form-control">
+            <option value="web">Application Web</option>
+            <option value="mobile">Application Mobile</option>
+            <option value="health">Santé</option>
+            <option value="education">Éducation</option>
+            <option value="finance">Finance</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="project-specs">Cahier des charges</label>
+        <div class="file-upload-container">
+          <label class="file-upload-label" for="file-upload">
+            <input id="file-upload" type="file" (change)="onFileSelected($event)" accept=".pdf,.doc,.docx,.md">
+            <div class="file-upload-box">
+              <i class="fas fa-cloud-upload-alt"></i>
+              @if (!selectedFile) {
+                <span>Glissez-déposez un fichier ou cliquez pour sélectionner</span>
+                <small>Formats acceptés: PDF, Word, Markdown</small>
+              }
+              @if (selectedFile) {
+                <div class="file-preview">
+                  <i class="fas fa-file-alt"></i>
+                  <div>
+                    <span class="file-name">{{ selectedFile.name }}</span>
+                    <small>{{ selectedFile.size / 1000 | number:'1.0-2' }} KB</small>
+                  </div>
+                </div>
+              }
+            </div>
+          </label>
+          <button type="button" (click)="uploadSpecs()" [disabled]="!selectedFile || uploadInProgress" class="btn-upload">
+            @if (uploadInProgress) {
+              <i class="fas fa-spinner fa-spin"></i>
+              <span>Envoi en cours...</span>
+            } @else {
+              <i class="fas fa-upload"></i>
+              <span>Uploader</span>
+            }
+          </button>
+        </div>
+
+        @if (uploadProgress > 0) {
+          <div class="upload-progress">
+            <div class="progress-bar" [style.width.%]="uploadProgress"></div>
+            <span>{{ uploadProgress }}%</span>
+          </div>
+        }
+
+        @if (uploadError) {
+          <div class="error-message">
+            <i class="fas fa-exclamation-triangle"></i> {{ uploadError }}
+          </div>
+        }
+      </div>
+
+      <div class="form-actions">
+        <button type="reset" class="btn btn-secondary">
+          <i class="fas fa-undo"></i> Réinitialiser
+        </button>
+        <button type="submit" class="btn btn-primary" [disabled]="!projectForm.valid || uploadInProgress">
+          <i class="fas fa-save"></i> Enregistrer les modifications
+        </button>
+      </div>
+    </form>
+  </section>
+
+  <!-- Features Management Tab -->
+  <section class="settings-section" *ngIf="activeTab === 'features'" @fadeIn>
+    <div class="section-header">
+      <h2><i class="fas fa-list-check"></i> Gestion des fonctionnalités</h2>
+      <button class="btn btn-icon" (click)="featureForm.reset()">
+        <i class="fas fa-plus"></i> Nouvelle fonctionnalité
+      </button>
+    </div>
+
+    <div class="features-container">
+      <form [formGroup]="featureForm" (ngSubmit)="addFeature()" class="feature-form">
+        <h3><i class="fas fa-plus-circle"></i> Ajouter une fonctionnalité</h3>
+
+        <div class="form-group">
+          <label for="feature-title">Titre</label>
+          <input id="feature-title" type="text" formControlName="title" class="form-control"
+                 placeholder="Nom de la fonctionnalité">
+        </div>
+
+        <div class="form-group">
+          <label for="feature-description">Description</label>
+          <textarea id="feature-description" formControlName="description" class="form-control"
+                    rows="3" placeholder="Décrivez cette fonctionnalité"></textarea>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="feature-deadline">Échéance</label>
+            <input id="feature-deadline" type="date" formControlName="deadline" class="form-control">
+          </div>
+
+          <div class="form-group">
+            <label for="feature-priority">Priorité</label>
+            <select id="feature-priority" formControlName="priority" class="form-control">
+              <option value="low">Basse</option>
+              <option value="medium">Moyenne</option>
+              <option value="high">Haute</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="feature-criteria">Critères d'acceptation</label>
+          <textarea id="feature-criteria" formControlName="criteria" class="form-control"
+                    rows="2" placeholder="Conditions pour valider cette fonctionnalité"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="feature-requirements">Exigences techniques</label>
+          <textarea id="feature-requirements" formControlName="requirements" class="form-control"
+                    rows="2" placeholder="Technologies et contraintes techniques"></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary" [disabled]="!featureForm.valid">
+          <i class="fas fa-plus"></i> Ajouter
+        </button>
+      </form>
+
+      <div class="features-list" @stagger>
+        @if (features.length === 0) {
+          <div class="empty-state">
+            <i class="fas fa-inbox"></i>
+            <h3>Aucune fonctionnalité ajoutée</h3>
+            <p>Commencez par ajouter votre première fonctionnalité</p>
+          </div>
+        }
+
+        @for (feature of features; track feature.id; let i = $index) {
+          <div class="feature-card" [class.feature-done]="feature.status === 'done'">
+            <div class="feature-header">
+              <div class="feature-status">
+                <select [(ngModel)]="feature.status" (change)="updateFeatureStatus(feature.id, feature.status)">
+                  <option value="todo">À faire</option>
+                  <option value="inProgress">En cours</option>
+                  <option value="done">Terminé</option>
+                </select>
+              </div>
+              <h3>{{ feature.title }}</h3>
+              <button class="btn-icon danger" (click)="removeFeature(feature.id)">
+                <i class="fas fa-trash"></i>
+              </button>
+            </div>
+
+            <div class="feature-body">
+              <p class="feature-description">{{ feature.description }}</p>
+
+              <div class="feature-meta">
+                <div>
+                  <i class="fas fa-calendar-day"></i>
+                  <span>Échéance: {{ feature.deadline | date:'dd/MM/yyyy' }}</span>
+                </div>
+                <div>
+                  <i class="fas fa-exclamation-circle"></i>
+                  <span>Critères: {{ feature.criteria }}</span>
+                </div>
+              </div>
+
+              <div class="feature-tech">
+                <h4><i class="fas fa-microchip"></i> Exigences techniques</h4>
+                <p>{{ feature.requirements }}</p>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- Quiz Tab -->
+  <section class="settings-section quiz-section" *ngIf="activeTab === 'quiz'" @fadeIn>
+    @if (!quizCompleted) {
+      <div class="quiz-intro">
+        <h2><i class="fas fa-star"></i> Trouvez votre rôle idéal</h2>
+        <p>Ce quiz vous aidera à identifier le rôle qui correspond le mieux à vos compétences et préférences dans le projet.</p>
+        <div class="quiz-stats">
+          <div class="stat-card">
+            <div class="stat-value">{{ quizQuestions.length }}</div>
+            <div class="stat-label">Questions</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value">{{ Object.keys(quizAnswers).length }}/{{ quizQuestions.length }}</div>
+            <div class="stat-label">Répondues</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="quiz-container" @stagger>
+        @for (question of quizQuestions; track question.id) {
+          <div class="quiz-question-card" [class.answered]="quizAnswers[question.id]">
+            <div class="question-header">
+              <span class="question-number">Question #{{ $index + 1 }}</span>
+              @if (quizAnswers[question.id]) {
+                <span class="answered-badge"><i class="fas fa-check"></i> Répondu</span>
+              }
+            </div>
+
+            <h3>{{ question.text }}</h3>
+
+            <div class="quiz-options">
+              @for (option of question.options; track option.value) {
+                <button class="quiz-option"
+                        [class.selected]="quizAnswers[question.id] === option.value"
+                        (click)="selectAnswer(question.id, option.value)">
+                  <div class="option-icon">
+                    <i class="fas {{ option.icon }}"></i>
+                  </div>
+                  <div class="option-text">{{ option.text }}</div>
+                </button>
+              }
+            </div>
+          </div>
+        }
+      </div>
+
+      <div class="quiz-actions">
+        <button class="btn btn-secondary" (click)="quizAnswers = {}">
+          <i class="fas fa-sync-alt"></i> Recommencer
+        </button>
+        <button class="btn btn-primary" (click)="submitQuiz()" [disabled]="!isQuizComplete()">
+          <i class="fas fa-check-circle"></i> Voir les résultats
+        </button>
+      </div>
+    }
+
+    @if (quizCompleted) {
+      <div class="quiz-results" @stagger>
+        <div class="results-header">
+          <h2><i class="fas fa-award"></i> Votre résultat</h2>
+          <p>Basé sur vos réponses, voici le rôle qui semble le mieux correspondre à votre profil :</p>
+        </div>
+
+        <div class="recommended-role">
+          <div class="role-badge" [style.background]="roleDetails[recommendedRole].color">
+            <i class="fas {{ roleDetails[recommendedRole].icon }}"></i>
+          </div>
+          <h3>{{ recommendedRole | titlecase }}</h3>
+          <p class="role-description">{{ roleDetails[recommendedRole].description }}</p>
+        </div>
+
+        <div class="all-roles">
+          <h3><i class="fas fa-chart-pie"></i> Comparaison des rôles</h3>
+
+          <div class="roles-grid">
+            @for (role of roles; track role) {
+              <div class="role-card" [style.border-color]="roleDetails[role].color">
+                <div class="role-header">
+                  <div class="role-icon" [style.background]="roleDetails[role].color">
+                    <i class="fas {{ roleDetails[role].icon }}"></i>
+                  </div>
+                  <h4>{{ role | titlecase }}</h4>
+                </div>
+
+                <div class="role-match">
+                  <div class="match-circle" [style.background.conicdeg]="getRoleMatch(role) * 3.6 + 'deg'">
+                    <span>{{ getRoleMatch(role) }}%</span>
+                  </div>
+                </div>
+
+                <ul class="role-skills">
+                  @for (skill of getRoleSkills(role); track skill) {
+                    <li>
+                      <i class="fas fa-check" [style.color]="roleDetails[role].color"></i>
+                      {{ skill }}
+                    </li>
+                  }
+                </ul>
+
+                @if (role === recommendedRole) {
+                  <div class="recommended-tag" [style.background]="roleDetails[role].color">
+                    <i class="fas fa-check"></i> Recommandé
+                  </div>
+                }
+              </div>
+            }
+          </div>
+        </div>
+
+        <div class="results-actions">
+          <button class="btn btn-primary" (click)="quizCompleted = false">
+            <i class="fas fa-redo"></i> Refaire le quiz
+          </button>
+        </div>
+      </div>
+    }
+  </section>
+</div>

@@ -1,5 +1,5 @@
 
-.title{
+.titles{
     margin: 20px 30px;
     font-size: 15px;
     color: black;
@@ -7,7 +7,20 @@
     justify-content: space-between;
     align-items: center;
 }
-.title span {
+.titles .ss{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.titles i{
+    font-size: 30px;
+    color: var(--primary-color);
+    cursor: pointer;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+   margin-right: 20px ;
+}
+.titles span {
     color: var(--primary-color);
     font-weight: 500;
     cursor: pointer;

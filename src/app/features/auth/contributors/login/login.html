@@ -57,8 +57,9 @@
       </div>
 
       <!-- Bouton de connexion -->
-      <button type="submit" class="login-btn" (click)="onLogin()">
-        Se connecter
+      <button type="submit" class="login-btn" (click)="onLogin()" [disabled]="isLoading">
+        <span *ngIf="!isLoading">Se connecter</span>
+        <div *ngIf="isLoading" class="spinner"></div>
       </button>
 
       <!-- Option SSO -->

@@ -25,6 +25,8 @@ import { TaskDetails } from './features/contributors/pages/task-details/task-det
 import { authGuard } from './core/auth-guard';
 import { Oauth2RedirectComponent } from './core/oauth2-redirect/oauth2-redirect';
 import { ForgetPassword } from './features/auth/contributors/forget-password/forget-password';
+import { Coinssolde } from './features/contributors/pages/coinssolde/coinssolde';
+import { UpadateProfil } from './shared/ui-components/upadate-profil/upadate-profil';
 
 
 export const routes: Routes = [
@@ -40,8 +42,15 @@ export const routes: Routes = [
       { path: 'demarrage-quiz', component: DemarrageQuiz },
       { path: 'quiz', component: Quiz },
       { path: 'workspace-projetc-resource', component: WorkspaceProjectResources },
+       { path: 'coins', component: Coinssolde },
+        {path: 'update-profil', component: UpadateProfil },
+
+             { path: 'badge-recompense', component: RecompenseBadge },
        { path: 'details', component: DetailsPages },
       { path: 'workspace-project', component: WorkspaceProject },
+       { path: 'projets-recommandes', component: ProjetsRecommandes },
+       { path: 'formulaire-participation', component: FormulaireParticipation },
+        { path: 'voir-participation', component: ListeDemandeParticipation },
       { path: '', redirectTo: 'home', pathMatch: 'full' }
     ]
   },
@@ -60,7 +69,7 @@ export const routes: Routes = [
 
       { path: 'submit-contribution', component: SubmitContribution },
       { path: 'task-details', component: TaskDetails },
-      { path: 'coins', component: Coins },
+
       { path: 'parametre-coins', component: ParametrageCoins },
       { path: 'badge-recompense', component: RecompenseBadge },
       { path: 'hist_contribution', component: PageContribution },
@@ -68,7 +77,7 @@ export const routes: Routes = [
       { path: 'list-demande-participation', component: ListeDemandeParticipation },
 
       { path: 'gestion-fonctionnalite', component : GestionFonctionnalite },
-      { path: 'test/:role', component: FormulaireParticipation },
+
     ]
   }
 ,

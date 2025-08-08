@@ -4,7 +4,7 @@
     box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.1);
     background-color: white;
     border-radius: 10px;
-    
+
 }
 
 .card .titres{
@@ -26,7 +26,7 @@
 }
 
 .card .titres .coins{
-    
+
     width: auto;
     height: 30px;
     display: flex;
@@ -48,10 +48,20 @@
     font-size: 1.2rem;
     color: #333;
     margin-bottom: 10px;
+   
 }
 .info p{
-    font-size: 0.9rem;
+    font-size: 0.7rem;
     color: #666;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    /* Fallback pour les navigateurs non-WebKit */
+    max-height: 4.5em; /* 1.5em par ligne × 3 lignes */
+    line-height: 1.5em;
     margin-bottom: 20px;
 }
 
@@ -108,7 +118,7 @@
     align-items: center;
     justify-content: center;
     width: 100%;
-   
+
 }
 .buttons button{
 /* ✅ CORRECT */

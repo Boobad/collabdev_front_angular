@@ -1,0 +1,45 @@
+<div class="update-profile-container">
+  <div class="profile-card">
+    <button class="back-button" (click)="goBack()">
+      <i class="fas fa-arrow-left"></i> Retour au profil
+    </button>
+
+    <form class="profile-form">
+      <h2 class="form-title">Modifier mon profil</h2>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="username">Nom d'utilisateur</label>
+          <div class="input-container">
+            <i class="fas fa-user input-icon"></i>
+            <input type="text" id="username" placeholder="Votre nom" class="modern-input" />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="email">Email</label>
+          <div class="input-container">
+            <i class="fas fa-envelope input-icon"></i>
+            <input type="email" id="email" placeholder="votre@email.com" class="modern-input" />
+          </div>
+        </div>
+
+        <div class="form-group full-width">
+          <label for="about">À propos de moi</label>
+          <div class="input-container">
+            <i class="fas fa-pencil-alt input-icon"></i>
+            <textarea id="about" rows="4" placeholder="Décrivez-vous en quelques mots..." class="modern-input"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="button" class="cancel-btn" (click)="goBack()">Annuler</button>
+        <button type="submit" class="save-btn" (click)="saveProfile()">
+          <span class="btn-text">Enregistrer</span>
+          <i class="fas fa-check btn-icon"></i>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

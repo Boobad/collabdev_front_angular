@@ -1,249 +1,300 @@
-body {
-  font-family: Arial, sans-serif;
-  background: #f9f9f9;
-  margin: 0;
-  padding: 20px 80px; 
-  color: #333;
+:root {
+  --primary: #4361ee;
+  --secondary: #3a0ca3;
+  --success: #4cc9f0;
+  --danger: #f72585;
+  --warning: #f8961e;
+  --light: #f8f9fa;
+  --dark: #212529;
+  --gray: #6c757d;
+  --border-radius: 8px;
+  --transition: all 0.2s ease;
 }
 
 
-/* Titre */
-.title {
-  text-align: center;
-  background: linear-gradient(to right, #0047FF, #4A90E2); 
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+/* Header */
+.header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 2rem;
+  gap: 1rem;
+}
+
+.back-button {
+  background: var(--primary);
   color: white;
-  padding: 15px;
-  border-radius: 8px;
-  margin: 0 0 20px 0;
-  font-size: 20px;
-  font-weight: bold;
+  border: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transition: var(--transition);
 }
 
-/* Conteneur stylé */
+.back-button:hover {
+  background: var(--secondary);
+  transform: translateX(-3px);
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: 600;
+
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: black;
+}
+
+/* Search */
+.search-container {
+  margin-bottom: 2rem;
+}
+
 .search-bar {
-  margin-bottom: 20px; 
+  display: flex;
+  align-items: center;
+  background: white;
+  border-radius: var(--border-radius);
+  padding: 0.5rem 1rem;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  gap: 0.5rem;
+}
+
+.search-bar input {
+  flex: 1;
+  border: none;
+  outline: none;
+  padding: 0.5rem;
+  font-size: 1rem;
+}
+
+.search-bar select {
+  border: none;
+  background: var(--light);
+  padding: 0.5rem;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+}
+
+/* Candidates List */
+.candidates-list {
+  display: grid;
+  gap: 1rem;
+}
+
+.candidate-card {
+  background: white;
+  border-radius: var(--border-radius);
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 10px;
-  background: #f2f3f5; 
-  border-radius: 12px;
-  padding: 8px;
-  border: 1px solid #e0e0e0;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  transition: var(--transition);
 }
 
-/* Champ recherche avec icône loupe */
-.search-bar input {
+.candidate-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.candidate-info {
+  display: flex;
   flex: 1;
-  padding: 10px 15px 10px 38px; /* espace à gauche pour la loupe */
-  border: 1px solid #ccc;
-  border-radius: 12px;
-  font-size: 14px;
-  outline: none;
-  background: white url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' fill='gray' viewBox='0 0 24 24'><path d='M10 2a8 8 0 105.293 14.293l4.707 4.707 1.414-1.414-4.707-4.707A8 8 0 0010 2zm0 2a6 6 0 110 12A6 6 0 0110 4z'/></svg>") no-repeat 12px center;
-  background-size: 16px; /* taille icône */
+  justify-content: space-between;
 }
 
-
-/* Sélecteur de statut */
-.search-bar select.filter {
-  padding: 10px 40px 10px 15px; /* espace à droite pour la flèche */
-  border-radius: 25px;
-  border: 1px solid #ccc;
-  background: white;
-  font-weight: bold;
-  font-size: 14px;
-  color: black;
-  cursor: pointer;
-  outline: none;
-
-  /* enlève la flèche native */
-  appearance: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-
-  /* ajoute flèche personnalisée */
-  background-image: url("data:image/svg+xml;utf8,<svg fill='black' height='16' viewBox='0 0 24 24' width='16' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>");
-  background-repeat: no-repeat;
-  background-position: right 12px center; /* positionne la flèche */
-  background-size: 16px;
+.main-info h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
 }
 
-/* Responsive */
-@media (max-width: 768px) {
-  .search-bar {
-    flex-direction: column;
-    align-items: stretch;
-  }
-  .search-bar input,
-  .search-bar select {
-    width: 100%;
-  }
+.main-info p {
+  color: var(--gray);
+  margin-bottom: 0.25rem;
 }
 
+.main-info small {
+  color: #adb5bd;
+  font-size: 0.8rem;
+}
 
+.status-info {
+  text-align: right;
+  margin-left: 1rem;
+}
 
-/* Liste des candidats */
-.candidats {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
+.score {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
 }
-.card {
-  background: white;
-  padding: 15px;
-  border-radius: 12px;
-  border: 1px solid #ddd;
-  position: relative;
+
+.status-badge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 1rem;
+  font-size: 0.8rem;
+  font-weight: 500;
 }
-.card .name { font-weight: bold; font-size: 16px; }
-.card .email { font-size: 14px; color: #555; }
-.card .date { font-size: 13px; color: #777; }
-.card .status { font-weight: bold; margin: 5px 0; }
-.status.orange { color: #f59e0b; }
-.status.blue { color: #3b82f6; }
-.status.red { color: #ef4444; }
-.card .score {
-   position: absolute;
-  top: 15px;
-  right: 200px; /* reculé pour laisser plus d’espace */
-  font-weight: bold;
-  font-size: 14px;
+
+.pending {
+  background: #fff3bf;
+  color: #f59f00;
 }
+
+.approved {
+  background: #d3f9d8;
+  color: #2b8a3e;
+}
+
+.rejected {
+  background: #ffd8d8;
+  color: #c92a2a;
+}
+
+/* Actions */
 .actions {
-  position: absolute;
-  top: 12px;
-  right: 15px;
   display: flex;
-  gap: 10px;
+  gap: 0.5rem;
+  margin-left: 1rem;
 }
 
-/* Boutons */
-button {
+.actions button {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
   border: none;
+  display: grid;
+  place-items: center;
   cursor: pointer;
-  font-size: 14px;
-  font-weight: bold;
-  padding: 8px 14px;
-  border-radius: 20px;
+  transition: var(--transition);
 }
-.valider {
-  background: linear-gradient(to right, #2563EB, #1D4ED8);
+
+.btn-success {
+  background: var(--success);
   color: white;
-  border: none;
-  padding: 8px 14px;
-  border-radius: 20px;
-  cursor: pointer;
-  transition: all 0.3s ease;
 }
-.valider:hover {
-  box-shadow: 0 0 12px rgba(37, 99, 235, 0.6); /* halo bleu */
-  transform: scale(1.05); /* grossit légèrement */
+
+.btn-success:hover {
+  background: #3aa8d8;
 }
-.valider:active {
-  transform: scale(0.95); /* effet clic */
-}
-.rejeter {
-  background: #DC2626;
+
+.btn-danger {
+  background: var(--danger);
   color: white;
-  border: none;
-  padding: 8px 14px;
-  border-radius: 20px;
-  cursor: pointer;
-  transition: all 0.3s ease;
 }
-.rejeter:hover {
-  box-shadow: 0 0 12px rgba(220, 38, 38, 0.6); /* halo rouge */
-  transform: scale(1.05); /* grossit légèrement */
+
+.btn-danger:hover {
+  background: #e3176a;
 }
-.rejeter:active {
-  transform: scale(0.95); /* effet clic */
-}
-.notifier {
-  background: #F97316;
+
+.btn-notify {
+  background: var(--warning);
   color: white;
-  border: none;
-  padding: 8px 14px;
-  border-radius: 20px;
-  cursor: pointer;
-  transition: all 0.3s ease;
   position: relative;
-  animation: pulse 1.5s infinite; /* ✅ animation continue */
 }
 
-/* Effet hover : halo plus fort */
-.notifier:hover {
-  box-shadow: 0 0 15px rgba(249, 115, 22, 0.7);
-  transform: scale(1.05);
+.btn-notify:hover {
+  background: #e68a19;
 }
 
-.notifier:active {
-  transform: scale(0.95);
-}
-.notif-count {
-  background: red;
+.badge {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background: var(--danger);
   color: white;
   border-radius: 50%;
-  padding: 2px 6px;
-  font-size: 12px;
-  margin-left: 4px;
-}
-
-/* Navigation bas de page */
-.footer-nav {
-  display: flex;
-  justify-content: space-between; /* bouton à gauche, pagination à droite */
-  align-items: center;
-  margin-top: 30px;
-  padding: 0 40px;
-}
-
-/* Bouton Retour */
-.back {
-  background: linear-gradient(to right, #0047FF, #4A90E2); 
-  color: white;
-  font-size: 14px;
-  font-weight: bold;
-  padding: 10px 25px;
-  border-radius: 20px;
-  border: none;
-  cursor: pointer;
+  width: 20px;
+  height: 20px;
+  font-size: 0.7rem;
+  display: grid;
+  place-items: center;
 }
 
 /* Pagination */
 .pagination {
   display: flex;
-  gap: 8px;
-}
-.pagination button {
-  padding: 8px 12px;
-  border-radius: 8px;
-  border: 1px solid #ddd;
-  background: #f3f3f3;
-  cursor: pointer;
-}
-.pagination .active {
-  background: #3b82f6;
-  color: white;
-  font-weight: bold;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 2rem;
 }
 
-/* 🎯 Responsive : mobile & tablette */
+.pagination button {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid #dee2e6;
+  background: white;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.pagination button:hover:not(:disabled) {
+  background: var(--primary);
+  color: white;
+  border-color: var(--primary);
+}
+
+.pagination button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.pagination span {
+  width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.pagination span:hover {
+  background: #e9ecef;
+}
+
+.pagination .active {
+  background: var(--primary);
+  color: white;
+}
+
+/* Responsive */
 @media (max-width: 768px) {
-  .search-bar {
+  .candidate-card {
     flex-direction: column;
-    align-items: center;
+    align-items: flex-start;
+    gap: 1rem;
   }
-  .search-bar input {
-    width: 90%;
-  }
-  .footer-nav {
+
+  .candidate-info {
+    width: 100%;
     flex-direction: column;
-    gap: 15px;
-    padding: 0;
   }
-  .pagination {
-    justify-content: center;
+
+  .status-info {
+    width: 100%;
+    text-align: left;
+    margin: 1rem 0 0 0;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .actions {
+    width: 100%;
+    justify-content: flex-end;
+    margin: 1rem 0 0 0;
   }
 }

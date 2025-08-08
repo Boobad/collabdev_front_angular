@@ -10,19 +10,19 @@
     <ul>
       <li  routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"><a routerLink="/home" ><i class="fas fa-home"></i> <span *ngIf="!isCollapsed">Home</span></a></li>
       <li routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"><a routerLink="/projects"><i class="fas fa-project-diagram"></i> <span *ngIf="!isCollapsed">Mes Projets</span></a></li>
-      <li><a routerLink="/tasks"><i class="fas fa-tasks"></i> <span *ngIf="!isCollapsed">Tâches</span></a></li>
-      <li><a routerLink="/collaborators"><i class="fas fa-users"></i> <span *ngIf="!isCollapsed">Collaborateurs</span></a></li>
-      <li><a routerLink="/coins"><i class="fas fa-coins"></i> <span *ngIf="!isCollapsed">Mes Coins</span></a></li>
-      <li><a routerLink="/badges"><i class="fas fa-award"></i> <span *ngIf="!isCollapsed">Badges</span></a></li>
-      <li><a href="#"><i class="fas fa-cog"></i> <span *ngIf="!isCollapsed">Paramètres</span></a></li>
+
+      <li routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"><a routerLink="/collaborators"><i class="fas fa-users"></i> <span *ngIf="!isCollapsed">Collaborateurs</span></a></li>
+      <li routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"><a routerLink="/coins"><i class="fas fa-coins"></i> <span *ngIf="!isCollapsed">Mes Coins</span></a></li>
+      <li routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"><a routerLink="/badge-recompense"><i class="fas fa-award"></i> <span *ngIf="!isCollapsed">Badges</span></a></li>
+      <li routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"><a href="#"><i class="fas fa-cog"></i> <span *ngIf="!isCollapsed">Paramètres</span></a></li>
     </ul>
   </nav>
 
   <div class="sidebar-footer" >
     <div class="user-profile">
-      <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="User">
-      <div class="user-info" *ngIf="!isCollapsed">
-        <span class="user-name">Adama Dembele</span>
+      <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="User" routerLink="/profil-user">
+      <div class="user-info" *ngIf="!isCollapsed && user">
+        <span class="user-name">{{ user.prenom }} {{ user.nom }}</span>
         <span class="user-role">Porteur de projet</span>
         <div class="user-level">
           <div class="level-progress">

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router, RouterLink, RouterOutlet } from '@angular/router';
 import { RouterModule } from '@angular/router'; // ← nécessaire pour routerLink & routerLinkActive
 import { AuthService } from '../../core/auth-service';
@@ -11,7 +11,16 @@ import { AuthService } from '../../core/auth-service';
   styleUrl: './sidebar.css'
 })
 
-export class Sidebar {
+export class Sidebar implements OnInit {
+
+  user: any = null;
+
+  ngOnInit(): void {
+    const userData = localStorage.getItem('user');
+    if (userData) {
+      this.user = JSON.parse(userData);
+    }
+  }
 
   isCollapsed = false;
 

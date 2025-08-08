@@ -1,0 +1,170 @@
+@keyframes pulse {
+  0% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.1); opacity: 0.8; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
+}
+
+.dialog-container {
+  padding: 30px;
+  border-radius: 20px;
+  max-width: 380px;
+  text-align: center;
+  font-family: 'Poppins', sans-serif;
+  background: white;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  border: 1px solid rgba(255, 215, 0, 0.3);
+  overflow: hidden;
+  position: relative;
+}
+
+.dialog-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 8px;
+  background: linear-gradient(90deg, #FFD700, #FFA500);
+}
+
+.coin-animation {
+  position: relative;
+  height: 80px;
+  margin-bottom: 20px;
+}
+
+.coin {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(135deg, #FFD700, #FFA500);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: bold;
+  box-shadow: 0 4px 8px rgba(255, 215, 0, 0.4);
+}
+
+.coin:nth-child(1) {
+  left: 30%;
+  top: 0;
+  animation: float 3s ease-in-out infinite;
+}
+
+.coin:nth-child(2) {
+  left: 50%;
+  top: 20px;
+  animation: float 3.5s ease-in-out infinite;
+}
+
+.coin:nth-child(3) {
+  left: 70%;
+  top: 10px;
+  animation: float 4s ease-in-out infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.delay-1 {
+  animation-delay: 0.3s;
+}
+
+.delay-2 {
+  animation-delay: 0.6s;
+}
+
+h2 {
+  color: #333;
+  font-size: 1.5rem;
+  margin-bottom: 25px;
+  font-weight: 700;
+  position: relative;
+}
+
+.content {
+  margin-bottom: 30px;
+}
+
+p {
+  margin: 15px 0;
+  font-size: 1.1rem;
+}
+
+.required span {
+  color: #FF5722;
+  font-weight: 600;
+}
+
+.current span {
+  color: #4CAF50;
+  font-weight: 600;
+}
+
+.difference {
+  background: #FFF9C4;
+  padding: 12px;
+  border-radius: 10px;
+  margin-top: 25px;
+  font-size: 1rem;
+  color: #5D4037;
+}
+
+.actions {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+}
+
+button {
+  border: none;
+  padding: 8px 8px;
+  border-radius: 50px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 1rem;
+}
+
+.close-btn {
+  background: #f5f5f5;
+  color: #666;
+}
+
+.close-btn:hover {
+  background: #e0e0e0;
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.buy-btn {
+  background: linear-gradient(135deg, #FFC107, #FF9800);
+  color: white;
+  box-shadow: 0 4px 15px rgba(255, 152, 0, 0.4);
+}
+
+.buy-btn:hover {
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 8px 25px rgba(255, 152, 0, 0.5);
+  background: linear-gradient(135deg, #FFCA28, #FB8C00);
+}
+
+button i {
+  transition: transform 0.3s ease;
+}
+
+button:hover i {
+  transform: rotate(15deg);
+}
