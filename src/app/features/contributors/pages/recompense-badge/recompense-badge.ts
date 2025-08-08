@@ -7,4 +7,6 @@ import { Navebar } from '../../../../shared/navebar/navebar';
   templateUrl: './recompense-badge.html',
   styleUrl: './recompense-badge.css',
 })
-export class RecompenseBadge {}
+export class RecompenseBadge {
+  
+}
