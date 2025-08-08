@@ -35,6 +35,7 @@ export const routes: Routes = [
     component: MainLayout,
     canActivate: [authGuard],
     children: [
+      
       { path: 'home', component: Home },
       { path: 'projects', component: Projects },
       { path: 'profil-user', component: ProfilUser },

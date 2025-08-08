@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
 
 @Component({
@@ -7,6 +7,8 @@ import { Router } from '@angular/router';
   templateUrl: './projects-recommander.html',
   styleUrl: './projects-recommander.css'
 })
+
+
 export class ProjectsRecommander {
   constructor(private router: Router) {}
 
@@ -14,4 +16,11 @@ export class ProjectsRecommander {
     // Redirige vers une page de confirmation (à adapter selon votre routing)
     this.router.navigate(['/formulaire-participation']);
   }
+
+  @Input() category!: string;
+  @Input() coin!: string;
+  @Input() titleProject!: string;
+  @Input() description!: string;
+  @Input() langages!: string[];
+  
 }

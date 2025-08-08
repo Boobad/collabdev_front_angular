@@ -1,35 +1,22 @@
 <div class="card">
     <div class="titres">
         <div class="category">
-            SANTE
+            {{ domaine }}
         </div>
         <div class="coins">
             <i class="fas fa-coins"></i>
-            <span>100</span>
+            <span>{{ coin }}</span>
         </div>
     </div>
     <div class="divider"></div>
     <div class="info">
-        <h1>Plateforme de télémédecine</h1>
-        <p>Une solution innovante pour des consultations médicales à distance.Application mobile pour consultations
-          médicales à distance avec suivi des 
-          patients.
-        </p>
+        <h1>{{ titleProject }}</h1>
+        <p>{{ description }}</p>
     </div>
     <div class="details">
-        <div class="langages">
-            
-            <span>Python</span>
+        <div class="langages" *ngFor="let langage of langages">
+            <span>{{ langage }}</span>
         </div>
-        <div class="langages">
-            
-            <span>mobile</span>
-        </div>
-        <div class="langages">
-            
-            <span>Aws</span>
-        </div>
-        
     </div>
     <div class="divider"></div>
    

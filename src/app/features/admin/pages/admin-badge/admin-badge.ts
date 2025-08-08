@@ -1,9 +1,8 @@
 import { Component } from '@angular/core';
-import { Navebar } from '../../components/shared/navebar/navebar';
 
 @Component({
   selector: 'app-admin-badge',
-  imports: [Navebar],
+  imports: [],
   templateUrl: './admin-badge.html',
   styleUrl: './admin-badge.css'
 })
