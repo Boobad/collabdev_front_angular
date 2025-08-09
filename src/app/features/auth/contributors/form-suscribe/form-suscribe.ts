@@ -110,7 +110,7 @@ export class FormSuscribe {
     if (!this.user.telephone) {
       this.errors.telephone = 'Le téléphone est obligatoire';
       isValid = false;
-    } else if (!/^[0-9]{10}$/.test(this.user.telephone)) {
+    } else if (!/^[0-9]{8}$/.test(this.user.telephone)) {
       this.errors.telephone = 'Le numéro de téléphone doit contenir 10 chiffres';
       isValid = false;
     }

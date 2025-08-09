@@ -1,59 +1,58 @@
 <div class="profile-container">
-    <!-- Section de gauche - Profil -->
-    <div class="profile-sidebar">
-        <div class="profile-avatar-container">
-            <img [src]="profileImage" alt="Photo de profil" class="profile-avatar">
-            <button class="avatar-edit-btn" (click)="triggerFileInput()">
-                <i class="fa-solid fa-camera"></i>
-            </button>
-        </div>
-
-        <h2 class="profile-username">Djeny</h2>
-        <p class="profile-title">Membre depuis 2023</p>
-
-        <div class="profile-stats">
-            <div class="stat-item">
-                <i class="fa-solid fa-diagram-project"></i>
-                <span>12 Projets</span>
-            </div>
-            <div class="stat-item">
-                <i class="fa-solid fa-users"></i>
-                <span>5 Collaborations</span>
-            </div>
-        </div>
-
-        <button class="edit-profile-btn" routerLink="/update-profil">
-            <i class="fa-solid fa-pen-to-square"></i> Modifier le profil
-        </button>
+  <!-- Section gauche -->
+  <div class="profile-sidebar">
+    <div class="profile-avatar-container">
+      <img [src]="profileImage" alt="Photo de profil" class="profile-avatar">
+      <button class="avatar-edit-btn" (click)="triggerFileInput()">
+        <i class="fa-solid fa-camera"></i>
+      </button>
     </div>
 
-    <!-- Section de droite - Contenu -->
-    <div class="profile-content">
-        <!-- Section À propos -->
-        <section class="profile-section">
-            <div class="section-header">
-                <div class="section-icon">
-                    <i class="fa-solid fa-user"></i>
-                </div>
-                <h3>À propos de moi</h3>
-            </div>
+    <h2 class="profile-username">{{ username }}</h2>
+    <p class="profile-title">Membre depuis {{ membresDepuis }}</p>
 
-            <div class="about-content">
-                <div class="info-field">
-                    <label>Nom d'utilisateur</label>
-                    <div class="info-value">Djeny</div>
-                </div>
-
-                <div class="info-field">
-                    <label>Email</label>
-                    <div class="info-value">djeny@email.com</div>
-                </div>
-
-                <div class="info-field bio-field">
-                    <label>Bio</label>
-                    <div class="info-value">Je suis un passionné de technologie avec un intérêt particulier pour le développement web et mobile. J'aime collaborer sur des projets innovants.</div>
-                </div>
-            </div>
-        </section>
+    <div class="profile-stats">
+      <div class="stat-item">
+        <i class="fa-solid fa-diagram-project"></i>
+        <span>12 Projets</span>
+      </div>
+      <div class="stat-item">
+        <i class="fa-solid fa-users"></i>
+        <span>5 Collaborations</span>
+      </div>
     </div>
+
+    <button class="edit-profile-btn" routerLink="/update-profil">
+      <i class="fa-solid fa-pen-to-square"></i> Modifier le profil
+    </button>
+  </div>
+
+  <!-- Section droite -->
+  <div class="profile-content">
+    <section class="profile-section">
+      <div class="section-header">
+        <div class="section-icon">
+          <i class="fa-solid fa-user"></i>
+        </div>
+        <h3>À propos de moi</h3>
+      </div>
+
+      <div class="about-content">
+        <div class="info-field">
+          <label>Nom d'utilisateur</label>
+          <div class="info-value">{{ username }}</div>
+        </div>
+
+        <div class="info-field">
+          <label>Email</label>
+          <div class="info-value">{{ email }}</div>
+        </div>
+
+        <div class="info-field bio-field">
+          <label>Bio</label>
+          <div class="info-value">{{ bio }}</div>
+        </div>
+      </div>
+    </section>
+  </div>
 </div>
