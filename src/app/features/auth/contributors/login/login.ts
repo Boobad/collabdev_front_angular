@@ -6,6 +6,8 @@ import { OauthService } from '../../../../core/oauth-service';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 
+declare const google: any;
+
 @Component({
   selector: 'app-login',
   standalone: true,
@@ -29,8 +31,41 @@ export class Login implements OnInit {
     if (this.authService.isLoggedIn()) {
       this.router.navigate(['/home']);
     }
+
+    // Initialise le bouton Google ID
+    window.onload = () => {
+      google.accounts.id.initialize({
+        client_id:  '425444552086-3pd70ibsfafbg9gg4rc1s0iqngtadndf.apps.googleusercontent.com',
+        callback: (response: any) => this.handleGoogleResponse(response),
+      });
+      google.accounts.id.renderButton(
+        document.getElementById('googleBtn'),
+        { theme: 'outline', size: 'large' }
+      );
+    }; 
+
   }
 
+
+   
+
+   handleGoogleResponse(response: any) {
+    const idToken = response.credential;
+    this.isLoading = true;
+    this.authService.loginWithGoogleToken(idToken).subscribe({
+      next: (res) => {
+        this.isLoading = false;
+        this.authService.saveToken(res.token);
+        this.router.navigate(['/home']);
+      },
+      error: (err) => {
+        this.isLoading = false;
+        alert('Connexion Google échouée');
+        console.error(err);
+      }
+    });
+  }  
+  
    onLogin(): void {
     this.isLoading = true; // Active le loading
 
@@ -56,9 +91,7 @@ export class Login implements OnInit {
     });
   }
 
-  loginWithGoogle() {
-    this.oauthService.loginWithGoogle();
-  }
+  
 
   loginWithGithub() {
     window.location.href = 'http://localhost:8080/oauth2/authorization/github';
