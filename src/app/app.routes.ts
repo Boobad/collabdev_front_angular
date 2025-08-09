@@ -27,6 +27,7 @@ import { Oauth2RedirectComponent } from './core/oauth2-redirect/oauth2-redirect'
 import { ForgetPassword } from './features/auth/contributors/forget-password/forget-password';
 import { Coinssolde } from './features/contributors/pages/coinssolde/coinssolde';
 import { UpadateProfil } from './shared/ui-components/upadate-profil/upadate-profil';
+import { ResetPassword } from './features/auth/contributors/reset-password/reset-password';
 
 
 export const routes: Routes = [
@@ -63,6 +64,7 @@ export const routes: Routes = [
       { path: 'login', loadComponent: () => import('./features/auth/contributors/login/login').then(m => m.Login) },
       { path: 'logAdmin', component: LoginAdmin },
       { path: 'suscribe', component: FormSuscribe },
+      { path: 'reset', component: ResetPassword },
        { path: 'forgot', component: ForgetPassword },
       { path: 'oauth2-redirect', component: Oauth2RedirectComponent },
 
