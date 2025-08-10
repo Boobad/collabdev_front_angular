@@ -169,7 +169,7 @@
   color: #3c4043;
   cursor: pointer;
   transition: all 0.2s ease;
-  margin-bottom: 25px;
+  margin-bottom: 10px;
 }
 
 .google-login-btn:hover {
@@ -186,6 +186,48 @@
   width: 20px;
   height: 20px;
   margin-right: 12px;
+}
+/* Styles pour le bouton GitHub */
+.github-login-btn {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+  background: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 500;
+  color: #24292e;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-bottom: 25px;
+}
+
+.github-login-btn:hover {
+  background: #f6f8fa;
+  border-color: #d0d7de;
+  transform: translateY(-1px);
+}
+
+.github-login-btn:active {
+  transform: translateY(0);
+}
+
+.github-icon {
+  width: 20px;
+  height: 20px;
+  margin-right: 12px;
+  fill: #24292e;
+}
+.sou {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  color: #666;
+  margin: 10px 0;
+  justify-content: space-between;
+  flex-direction: column;
 }
 
 .form-group {
