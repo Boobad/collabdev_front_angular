@@ -9,7 +9,7 @@ import { CommonModule } from "@angular/common";
 
 @Component({
   selector: 'app-home',
-  standalone: true,
+ 
   imports: [
     Banniere,
     CardProjectActif,

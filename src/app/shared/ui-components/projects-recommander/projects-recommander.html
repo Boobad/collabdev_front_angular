@@ -1,34 +1,62 @@
-<div class="card">
-    <div class="titres">
-        <div class="category">
-            SANTE
-        </div>
-        <div class="coins">
-            <i class="fas fa-coins"></i>
-            <span>{{ projectCoins }}</span>
-        </div>
-    </div>
-    <div class="divider"></div>
-    <div class="info">
-        <h1>Plateforme de télémédecine</h1>
-        <p>Une solution innovante pour des consultations médicales à distance. Application mobile pour consultations
-          médicales à distance avec suivi des patients.
-        </p>
-    </div>
-    <div class="details">
-        <div class="langages">
-            <span>Python</span>
-        </div>
-        <div class="langages">
-            <span>mobile</span>
-        </div>
-        <div class="langages">
-            <span>Aws</span>
-        </div>
-    </div>
-    <div class="divider"></div>
+<div class="projects-container">
+  <!-- Message de chargement -->
+  <div *ngIf="isLoading" class="loading-message">
+    <mat-spinner diameter="50"></mat-spinner>
+    <p>Chargement des projets en attente...</p>
+  </div>
 
-    <div class="buttons">
-        <button (click)="onJoinProject()">Rejoindre le projet</button>
+  <!-- Message d'erreur -->
+  <div *ngIf="error" class="error-message">
+    <mat-icon>error_outline</mat-icon>
+    <p>{{ error }}</p>
+    <button mat-button (click)="fetchProjects()">Réessayer</button>
+  </div>
+
+  <!-- Liste des projets (utilisez filteredProjects au lieu de projects) -->
+  <div *ngIf="!isLoading && !error" class="projects-grid">
+    <div *ngFor="let project of filteredProjects" class="card"> <!-- Changé ici -->
+      <div class="titres">
+        <span class="category {{getDomainClass(project.domaine)}}">
+          {{ project.domaine || 'N/A' }}
+        </span>
+        <span class="coins">
+          <mat-icon>monetization_on</mat-icon>
+          <span>{{ project.coinsRequired || 100 }}</span> <!-- Utilisez la valeur du projet -->
+        </span>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="info">
+        <h1>{{ project.titre || 'Pas de titre' }}</h1>
+        <p class="description">{{ project.description || 'Pas de description disponible' }}</p>
+      </div>
+
+      <div class="details">
+        <span class="langages" *ngIf="project.niveau">
+          {{ project.niveau }}
+        </span>
+        <span class="langages" *ngIf="project.secteur">
+          {{ project.secteur }}
+        </span>
+        <span class="langages status"> <!-- Ajout du statut -->
+          {{ project.status }}
+        </span>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="buttons">
+        <button (click)="onJoinProject(project.id, project.coinsRequired || 400)">
+          Rejoindre le projet
+        </button>
+      </div>
     </div>
+
+    <!-- Message si aucun projet (utilisez filteredProjects) -->
+    <div *ngIf="filteredProjects.length === 0 && !isLoading && !error" class="no-projects">
+      <mat-icon>info_outline</mat-icon>
+      <p>Aucun projet en attente disponible</p>
+    </div>
+  </div>
 </div>

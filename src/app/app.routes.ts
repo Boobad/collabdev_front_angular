@@ -50,7 +50,7 @@ export const routes: Routes = [
        { path: 'details/:id', component: DetailsPages },
       { path: 'workspace-project', component: WorkspaceProject },
        { path: 'projets-recommandes', component: ProjetsRecommandes },
-       { path: 'formulaire-participation', component: FormulaireParticipation },
+       { path: 'formulaire-participation/:id', component: FormulaireParticipation },
         { path: 'voir-participation', component: ListeDemandeParticipation },
       { path: '', redirectTo: 'home', pathMatch: 'full' }
     ]
