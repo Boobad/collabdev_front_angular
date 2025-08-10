@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../../core/auth-service';
-import { OauthService } from '../../../../core/oauth-service';
+
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { Subject, takeUntil } from 'rxjs';
@@ -26,7 +26,7 @@ export class Login implements OnInit, OnDestroy {
 
   constructor(
     private authService: AuthService,
-    private oauthService: OauthService,
+   
     private router: Router
   ) {}
 
@@ -102,34 +102,34 @@ export class Login implements OnInit, OnDestroy {
       });
   }
 
-  loginWithGithub(): void {
-    this.isLoading = true;
-    // Utilisez le service OAuth plutôt qu'une redirection directe
-    this.oauthService.initiateGithubLogin()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (url) => {
-          window.location.href = url || 'http://localhost:8080/oauth2/authorization/github';
-        },
-        error: (err) => {
-          this.handleLoginError('Connexion GitHub échouée', err);
-        }
-      });
-  }
+  // loginWithGithub(): void {
+  //   this.isLoading = true;
+  //   // Utilisez le service OAuth plutôt qu'une redirection directe
+  //   this.oauthService.initiateGithubLogin()
+  //     .pipe(takeUntil(this.destroy$))
+  //     .subscribe({
+  //       next: (url) => {
+  //         window.location.href = url || 'http://localhost:8080/oauth2/authorization/github';
+  //       },
+  //       error: (err) => {
+  //         this.handleLoginError('Connexion GitHub échouée', err);
+  //       }
+  //     });
+  // }
 
-  loginWithLinkedin(): void {
-    this.isLoading = true;
-    this.oauthService.initiateLinkedinLogin()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (url) => {
-          window.location.href = url || 'http://localhost:8080/oauth2/authorization/linkedin';
-        },
-        error: (err) => {
-          this.handleLoginError('Connexion LinkedIn échouée', err);
-        }
-      });
-  }
+  // loginWithLinkedin(): void {
+  //   this.isLoading = true;
+  //   this.oauthService.initiateLinkedinLogin()
+  //     .pipe(takeUntil(this.destroy$))
+  //     .subscribe({
+  //       next: (url) => {
+  //         window.location.href = url || 'http://localhost:8080/oauth2/authorization/linkedin';
+  //       },
+  //       error: (err) => {
+  //         this.handleLoginError('Connexion LinkedIn échouée', err);
+  //       }
+  //     });
+  // }
 
   private handleLoginSuccess(response: any): void {
     this.authService.saveToken(response.token);

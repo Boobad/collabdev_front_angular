@@ -1,8 +1,8 @@
 import { Injectable } from "@angular/core"
-import type { HttpClient, HttpParams } from "@angular/common/http"
-import type { Observable } from "rxjs"
+import  { HttpClient, HttpParams } from "@angular/common/http"
+import  { Observable } from "rxjs"
 import { apiUrl, buildHttpParams } from "./api.config"
-import type { ID, MessageResponse, Page, Project, ProjectCreateRequest } from "../types/api.models"
+import  { ID, MessageResponse, Page, Project, ProjectCreateRequest } from "../types/api.models"
 
 @Injectable({ providedIn: "root" })
 export class ProjectsService {

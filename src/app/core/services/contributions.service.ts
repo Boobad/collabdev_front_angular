@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core"
-import type { HttpClient } from "@angular/common/http"
+import  { HttpClient } from "@angular/common/http"
 import type { Observable } from "rxjs"
 import { apiUrl } from "./api.config"
 import type { Contribution, ContributionSubmitRequest, ID, MessageResponse } from "../types/api.models"

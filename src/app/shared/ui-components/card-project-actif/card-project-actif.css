@@ -1,126 +1,121 @@
-.card{
-    height: auto;
-    width: 300px;
-    box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.1);
-    background-color: white;
-    border-radius: 10px;
-    ;
-
-
+.card {
+  height: auto;
+  width: 300px;
+  box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.1);
+  background-color: white;
+  border-radius: 10px;
+  padding-bottom: 10px;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.card .titres{
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 20px;
-}
-.card .titres .category{
-    background-color: #FFEBEE;
-    width: 75px;
-    height: 30px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50px;
-    color: #C62828;
-    font-weight: 800;
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 2px 6px 15px rgba(0, 0, 0, 0.15);
 }
 
-.card .titres .coins{
-
-    width: auto;
-    height: 30px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50px;
-    color: #FF9800;
-    font-weight: 800;
-}
-.card .titres .coins i{
-    margin-right: 10px;
+.card .titres {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px;
 }
 
-.info{
-    padding: 0 20px;
-    margin-top: 10px;
-}
-.info h1{
-    font-size: 1.0rem;
-    color: #333;
-    margin-bottom: 10px;
-      /* Ellipsis */
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-.info p{
-    font-size: 0.7rem;
-    color: #666;
-    margin-bottom: 20px;
-    /* Ellipsis sur plusieurs lignes */
-    display: -webkit-box;
-    -webkit-line-clamp: 2; /* nombre de lignes à afficher */
-    -webkit-box-orient: vertical;
-    overflow: hidden;
+.card .titres .category {
+  background-color: #FFEBEE;
+  width: 75px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50px;
+  color: #C62828;
+  font-weight: 800;
+  font-size: 0.7rem;
 }
 
-.details{
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 20px;
-    margin-top: 10px;
-}
-.details i{
-    color: #4CAF50;
-    font-size: 1.2rem;
-    margin-right: 10px;}
-.details .collaborateurs{
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-.details span{
-    font-size: 0.8rem;
-    color: #666;
-}
-.details .taches{
-    display: flex;
-    align-items: center;
-    gap: 10px;
+.info {
+  padding: 0 20px;
+  margin-top: 10px;
 }
 
-.divider{
-    height: 1px;
-    background-color: #E0E0E0;
-    margin: 20px 20px 0px 20px;
-    padding: 0 20px;
+.info h1 {
+  font-size: 1.0rem;
+  color: #333;
+  margin-bottom: 10px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.info p {
+  font-size: 0.7rem;
+  color: #666;
+  margin-bottom: 20px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  line-height: 1.4;
+}
+
+.details {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  margin: 10px 0;
+}
+
+.details i {
+  color: #4CAF50;
+  font-size: 1.0rem;
+  margin-right: 8px;
+}
+
+.details span {
+  font-size: 0.8rem;
+  color: #666;
+}
+
+.details .langages span {
+  background-color: #E3F2FD;
+  padding: 5px 10px;
+  border-radius: 20px;
+  color: #1976D2;
+  font-size: 0.7rem;
+}
+
+.divider {
+  height: 1px;
+  background-color: #E0E0E0;
+  margin: 15px 20px;
+}
+
+.progress-container {
+  padding: 0 20px;
 }
 
 .progressbar {
-  width: 90%;
-  height: 10px;
+  width: 100%;
+  height: 8px;
   background-color: #e0e0e0;
-  border-radius: 5px;
+  border-radius: 4px;
   overflow: hidden;
-  margin: 20px auto;
+  margin-bottom: 8px;
 }
 
 .progressbar .bar {
   height: 100%;
   transition: width 0.4s ease, background 0.3s ease;
-  border-radius: 5px;
+  border-radius: 4px;
 }
 
-.complet{
-    padding: 0 20px;
-    margin-top: 10px;
-    position: relative;
-    top: -10px;
-
+.complet {
+  text-align: right;
 }
-.complet span{
- margin-bottom: 10px;
+
+.complet span {
+  font-size: 0.8rem;
+  color: #666;
 }

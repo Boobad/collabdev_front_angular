@@ -3,13 +3,33 @@
       <h1>Mes Projets Actifs</h1>
 
   </div>
+<!-- Message de chargement -->
+<!-- Message de chargement -->
+<div *ngIf="loading" class="loading-container">
+  <div class="loader"></div>
+  <p>Chargement des projets...</p>
+</div>
 
-<div class="project_active">
+<!-- Liste des projets -->
+<div *ngIf="!loading && projetsActifs.length > 0; else noProjects" class="project_active">
   <app-card-project-actif
     *ngFor="let projet of projetsActifs"
     [projet]="projet">
   </app-card-project-actif>
 </div>
+
+<!-- Message si aucun projet -->
+<!-- Message si aucun projet -->
+<ng-template #noProjects>
+  <div class="no-project-container">
+    <i class="fas fa-folder-open no-project-icon"></i>
+    <p class="no-project-title">Aucun projet actif</p>
+    <p class="no-project-subtitle">Commencez dès maintenant et ajoutez votre premier projet</p>
+  </div>
+</ng-template>
+
+
+
 
 
 

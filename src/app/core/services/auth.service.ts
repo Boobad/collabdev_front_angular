@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core"
-import type { HttpClient } from "@angular/common/http"
+import  { HttpClient } from "@angular/common/http"
 import { type Observable, tap } from "rxjs"
 import { apiUrl } from "./api.config"
 import type { LoginRequest, LoginResponse, RegisterRequest, User } from "../types/api.models"

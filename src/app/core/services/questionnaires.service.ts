@@ -1,8 +1,8 @@
 import { Injectable } from "@angular/core"
-import type { HttpClient } from "@angular/common/http"
-import type { Observable } from "rxjs"
+import  { HttpClient } from "@angular/common/http"
+import  { Observable } from "rxjs"
 import { apiUrl } from "./api.config"
-import type { ID, MessageResponse, Quiz, QuizCreateRequest, QuizSubmitRequest } from "../types/api.models"
+import { ID, MessageResponse, Quiz, QuizCreateRequest, QuizSubmitRequest } from "../types/api.models"
 
 @Injectable({ providedIn: "root" })
 export class QuestionnairesService {
