@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
-import { Navebar } from '../../../../shared/navebar/navebar';
 
 @Component({
   selector: 'app-recompense-badge',
-  imports: [Navebar],
+  standalone: true,
+  imports: [], // Seuls les composants standalone peuvent être importés ici
   templateUrl: './recompense-badge.html',
   styleUrl: './recompense-badge.css',
 })

@@ -8,15 +8,15 @@
                     <div class="user-stats">
                         <div class="stat-item coins" routerLink="/coins">
                             <i class="fas fa-coins"></i>
-                            <span>1,250</span>
+                            <span>{{ coinsValue }} Coins</span>
                         </div>
                         <div class="stat-item xp">
                             <i class="fas fa-star"></i>
-                            <span>1,850 XP</span>
+                            <span>{{ experiencePoints }} XP</span>
                         </div>
                         <div class="stat-item badges">
                             <i class="fas fa-award"></i>
-                            <span>5</span>
+                            <span>{{ badgesCount }}</span>
                         </div>
                     </div>
                     <button class="notification-btn" (click)="toggleNotifications()">
