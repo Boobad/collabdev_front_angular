@@ -1,4 +1,15 @@
+/* Couleurs secteurs */
+.health { color: #e74c3c; }        /* rouge */
+.education { color: #3498db; }    /* bleu */
+.agriculture { color: #27ae60; }  /* vert */
+.transports { color: #f39c12; }   /* orange */
+.finance { color: #f1c40f; }      /* jaune */
+.informatique { color: #8e44ad; } /* violet */
 
+/* Couleurs statuts */
+.in-progress { color: orange; }
+.completed { color: green; }
+.pending { color: gray; }
 
 .project-header {
     display: flex;
@@ -65,6 +76,11 @@
     color: var(--dark-color);
     font-weight: 700;
     letter-spacing: -0.5px;
+    display: -webkit-box;        /* boîte flexible en mode webkit */
+    -webkit-box-orient: vertical; /* orientation verticale */
+    -webkit-line-clamp: 1;       /* nombre de lignes max affichées (ici 2) */
+    overflow: hidden;            /* cacher le débordement */
+    text-overflow: ellipsis;  
 }
 
 .project-meta {

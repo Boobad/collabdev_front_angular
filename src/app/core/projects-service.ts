@@ -36,7 +36,7 @@ export class ProjectsService {
   uploadFile(file: File): Observable<{ fileUrl: string }> {
     const formData = new FormData();
     formData.append('file', file);
-    return this.http.post<{ fileUrl: string }>(`${this.apiUrl}/upload-file`, formData);
+    return this.http.post<{ fileUrl: string }>(`${this.apiUrl}/upload`, formData);
   }
 
   createProject(userId: number, project: ProjectPayload): Observable<any> {

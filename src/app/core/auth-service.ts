@@ -15,19 +15,23 @@ export class AuthService {
     return this.http.get<any>(`${this.apiUrl}/profile/${id}`);
   }
 
-  // Connexion utilisateur
+  // Connexion utilisateur (sans token, avec vérification actif)
   loginUser(credentials: { email: string, password: string }): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/login`, credentials).pipe(
       tap(response => {
-        // Suppose que la réponse contient le token et les infos user
-        if (response.token) {
-          this.saveToken(response.token);
-        }
-        if (response.user) {
-          // Stocker l’objet utilisateur complet
-          localStorage.setItem('user', JSON.stringify(response.user));
-          // Stocker l’ID utilisateur en string
-          localStorage.setItem('userId', response.user.id.toString());
+        console.log('Réponse API login:', response);
+
+        // Vérifier si l'utilisateur est actif
+        if (response && response.id && response.actif === true) {
+          // Stocker l'objet utilisateur complet
+          localStorage.setItem('user', JSON.stringify(response));
+
+          // Stocker uniquement l'ID utilisateur
+          localStorage.setItem('userId', response.id.toString());
+
+          console.log('Utilisateur actif, stocké dans localStorage.');
+        } else {
+          console.warn('Utilisateur inactif ou réponse invalide, connexion refusée.');
         }
       })
     );
@@ -44,6 +48,7 @@ export class AuthService {
     return this.http.post(`${this.apiUrl}/register`, userData);
   }
 
+  // Connexion avec Google
   loginWithGoogleToken(idToken: string) {
     return this.http.post<{ token: string }>(
       'http://localhost:8080/login/oauth2/code/google',
@@ -51,17 +56,21 @@ export class AuthService {
     );
   }
 
+  // Sauvegarde token (si un jour ton API en renvoie)
   saveToken(token: string): void {
     localStorage.setItem('token', token);
   }
 
+  // Vérifie si un utilisateur est connecté
   isLoggedIn(): boolean {
-    return !!localStorage.getItem('token');
+    return !!localStorage.getItem('user');
   }
 
+  // Déconnexion
   logout(): void {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
     localStorage.removeItem('userId');
+    console.log('Utilisateur déconnecté, localStorage vidé.');
   }
 }

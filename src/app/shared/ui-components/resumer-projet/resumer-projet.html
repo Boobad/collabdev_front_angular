@@ -1,44 +1,53 @@
- <!-- Project Summary -->
-                        <div class="project-summary">
-                            <h2><i class="fas fa-info-circle"></i> Résumé du Projet</h2>
-                            <div class="summary-content">
-                                <p>Application mobile pour consultations médicales à distance avec suivi des patients. L'objectif est de permettre aux médecins de consulter leurs patients à distance tout en maintenant un suivi médical complet avec historique des consultations, prescriptions et résultats d'analyses.</p>
-                                
-                                <div class="project-reward">
-                                    <i class="fas fa-coins"></i>
-                                    <span>250 coins à gagner</span>
-                                </div>
-                                
-                                <div class="project-details">
-                                    <div class="detail-item">
-                                        <i class="fas fa-user-tie"></i>
-                                        <div>
-                                            <span class="detail-label">Porteur de projet</span>
-                                            <span class="detail-value">Jean Dupont</span>
-                                        </div>
-                                    </div>
-                                    <div class="detail-item">
-                                        <i class="fas fa-user-cog"></i>
-                                        <div>
-                                            <span class="detail-label">Gestionnaire</span>
-                                            <span class="detail-value">Marie Lambert</span>
-                                        </div>
-                                    </div>
-                                    <div class="detail-item">
-                                        <i class="fas fa-calendar-check"></i>
-                                        <div>
-                                            <span class="detail-label">Date de fin estimée</span>
-                                            <span class="detail-value">15/12/2023</span>
-                                        </div>
-                                    </div>
-                                    <div class="detail-item">
-                                        <i class="fas fa-code-branch"></i>
-                                        <div>
-                                            <span class="detail-label">Dépôt Git</span>
-                                            <a href="#" class="detail-value">github.com/innovcollab/telemedecine</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
+<div *ngIf="loading" class="loading">Chargement du résumé...</div>
+
+<div *ngIf="error" class="error">
+  Erreur lors du chargement du projet. Veuillez réessayer plus tard.
+</div>
+
+<div *ngIf="!loading && !error && !project" class="no-data">
+  Aucun projet trouvé.
+</div>
+
+<div *ngIf="project" class="project-summary">
+  <h2><i class="fas fa-info-circle"></i> Résumé du Projet</h2>
+
+  <div class="summary-content">
+    <p>{{ project.description }}</p>
+
+    <!-- <div class="project-reward">
+      <i class="fas fa-coins"></i>
+      <span>250 coins à gagner</span>
+    </div> -->
+
+    <div class="project-details">
+      <div class="detail-item">
+        <i class="fas fa-user-tie"></i>
+        <div>
+          <span class="detail-label">Porteur de projet</span>
+          <span class="detail-value">{{ project.createurPrenom }} {{ project.createurNom }}</span>
+        </div>
+      </div>
+      <div class="detail-item">
+        <i class="fas fa-user-cog"></i>
+        <div>
+          <span class="detail-label">Gestionnaire</span>
+          <span class="detail-value">Marie Lambert</span>
+        </div>
+      </div>
+      <div class="detail-item">
+        <i class="fas fa-calendar-check"></i>
+        <div>
+          <span class="detail-label">Date de fin estimée</span>
+          <span class="detail-value">{{ project.dateCreation }} </span>
+        </div>
+      </div>
+      <div class="detail-item">
+        <i class="fas fa-code-branch"></i>
+        <div>
+          <span class="detail-label">Dépôt Git</span>
+          <a href="http://localhost:8080{{ project.urlCahierDeCharge }}" class="detail-value"> http://localhost:8080{{ project.urlCahierDeCharge }}</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

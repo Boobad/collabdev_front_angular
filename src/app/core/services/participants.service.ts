@@ -4,6 +4,18 @@ import  { Observable } from "rxjs"
 import { apiUrl } from "./api.config"
 import  { ID, MessageResponse, ParticipationRequest } from "../types/api.models"
 
+export interface Participant {
+  id: number;
+  profil: string;
+  statut: string;
+  scoreQuiz: string;
+  estDebloque: boolean;
+  contributeurNom: string;
+  contributeurPrenom: string;
+  contributeurEmail: string;
+  projetTitre: string;
+}
+
 @Injectable({ providedIn: "root" })
 export class ParticipantsService {
   constructor(private http: HttpClient) {}
@@ -29,4 +41,10 @@ export class ParticipantsService {
   removeFromProject(projetId: ID, userId: ID): Observable<MessageResponse> {
     return this.http.delete<MessageResponse>(apiUrl(`/participants/projet/${projetId}/utilisateur/${userId}`))
   }
+
+   // Récupérer la liste des participants pour un projet donné
+  getParticipantsByProject(projetId: number): Observable<Participant[]> {
+    return this.http.get<Participant[]>(apiUrl(`/participants/projet/${projetId}`));
+  }
+
 }

@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { ProjectPayload, ProjectsService } from '../../../core/projects-service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-modal-create-project',
@@ -10,8 +11,12 @@ export class ModalCreateProject {
   selectedFile: File | null = null;
   fileName: string = 'Aucun fichier sélectionné';
   isSubmitting: boolean = false;
+  lastCreatedProjectId: string | null = null;
 
-  constructor(private projectsService: ProjectsService) {}
+  constructor(
+    private projectsService: ProjectsService,
+    private router: Router
+  ) {}
 
   openModal(): void {
     const modal = document.getElementById('projectModal');
@@ -86,19 +91,19 @@ export class ModalCreateProject {
         role
       };
 
-      console.log('Payload à envoyer:', projectPayload);
-
       this.projectsService.createProject(userId, projectPayload).subscribe({
-        next: () => {
-          alert('Projet créé avec succès !');
+        next: (response) => {
+          this.lastCreatedProjectId = response.id;
+          this.showSuccessModal();
           this.resetForm(form);
           this.closeModal();
+          this.isSubmitting = false;
         },
         error: (err) => {
           console.error('Erreur création projet:', err);
           alert(`Erreur lors de la création: ${err.error?.message || err.message}`);
-        },
-        complete: () => this.isSubmitting = false
+          this.isSubmitting = false;
+        }
       });
 
     } catch (error) {
@@ -106,6 +111,23 @@ export class ModalCreateProject {
       alert('Une erreur inattendue est survenue');
       this.isSubmitting = false;
     }
+  }
+
+  showSuccessModal(): void {
+    const modal = document.getElementById('successModal');
+    if (modal) modal.classList.add('active');
+  }
+
+  closeSuccessModal(): void {
+    const modal = document.getElementById('successModal');
+    if (modal) modal.classList.remove('active');
+  }
+
+  viewProject(): void {
+    if (this.lastCreatedProjectId) {
+      this.router.navigate(['/projects', this.lastCreatedProjectId]);
+    }
+    this.closeSuccessModal();
   }
 
   private resetForm(form: HTMLFormElement): void {

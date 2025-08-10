@@ -22,8 +22,8 @@ import { CommonModule } from "@angular/common";
   styleUrls: ['./home.css'],
 })
 export class Home implements OnInit {
-  projetsActifs: Projet[] = []; // ✅ Toujours un tableau, jamais undefined
-  userId = 2;
+  projetsActifs: Projet[] = [];
+  userId: number | undefined; // Déclaré sans valeur initiale
   loading = true;
 
   constructor(
@@ -33,24 +33,47 @@ export class Home implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.getUserIdFromLocalStorage();
     this.chargerProjets();
   }
 
+  private getUserIdFromLocalStorage(): void {
+    try {
+      const userStr = localStorage.getItem('user');
+      if (userStr) {
+        const user = JSON.parse(userStr);
+        this.userId = user.id;
+        console.log('User ID récupéré:', this.userId);
+      } else {
+        console.warn('Aucun utilisateur trouvé dans le localStorage');
+        this.userId = 0; // Valeur par défaut ou gestion d'erreur
+      }
+    } catch (error) {
+      console.error('Erreur lors de la lecture du localStorage:', error);
+      this.userId = 0; // Valeur par défaut en cas d'erreur
+    }
+  }
+
   chargerProjets(): void {
+    if (!this.userId) {
+      console.error('User ID non disponible');
+      this.loading = false;
+      return;
+    }
+
     this.loading = true;
     this.projectsService.getProjetsActifs(this.userId).subscribe({
       next: (projets) => {
         this.zone.run(() => {
-          this.projetsActifs = projets || []; // ✅ toujours un tableau
+          this.projetsActifs = projets || [];
           this.loading = false;
-           console.error('Erreur chargement projets:', projets);
           this.cdr.detectChanges();
         });
       },
       error: (err) => {
         console.error('Erreur chargement projets:', err);
         this.zone.run(() => {
-          this.projetsActifs = []; // ✅ tableau vide
+          this.projetsActifs = [];
           this.loading = false;
           this.cdr.detectChanges();
         });
@@ -58,4 +81,3 @@ export class Home implements OnInit {
     });
   }
 }
-

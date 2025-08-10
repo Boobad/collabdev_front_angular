@@ -9,12 +9,24 @@
       <form id="newProjectForm" (submit)="onSubmit($event)">
         <div class="form-group">
           <label for="projectTitle">Titre du projet *</label>
-          <input type="text" id="projectTitle" name="projectTitle" placeholder="Donnez un titre clair à votre projet" required>
+          <input
+            type="text"
+            id="projectTitle"
+            name="projectTitle"
+            placeholder="Donnez un titre clair à votre projet"
+            required
+          />
         </div>
 
         <div class="form-group">
           <label for="projectDescription">Description *</label>
-          <textarea id="projectDescription" name="projectDescription" rows="4" placeholder="Décrivez en détail votre projet, ses objectifs et sa valeur ajoutée" required></textarea>
+          <textarea
+            id="projectDescription"
+            name="projectDescription"
+            rows="4"
+            placeholder="Décrivez en détail votre projet, ses objectifs et sa valeur ajoutée"
+            required
+          ></textarea>
         </div>
 
         <div class="form-row">
@@ -22,11 +34,14 @@
             <label for="projectDomain">Domaine</label>
             <select id="projectDomain" name="projectDomain">
               <option value="">Sélectionnez un domaine</option>
-              <option value="web">Web</option>
-              <option value="mobile">Mobile</option>
-              <option value="design">Design</option>
-              <option value="iot">IoT</option>
-              <option value="ai">IA/ML</option>
+              <option value="WEB">Web</option>
+              <option value="MOBILE">Mobile</option>
+              
+              
+              <option value="IA">IA</option>
+              <option value="CYBERSECURITE">Cybersécurité</option>
+              <option value="DEVOPS">DevOps</option>
+              <option value="DATA_SCIENCE">Data Science</option>
             </select>
           </div>
 
@@ -34,12 +49,12 @@
             <label for="projectSector">Secteur *</label>
             <select id="projectSector" name="projectSector" required>
               <option value="">Sélectionnez un secteur</option>
-              <option value="health">Santé</option>
-              <option value="education">Éducation</option>
-              <option value="agriculture">Agriculture</option>
-              <option value="transport">Transport</option>
-              <option value="finance">Finance</option>
-              <option value="entertainment">Divertissement</option>
+              <option value="SANTE">Santé</option>
+              <option value="EDUCATION">Éducation</option>
+              <option value="AGRICULTURE">Agriculture</option>
+              <option value="TRANSPORTS">Transports</option>
+              <option value="FINANCE">Finance</option>
+              <option value="AUTRE">Divertissement</option>
             </select>
           </div>
         </div>
@@ -48,7 +63,7 @@
           <label>Votre rôle dans le projet *</label>
           <div class="role-options">
             <label class="role-option">
-              <input type="radio" name="projectRole" value="ideator" checked>
+              <input type="radio" name="projectRole" value="ideator" checked />
               <div class="role-card">
                 <i class="fas fa-lightbulb"></i>
                 <h4>Idéateur</h4>
@@ -56,7 +71,7 @@
               </div>
             </label>
             <label class="role-option">
-              <input type="radio" name="projectRole" value="manager">
+              <input type="radio" name="projectRole" value="manager" />
               <div class="role-card">
                 <i class="fas fa-tasks"></i>
                 <h4>Gestionnaire</h4>
@@ -69,7 +84,12 @@
         <div class="form-group">
           <label for="projectFile">Cahier des charges (optionnel)</label>
           <div class="file-upload">
-            <input type="file" id="projectFile" (change)="onFileSelected($event)" accept=".pdf,.doc,.docx,.ppt,.pptx">
+            <input
+              type="file"
+              id="projectFile"
+              (change)="onFileSelected($event)"
+              accept=".pdf,.doc,.docx,.ppt,.pptx"
+            />
             <label for="projectFile" class="upload-btn">
               <i class="fas fa-cloud-upload-alt"></i>
               <span>Choisir un fichier</span>
@@ -79,10 +99,50 @@
         </div>
 
         <div class="form-actions">
-          <button type="button" class="cancel-btn" (click)="closeModal()">Annuler</button>
-          <button type="submit" class="submit-btn" [disabled]="isSubmitting">Partager le projet</button>
+          <button type="button" class="cancel-btn" (click)="closeModal()">
+            Annuler
+          </button>
+          <button type="submit" class="submit-btn" [disabled]="isSubmitting">
+            Partager le projet
+          </button>
         </div>
       </form>
+    </div>
+  </div>
+</div>
+
+<!-- Success Modal -->
+<div class="success-modal-overlay" id="successModal">
+  <div class="success-modal-container">
+    <div class="success-animation">
+      <svg
+        class="checkmark"
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 52 52"
+      >
+        <circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none" />
+        <path
+          class="checkmark__check"
+          fill="none"
+          d="M14.1 27.2l7.1 7.2 16.7-16.8"
+        />
+      </svg>
+      <div class="confetti"></div>
+      <div class="confetti"></div>
+      <div class="confetti"></div>
+      <div class="confetti"></div>
+      <div class="confetti"></div>
+      <div class="confetti"></div>
+      <div class="confetti"></div>
+      <div class="confetti"></div>
+    </div>
+
+    <h2>Projet créé avec succès !</h2>
+    <p>Votre projet a été publié et est maintenant en cours de verifications.</p>
+
+    <div class="success-actions">
+      <button class="view-project-btn" (click)="viewProject()">Voir le projet</button>
+      <button class="close-success-btn" (click)="closeSuccessModal()">Fermer</button>
     </div>
   </div>
 </div>

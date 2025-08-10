@@ -47,7 +47,7 @@ export const routes: Routes = [
         {path: 'update-profil', component: UpadateProfil },
 
              { path: 'badge-recompense', component: RecompenseBadge },
-       { path: 'details', component: DetailsPages },
+       { path: 'details/:id', component: DetailsPages },
       { path: 'workspace-project', component: WorkspaceProject },
        { path: 'projets-recommandes', component: ProjetsRecommandes },
        { path: 'formulaire-participation', component: FormulaireParticipation },
