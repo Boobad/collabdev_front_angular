@@ -1,0 +1,118 @@
+<!-- search-page.html -->
+<section class="search-page">
+  <div class="search-bar">
+    <i class="fas fa-search"></i>
+    <input
+      type="text"
+      [ngModel]="searchText"
+      (ngModelChange)="onSearchTextChange()"
+      placeholder="Rechercher un projet..."
+      class="search-input"
+      #searchInput
+    />
+    <button class="search-btn" (click)="searchInput.focus()">
+      <i class="fas fa-search"></i>
+    </button>
+  </div>
+  
+  <div class="filters">
+    <div class="filter-group">
+      <label for="secteur"><i class="fas fa-building"></i> Secteur :</label>
+      <select id="secteur" [(ngModel)]="secteurVal" (ngModelChange)="onFilterChange()">
+        <option value="">Tous</option>
+        <option value="informatique">Informatique</option>
+        <option value="sante">Santé</option>
+        <option value="agriculture">Agriculture</option>
+        <option value="finance">Finance</option>
+      </select>
+    </div>
+    
+    <div class="filter-group">
+      <label for="domaine"><i class="fas fa-laptop-code"></i> Domaine :</label>
+      <select id="domaine" [(ngModel)]="domaineVal" (ngModelChange)="onFilterChange()">
+        <option value="">Tous</option>
+        <option value="web">Web</option>
+        <option value="mobile">Mobile</option>
+        <option value="design">Design</option>
+        <option value="marketing">Marketing</option>
+      </select>
+    </div>
+    
+    <div class="filter-group">
+      <label for="niveau"><i class="fas fa-signal"></i> Niveau :</label>
+      <select id="niveau" [(ngModel)]="niveauVal" (ngModelChange)="onFilterChange()">
+        <option value="">Tous</option>
+        <option value="debutant">Débutant</option>
+        <option value="intermediaire">Intermédiaire</option>
+        <option value="avance">Avancé</option>
+      </select>
+    </div>
+    
+    <button id="clearFilters" (click)="clearFilters()">
+      <i class="fas fa-broom"></i> Effacer filtres
+    </button>
+  </div>
+  
+  <div class="search-results">
+    <!-- État de chargement -->
+    <div *ngIf="isLoading" class="loading-container">
+      <div class="loading">
+        <span class="spinner"></span> Chargement des projets...
+      </div>
+      <div class="skeleton-container">
+        <div class="skeleton-card" *ngFor="let _ of [1, 2, 3]">
+          <div class="skeleton skeleton-title"></div>
+          <div class="skeleton skeleton-text"></div>
+          <div class="skeleton skeleton-text"></div>
+          <div class="skeleton skeleton-tags"></div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Message d'erreur -->
+    <div *ngIf="errorMessage && !isLoading" class="error">
+      <i class="fas fa-exclamation-triangle"></i> {{ errorMessage }}
+      <button class="retry-button" (click)="retryFetch()">
+        <i class="fas fa-redo"></i> Réessayer
+      </button>
+    </div>
+    
+    <!-- Aucun résultat -->
+    <div *ngIf="!isLoading && !errorMessage && filteredResults.length === 0" class="no-results">
+      <i class="fas fa-inbox"></i>
+      <p>Aucun projet trouvé</p>
+      <p>Essayez de modifier vos critères de recherche</p>
+      <button (click)="clearFilters()">Réinitialiser les filtres</button>
+    </div>
+    
+    <!-- Résultats -->
+    <div *ngFor="let item of filteredResults; trackBy: trackByProjectId" 
+         class="result-item" 
+         (click)="viewProject(item.id)">
+      <div class="item-header">
+        <h3>{{ item.titre }}</h3>
+        <span class="status-badge">{{ item.status | uppercase }}</span>
+      </div>
+      
+      <p class="description">{{ item.description | truncate: 120 }}</p>
+      
+      <div class="tags">
+        <span class="tag secteur"><i class="fas fa-building"></i> {{ item.secteur }}</span>
+        <span class="tag domaine"><i class="fas fa-laptop-code"></i> {{ item.domaine }}</span>
+        <span class="tag niveau"><i class="fas fa-signal"></i> {{ item.niveau }}</span>
+      </div>
+      
+      <div class="item-footer">
+        <div class="author">
+          <i class="fas fa-user"></i> {{ item.createurPrenom }} {{ item.createurNom }}
+        </div>
+        <div class="date">
+          <i class="far fa-calendar"></i> {{ item.dateCreation | date: 'dd/MM/yyyy' }}
+        </div>
+        <div class="participants">
+          <i class="fas fa-users"></i> {{ item.nombreParticipants }} participants
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

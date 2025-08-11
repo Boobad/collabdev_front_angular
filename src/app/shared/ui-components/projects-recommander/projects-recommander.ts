@@ -9,6 +9,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { CommonModule } from '@angular/common';
 import { CoinsService } from '../../../core/coins-service';
+import { MesCardProject } from '../mes-card-project/mes-card-project';
 
 
 interface Project {
@@ -32,6 +33,7 @@ interface ContributorResponse {
   selector: 'app-projects-recommander',
   standalone: true,
   imports: [
+    
     MatDividerModule,
     MatIconModule,
     MatButtonModule,
@@ -99,33 +101,58 @@ export class ProjectsRecommander implements OnInit {
   }
 
   fetchProjects(): void {
-    this.isLoading = true;
-    this.error = null;
-    this.cdRef.detectChanges();
+  this.isLoading = true;
+  this.error = null;
+  this.cdRef.detectChanges();
 
-    this.http.get<Project[]>('http://localhost:8080/api/v1/projets')
-      .subscribe({
-        next: (data) => {
-          this.projects = data;
-          this.filteredProjects = this.projects.filter(
-            project => project.status?.trim()?.toUpperCase() === 'EN_ATTENTE'
-          );
-
-          if (this.filteredProjects.length === 0) {
-            this.error = 'Aucun projet en attente disponible';
+  this.http.get<Project[]>('http://localhost:8080/api/v1/projets')
+    .subscribe({
+      next: (data) => {
+        // Associer coinsRequired selon le niveau
+        this.projects = data.map(project => {
+          let coins = 0;
+          switch (project.niveau?.trim()?.toLowerCase()) {
+            case 'debutant':
+              coins = 10;
+              break;
+            case 'intermediaire':
+              coins = 20;
+              break;
+            case 'avance':
+              coins = 40;
+              break;
+            case 'difficile':
+              coins = 50;
+              break;
+            case 'expert':
+              coins = 70;
+              break;
+            default:
+              coins = 100; // fallback si niveau inconnu
           }
+          return { ...project, coinsRequired: coins };
+        });
 
-          this.isLoading = false;
-          this.cdRef.detectChanges();
-        },
-        error: (err) => {
-          this.error = 'Échec du chargement des projets';
-          this.isLoading = false;
-          this.cdRef.detectChanges();
-          console.error('Erreur API:', err);
+        this.filteredProjects = this.projects.filter(
+          project => project.status?.trim()?.toUpperCase() === 'EN_ATTENTE'
+        );
+
+        if (this.filteredProjects.length === 0) {
+          this.error = 'Aucun projet en attente disponible';
         }
-      });
-  }
+
+        this.isLoading = false;
+        this.cdRef.detectChanges();
+      },
+      error: (err) => {
+        this.error = 'Échec du chargement des projets';
+        this.isLoading = false;
+        this.cdRef.detectChanges();
+        console.error('Erreur API:', err);
+      }
+    });
+}
+
 
   onJoinProject(projectId: number, requiredCoins: number): void {
     if (this.userCoins >= requiredCoins) {

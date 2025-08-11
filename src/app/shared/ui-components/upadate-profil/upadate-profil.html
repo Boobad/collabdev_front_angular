@@ -4,40 +4,133 @@
       <i class="fas fa-arrow-left"></i> Retour au profil
     </button>
 
-    <form class="profile-form">
+    <form class="profile-form" (ngSubmit)="saveProfile()">
       <h2 class="form-title">Modifier mon profil</h2>
 
-      <div class="form-grid">
-        <div class="form-group">
-          <label for="username">Nom d'utilisateur</label>
+      <!-- Messages d'état avec animations -->
+      <div *ngIf="errorMessage" class="alert alert-error animate__animated animate__fadeInDown">
+        <i class="fas fa-exclamation-circle"></i> {{ errorMessage }}
+      </div>
+      
+      <div *ngIf="successMessage" class="alert alert-success animate__animated animate__fadeInDown">
+        <i class="fas fa-check-circle"></i> {{ successMessage }}
+      </div>
+
+      <!-- Indicateur de modifications non sauvegardées -->
+      <div *ngIf="isFormDirty && !isSaving" class="unsaved-changes">
+        <i class="fas fa-exclamation-circle"></i> Vous avez des modifications non sauvegardées
+      </div>
+
+      <!-- Animation de chargement améliorée -->
+      <div *ngIf="isLoading" class="loading-overlay">
+        <div class="spinner-container">
+          <div class="spinner"></div>
+          <div class="spinner-inner"></div>
+        </div>
+        <p>Chargement de votre profil...</p>
+      </div>
+
+      <div class="form-grid" [class.blur]="isLoading">
+        <!-- Animation d'entrée pour les champs -->
+        <div class="form-group animate__animated animate__fadeInUp" [style.animation-delay]="'0.1s'">
+          <label for="nom">Nom</label>
           <div class="input-container">
             <i class="fas fa-user input-icon"></i>
-            <input type="text" id="username" placeholder="Votre nom" class="modern-input" />
+            <input type="text" id="nom" [(ngModel)]="profileData.nom" name="nom" 
+                   class="modern-input" required 
+                   (input)="onInputChange()" />
           </div>
         </div>
 
-        <div class="form-group">
+        <div class="form-group animate__animated animate__fadeInUp" [style.animation-delay]="'0.2s'">
+          <label for="prenom">Prénom</label>
+          <div class="input-container">
+            <i class="fas fa-user input-icon"></i>
+            <input type="text" id="prenom" [(ngModel)]="profileData.prenom" name="prenom" 
+                   class="modern-input" required 
+                   (input)="onInputChange()" />
+          </div>
+        </div>
+
+        <div class="form-group animate__animated animate__fadeInUp" [style.animation-delay]="'0.3s'">
+          <label for="telephone">Téléphone</label>
+          <div class="input-container">
+            <i class="fas fa-phone input-icon"></i>
+            <input type="tel" id="telephone" [(ngModel)]="profileData.telephone" name="telephone" 
+                   class="modern-input" 
+                   (input)="onInputChange()" />
+          </div>
+        </div>
+
+        <div class="form-group animate__animated animate__fadeInUp" [style.animation-delay]="'0.4s'">
           <label for="email">Email</label>
           <div class="input-container">
             <i class="fas fa-envelope input-icon"></i>
-            <input type="email" id="email" placeholder="votre@email.com" class="modern-input" />
+            <input type="email" id="email" [(ngModel)]="profileData.email" name="email" 
+                   class="modern-input" required 
+                   (input)="onInputChange()" />
           </div>
         </div>
 
-        <div class="form-group full-width">
-          <label for="about">À propos de moi</label>
+        <div class="form-group full-width animate__animated animate__fadeInUp" [style.animation-delay]="'0.5s'">
+          <label for="password">Mot de passe</label>
           <div class="input-container">
-            <i class="fas fa-pencil-alt input-icon"></i>
-            <textarea id="about" rows="4" placeholder="Décrivez-vous en quelques mots..." class="modern-input"></textarea>
+            <i class="fas fa-lock input-icon"></i>
+            <input [type]="showPassword ? 'text' : 'password'" id="password" 
+                   [(ngModel)]="profileData.password" name="password" 
+                   class="modern-input" 
+                   (input)="onInputChange()" />
+            <i [class]="showPassword ? 'fas fa-eye-slash' : 'fas fa-eye'" 
+               class="password-toggle" (click)="togglePasswordVisibility('password')"></i>
+          </div>
+          
+          <!-- Indicateur de force du mot de passe -->
+          <div *ngIf="profileData.password" class="password-strength">
+            <div class="strength-bar">
+              <div class="strength-fill" [ngClass]="getPasswordStrengthClass()" 
+                   [style.width.%]="passwordStrength"></div>
+            </div>
+            <div class="strength-label">
+              {{ 
+                passwordStrength < 50 ? 'Faible' : 
+                passwordStrength < 75 ? 'Moyen' : 'Fort'
+              }}
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group full-width animate__animated animate__fadeInUp" [style.animation-delay]="'0.6s'">
+          <label for="confirmPassword">Confirmer le mot de passe</label>
+          <div class="input-container">
+            <i class="fas fa-lock input-icon"></i>
+            <input [type]="showConfirmPassword ? 'text' : 'password'" id="confirmPassword" 
+                   [(ngModel)]="profileData.confirmPassword" name="confirmPassword" 
+                   class="modern-input" 
+                   [class.invalid]="!isPasswordValid"
+                   (input)="onInputChange()" />
+            <i [class]="showConfirmPassword ? 'fas fa-eye-slash' : 'fas fa-eye'" 
+               class="password-toggle" (click)="togglePasswordVisibility('confirm')"></i>
+          </div>
+          <p class="password-hint">Laissez vide pour conserver le mot de passe actuel</p>
+          
+          <!-- Message d'erreur pour la correspondance -->
+          <div *ngIf="passwordError" class="password-error">
+            <i class="fas fa-exclamation-triangle"></i> {{ passwordError }}
           </div>
         </div>
       </div>
 
-      <div class="form-actions">
-        <button type="button" class="cancel-btn" (click)="goBack()">Annuler</button>
-        <button type="submit" class="save-btn" (click)="saveProfile()">
-          <span class="btn-text">Enregistrer</span>
-          <i class="fas fa-check btn-icon"></i>
+      <div class="form-actions" [class.blur]="isLoading">
+        <button type="button" class="cancel-btn" (click)="goBack()">
+          Annuler
+        </button>
+        <button type="submit" class="save-btn" [disabled]="isSaving || !isPasswordValid">
+          <span class="btn-text">
+            <span *ngIf="!isSaving">Enregistrer</span>
+            <span *ngIf="isSaving">Enregistrement...</span>
+          </span>
+          <i *ngIf="!isSaving" class="fas fa-check btn-icon"></i>
+          <i *ngIf="isSaving" class="fas fa-spinner fa-spin btn-icon"></i>
         </button>
       </div>
     </form>

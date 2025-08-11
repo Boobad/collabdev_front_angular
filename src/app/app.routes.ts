@@ -28,6 +28,7 @@ import { ForgetPassword } from './features/auth/contributors/forget-password/for
 import { Coinssolde } from './features/contributors/pages/coinssolde/coinssolde';
 import { UpadateProfil } from './shared/ui-components/upadate-profil/upadate-profil';
 import { ResetPassword } from './features/auth/contributors/reset-password/reset-password';
+import { SearchPage } from './features/contributors/pages/search-page/search-page';
 
 
 export const routes: Routes = [
@@ -44,8 +45,8 @@ export const routes: Routes = [
       { path: 'quiz', component: Quiz },
       { path: 'workspace-projetc-resource', component: WorkspaceProjectResources },
        { path: 'coins', component: Coinssolde },
-        {path: 'update-profil', component: UpadateProfil },
-
+        {path: 'update-profil/:id', component: UpadateProfil },
+      { path: 'search', component: SearchPage },
              { path: 'badge-recompense', component: RecompenseBadge },
        { path: 'details/:id', component: DetailsPages },
       { path: 'workspace-project', component: WorkspaceProject },

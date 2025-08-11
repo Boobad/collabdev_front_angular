@@ -1,14 +1,20 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, tap } from 'rxjs';
+import { BehaviorSubject, Observable, tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
+  private authState = new BehaviorSubject<boolean>(false);
+  authState$ = this.authState.asObservable();
+  
   private apiUrl = 'http://localhost:8080/api/v1/auth';
 
   constructor(private http: HttpClient) {}
+loginWithGoogle(userData: any) {
+  return this.http.post<any>('http://localhost:8080/api/v1/auth/login', userData);
+}
 
   // Récupère le profil par ID
   getProfileById(id: number): Observable<any> {
@@ -17,10 +23,11 @@ export class AuthService {
 
   // Connexion utilisateur (sans token, avec vérification actif)
   loginUser(credentials: { email: string, password: string }): Observable<any> {
+    this.authState.next(true);
     return this.http.post<any>(`${this.apiUrl}/login`, credentials).pipe(
       tap(response => {
         console.log('Réponse API login:', response);
-
+ this.authState.next(true);
         // Vérifier si l'utilisateur est actif
         if (response && response.id && response.actif === true) {
           // Stocker l'objet utilisateur complet

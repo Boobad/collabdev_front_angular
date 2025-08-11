@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 export interface ContributorResponse {
   id: number;
@@ -18,6 +18,13 @@ export interface ContributorResponse {
 })
 export class CoinsService {
   private apiUrl = 'http://localhost:8080/api/v1/contributeurs';
+
+   private coinsValueSource = new BehaviorSubject<number>(0);
+  coinsValue$ = this.coinsValueSource.asObservable();
+
+  setCoinsValue(value: number) {
+    this.coinsValueSource.next(value);
+  }
 
   constructor(private http: HttpClient) {}
 

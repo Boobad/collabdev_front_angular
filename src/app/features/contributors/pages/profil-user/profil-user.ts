@@ -1,5 +1,5 @@
 import { Component, ChangeDetectorRef, OnDestroy, OnInit } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { RouterLink, Router } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
 import { AuthService } from '../../../../core/auth-service';
 
@@ -13,6 +13,7 @@ import { AuthService } from '../../../../core/auth-service';
 export class ProfilUser implements OnInit, OnDestroy {
   profileImage: string | ArrayBuffer | null = 'profil.png';
   fileInput: HTMLInputElement | null = null;
+  userId: number | null = null;
 
   // Données profil
   username: string = '';
@@ -22,7 +23,8 @@ export class ProfilUser implements OnInit, OnDestroy {
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    private authService: AuthService
+    private authService: AuthService,
+    private router: Router
   ) {}
 
   ngOnInit() {
@@ -42,6 +44,7 @@ export class ProfilUser implements OnInit, OnDestroy {
       try {
         const user = JSON.parse(userStr);
         userId = user.id;
+        this.userId = userId;
       } catch (e) {
         console.error('Erreur lors du parsing de user:', e);
       }
@@ -100,5 +103,14 @@ export class ProfilUser implements OnInit, OnDestroy {
   capitalize(s: string): string {
     if (!s) return s;
     return s.charAt(0).toUpperCase() + s.slice(1).toLowerCase();
+  }
+
+  navigateToUpdate(): void {
+    if (this.userId) {
+      this.router.navigate(['/update-profil', this.userId]);
+    } else {
+      console.error('User ID non disponible');
+      // Option: afficher un message d'erreur à l'utilisateur
+    }
   }
 }

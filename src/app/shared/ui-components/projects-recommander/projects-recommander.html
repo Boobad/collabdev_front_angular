@@ -12,48 +12,55 @@
     <button mat-button (click)="fetchProjects()">Réessayer</button>
   </div>
 
-  <!-- Liste des projets (utilisez filteredProjects au lieu de projects) -->
+  <!-- Liste des projets -->
   <div *ngIf="!isLoading && !error" class="projects-grid">
-    <div *ngFor="let project of filteredProjects" class="card"> <!-- Changé ici -->
+    <div *ngFor="let project of filteredProjects" class="card">
+      
+      <!-- Catégorie et coins -->
       <div class="titres">
         <span class="category {{getDomainClass(project.domaine)}}">
           {{ project.domaine || 'N/A' }}
         </span>
         <span class="coins">
-          <mat-icon>monetization_on</mat-icon>
-          <span>{{ project.coinsRequired || 100 }}</span> <!-- Utilisez la valeur du projet -->
+          <i class="fa fa-coins" style="margin-right: 6px;"></i>
+          <span>{{ project.coinsRequired || 100 }}</span>
         </span>
       </div>
 
       <div class="divider"></div>
 
+      <!-- Informations principales -->
       <div class="info">
         <h1>{{ project.titre || 'Pas de titre' }}</h1>
-        <p class="description">{{ project.description || 'Pas de description disponible' }}</p>
+        <p class="description">
+          {{ project.description || 'Pas de description disponible' }}
+        </p>
       </div>
 
+      <!-- Niveau et Statut séparés -->
       <div class="details">
-        <span class="langages" *ngIf="project.niveau">
+        <div class="badge niveau" *ngIf="project.niveau">
           {{ project.niveau }}
-        </span>
-        <span class="langages" *ngIf="project.secteur">
+        </div>
+        <div class="badge secteur" *ngIf="project.secteur">
           {{ project.secteur }}
-        </span>
-        <span class="langages status"> <!-- Ajout du statut -->
+        </div>
+        <div class="badge statut" [ngClass]="project.status.toLowerCase()">
           {{ project.status }}
-        </span>
+        </div>
       </div>
 
       <div class="divider"></div>
 
+      <!-- Bouton -->
       <div class="buttons">
-        <button (click)="onJoinProject(project.id, project.coinsRequired || 400)">
+        <button (click)="onJoinProject(project.id, project.coinsRequired || 700)">
           Rejoindre le projet
         </button>
       </div>
     </div>
 
-    <!-- Message si aucun projet (utilisez filteredProjects) -->
+    <!-- Aucun projet -->
     <div *ngIf="filteredProjects.length === 0 && !isLoading && !error" class="no-projects">
       <mat-icon>info_outline</mat-icon>
       <p>Aucun projet en attente disponible</p>

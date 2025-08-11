@@ -3,18 +3,19 @@
     <button class="sidebar-toggle" (click)="toggleSidebar()">
       <i class="fas fa-bars"></i>
     </button>
-    <h1 *ngIf="!isCollapsed">Collabdev</h1>
+   
+    <img *ngIf="!isCollapsed" src="logo 1.png" alt="">
   </div>
 
   <nav class="sidebar-nav">
     <ul>
       <li  routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"><a routerLink="/home" ><i class="fas fa-home"></i> <span *ngIf="!isCollapsed">Home</span></a></li>
-      <li routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"><a routerLink="/projects"><i class="fas fa-project-diagram"></i> <span *ngIf="!isCollapsed">Mes Projets</span></a></li>
+      <li routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"><a routerLink="/projects"><i class="fas fa-project-diagram"></i> <span *ngIf="!isCollapsed">Projets</span></a></li>
 
       <li routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"><a routerLink="/collaborators"><i class="fas fa-users"></i> <span *ngIf="!isCollapsed">Collaborateurs</span></a></li>
       <li routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"><a routerLink="/coins"><i class="fas fa-coins"></i> <span *ngIf="!isCollapsed">Mes Coins</span></a></li>
       <li routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"><a routerLink="/badge-recompense"><i class="fas fa-award"></i> <span *ngIf="!isCollapsed">Badges</span></a></li>
-      <li routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"><a href="#"><i class="fas fa-cog"></i> <span *ngIf="!isCollapsed">Paramètres</span></a></li>
+      
     </ul>
   </nav>
 
@@ -22,8 +23,8 @@
     <div class="user-profile">
       <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="User" routerLink="/profil-user">
       <div class="user-info" *ngIf="!isCollapsed && user">
-        <span class="user-name">{{ user.prenom }} {{ user.nom }}</span>
-        <span class="user-role">Porteur de projet</span>
+        <span class="user-name" routerLink="/profil-user">{{ user.prenom }} {{ user.nom }}</span>
+        <span class="user-role" routerLink="/profil-user">Porteur de projet</span>
         <div class="user-level">
           <div class="level-progress">
             <div class="progress-bar" style="width: 65%;"></div>

@@ -1,15 +1,17 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
-import { ModalCreateProject } from '../ui-components/modal-create-project/modal-create-project';
-import { NotificationModal } from '../ui-components/notification-modal/notification-modal';
+import { RouterLink, Router } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 import { CoinsService, ContributorResponse } from '../../core/coins-service';
 import { BadgeexpTotal, HistoriqueResponse } from '../../core/badgeexp-total';
+import { debounceTime, Subject } from 'rxjs';
+import { NotificationModal } from '../ui-components/notification-modal/notification-modal';
+import { ModalCreateProject } from '../ui-components/modal-create-project/modal-create-project';
 
 @Component({
   selector: 'app-navebar',
   standalone: true,
-  imports: [ModalCreateProject, NotificationModal, CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, FormsModule, ModalCreateProject, NotificationModal],
   templateUrl: './navebar.html',
   styleUrls: ['./navebar.css']
 })
@@ -18,8 +20,11 @@ export class Navebar implements OnInit {
   coinsValue: number = 0;
   experiencePoints: number = 0;
   badgesCount: number = 0;
+  searchQuery: string = '';
+  private searchSubject = new Subject<string>();
 
   constructor(
+    private router: Router,
     private coinsService: CoinsService,
     private participantService: BadgeexpTotal,
     private cdr: ChangeDetectorRef
@@ -28,6 +33,20 @@ export class Navebar implements OnInit {
   ngOnInit(): void {
     this.loadContributorData();
     this.loadBadgesCount();
+    this.searchSubject.pipe(debounceTime(300)).subscribe(() => {
+      this.goToSearchPage();
+    });
+  }
+
+  onSearchChange() {
+    this.searchSubject.next(this.searchQuery);
+  }
+
+  goToSearchPage() {
+    this.router.navigate(['/search'], {
+      queryParams: { q: this.searchQuery.trim() || null },
+      queryParamsHandling: 'merge'
+    });
   }
 
   loadContributorData(): void {
@@ -38,7 +57,6 @@ export class Navebar implements OnInit {
     }
     try {
       const user = JSON.parse(userStr);
-      console.log('Utilisateur localStorage:', user);
       const userId = user.id;
       if (!userId) {
         console.error('User ID introuvable dans les données utilisateur');
@@ -46,16 +64,16 @@ export class Navebar implements OnInit {
       }
       this.coinsService.getContributorByUserId(userId).subscribe({
         next: (data: ContributorResponse) => {
-          console.log('Données contributeur reçues:', data);
           this.coinsValue = data.totalCoin;
+          this.coinsService.setCoinsValue(this.coinsValue);
           this.experiencePoints = data.pointExp;
-          this.cdr.detectChanges(); // Forcer détection changement si besoin
+          this.cdr.detectChanges();
         },
         error: (error) => {
           console.error('Erreur récupération données contributeur :', error);
         }
       });
-    } catch(e) {
+    } catch (e) {
       console.error('Erreur parsing user data:', e);
     }
   }
@@ -68,7 +86,6 @@ export class Navebar implements OnInit {
     }
     try {
       const user = JSON.parse(userStr);
-      console.log('Utilisateur localStorage pour badges:', user);
       const userId = user.id;
       if (!userId) {
         console.error('User ID introuvable dans les données utilisateur');
@@ -76,15 +93,14 @@ export class Navebar implements OnInit {
       }
       this.participantService.getHistoriqueByParticipantId(userId).subscribe({
         next: (data: HistoriqueResponse) => {
-          console.log('Historique badges reçu:', data);
           this.badgesCount = data.badgesAcquis.length;
-          this.cdr.detectChanges(); // Forcer détection changement si besoin
+          this.cdr.detectChanges();
         },
-        error: (error: any) => {
+        error: (error) => {
           console.error('Erreur récupération historique badges :', error);
         }
       });
-    } catch(e) {
+    } catch (e) {
       console.error('Erreur parsing user data:', e);
     }
   }
@@ -95,11 +111,8 @@ export class Navebar implements OnInit {
 
   openModal() {
     const modal = document.getElementById('projectModal');
-    if (modal) modal.classList.add('active');
-  }
-
-  closeModal() {
-    const modal = document.getElementById('projectModal');
-    if (modal) modal.classList.remove('active');
+    if (modal) {
+      modal.classList.add('active'); // Ajoute .active
+    }
   }
 }

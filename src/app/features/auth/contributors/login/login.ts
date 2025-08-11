@@ -2,7 +2,6 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../../core/auth-service';
-
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { Subject, takeUntil } from 'rxjs';
@@ -14,19 +13,19 @@ declare const google: any;
   standalone: true,
   imports: [RouterLink, ReactiveFormsModule, FormsModule, CommonModule, HttpClientModule],
   templateUrl: './login.html',
-  styleUrl: './login.css'
+  styleUrls: ['./login.css']
 })
 export class Login implements OnInit, OnDestroy {
   username: string = '';
   password: string = '';
   rememberMe: boolean = false;
   isLoading: boolean = false;
+  showPassword: boolean = false;
 
   private destroy$ = new Subject<void>();
 
   constructor(
     private authService: AuthService,
-   
     private router: Router
   ) {}
 
@@ -35,7 +34,6 @@ export class Login implements OnInit, OnDestroy {
       this.router.navigate(['/home']);
       return;
     }
-
     this.initializeGoogleSignIn();
   }
 
@@ -44,10 +42,14 @@ export class Login implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
+  togglePassword(): void {
+    this.showPassword = !this.showPassword;
+  }
+
   private initializeGoogleSignIn(): void {
     if (typeof google !== 'undefined') {
       google.accounts.id.initialize({
-        client_id: '425444552086-3pd70ibsfafbg9gg4rc1s0iqngtadndf.apps.googleusercontent.com',
+        client_id:  '312043062222-pqt5dp0nerpmuan5n774068e6ps64um8.apps.googleusercontent.com', // remplace par ton vrai client_id
         callback: (response: any) => this.handleGoogleResponse(response),
       });
       google.accounts.id.renderButton(
@@ -65,16 +67,26 @@ export class Login implements OnInit, OnDestroy {
       return;
     }
 
+    // Décodage du token Google
+    const payload = JSON.parse(atob(response.credential.split('.')[1]));
+
+    const googleUser = {
+      email: payload.email,
+      firstName: payload.given_name,
+      lastName: payload.family_name,
+      fullName: payload.name,
+      picture: payload.picture
+    };
+
+    console.log('Infos Google:', googleUser);
+
     this.isLoading = true;
-    this.authService.loginWithGoogleToken(response.credential)
+
+    this.authService.loginWithGoogle(googleUser)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
-        next: (res) => {
-          this.handleLoginSuccess(res);
-        },
-        error: (err) => {
-          this.handleLoginError('Connexion Google échouée', err);
-        }
+        next: (res) => this.handleLoginSuccess(res),
+        error: (err) => this.handleLoginError('Connexion Google échouée', err)
       });
   }
 
@@ -93,43 +105,10 @@ export class Login implements OnInit, OnDestroy {
     this.authService.loginUser(credentials)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
-        next: (response) => {
-          this.handleLoginSuccess(response);
-        },
-        error: (err) => {
-          this.handleLoginError('Email ou mot de passe incorrect', err);
-        }
+        next: (response) => this.handleLoginSuccess(response),
+        error: (err) => this.handleLoginError('Email ou mot de passe incorrect', err)
       });
   }
-
-  // loginWithGithub(): void {
-  //   this.isLoading = true;
-  //   // Utilisez le service OAuth plutôt qu'une redirection directe
-  //   this.oauthService.initiateGithubLogin()
-  //     .pipe(takeUntil(this.destroy$))
-  //     .subscribe({
-  //       next: (url) => {
-  //         window.location.href = url || 'http://localhost:8080/oauth2/authorization/github';
-  //       },
-  //       error: (err) => {
-  //         this.handleLoginError('Connexion GitHub échouée', err);
-  //       }
-  //     });
-  // }
-
-  // loginWithLinkedin(): void {
-  //   this.isLoading = true;
-  //   this.oauthService.initiateLinkedinLogin()
-  //     .pipe(takeUntil(this.destroy$))
-  //     .subscribe({
-  //       next: (url) => {
-  //         window.location.href = url || 'http://localhost:8080/oauth2/authorization/linkedin';
-  //       },
-  //       error: (err) => {
-  //         this.handleLoginError('Connexion LinkedIn échouée', err);
-  //       }
-  //     });
-  // }
 
   private handleLoginSuccess(response: any): void {
     this.authService.saveToken(response.token);

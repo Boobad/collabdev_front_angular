@@ -44,7 +44,7 @@
       <button class="btn btn-tasks" routerLink="/workspace-project">
         <i class="fas fa-tasks"></i> Tâches
       </button>
-      <button class="btn btn-share">
+      <button class="btn btn-share" (click)="openShareModal()">
         <i class="fas fa-share-alt"></i> Partager
       </button>
       <button class="btn btn-favorite" title="Ajouter aux favoris">
@@ -52,3 +52,25 @@
       </button>
     </div>
 </section>
+
+<!-- Modal -->
+<div class="modal-backdrop" *ngIf="showShareModal" (click)="closeShareModal()"></div>
+<div class="modal" *ngIf="showShareModal" (click)="$event.stopPropagation()">
+  <h3>Partager le projet</h3>
+  <p>{{ project?.titre }}</p>
+  <div class="share-buttons">
+    <button class="facebook" (click)="share('facebook')">
+      <i class="fab fa-facebook-f"></i> Facebook
+    </button>
+    <button class="twitter" (click)="share('twitter')">
+      <i class="fab fa-twitter"></i> Twitter
+    </button>
+    <button class="linkedin" (click)="share('linkedin')">
+      <i class="fab fa-linkedin-in"></i> LinkedIn
+    </button>
+    <button class="whatsapp" (click)="share('whatsapp')">
+      <i class="fab fa-whatsapp"></i> WhatsApp
+    </button>
+  </div>
+  <button class="btn-close" (click)="closeShareModal()">Fermer</button>
+</div>
