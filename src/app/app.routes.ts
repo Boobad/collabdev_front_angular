@@ -4,33 +4,40 @@ import { Projects } from './contributeurs/pages/projects/projects';
 import { FormulaireParticipation } from './contributeurs/pages/formulaire-participation/formulaire-participation';
 import { DemarrageQuiz } from './contributeurs/pages/demarrage-quiz/demarrage-quiz';
 import { Quiz } from './contributeurs/pages/quiz/quiz';
+import { UsersList } from './contributeurs/pages/users-list/users-list';
+
 export const routes: Routes = [
   {
     path: '',
-    component: Home,
+    component: Home, // Page d'accueil par défaut
   },
   {
     path: 'projects',
-    component: Projects,
+    component: Projects, // Liste des projets
   },
   {
     path: 'formulaire-participation',
-    component: FormulaireParticipation,
+    component: FormulaireParticipation, // Formulaire de participation
   },
   {
     path: 'test/:role',
-    component: FormulaireParticipation, // À réévaluer si vous voulez utiliser DemarrageQuiz ici
+    component: DemarrageQuiz, // Redirige vers DemarrageQuiz pour un rôle spécifique (ajustement proposé)
+    // Note : Si ce n'est pas l'intention, supprimez cette route ou remplacez par une redirection
   },
   {
-    path: 'demarrage-quiz', // Nouvelle route pour DemarrageQuiz
-    component: DemarrageQuiz,
+    path: 'demarrage-quiz',
+    component: DemarrageQuiz, // Page de démarrage du quiz
   },
   {
     path: 'quiz',
-    component: Quiz,
+    component: Quiz, // Quiz interactif
+  },
+  {
+    path: 'users-list',
+    component: UsersList, // Liste des utilisateurs
   },
   {
     path: '**',
-    redirectTo: '',
+    redirectTo: '', // Route par défaut pour toutes les URL non reconnues
   },
 ];

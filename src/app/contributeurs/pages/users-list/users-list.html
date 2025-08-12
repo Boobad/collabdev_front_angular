@@ -1,0 +1,79 @@
+<div class="container">
+  <h1 class="page-title">Gestion des Utilisateurs</h1>
+  
+  <div class="users-grid">
+    <div class="user-card" *ngFor="let user of users" [ngClass]="{'blocked': user.blocked}">
+      <div class="user-header">
+        <div class="user-avatar" [ngClass]="{'blue': user.avatar.length <= 2, 'purple': user.avatar.length > 2}">
+          {{ user.avatar }}
+        </div>
+        <div class="user-info">
+          <h3>{{ user.name }}</h3>
+          <div class="user-role">{{ user.role }}</div>
+        </div>
+      </div>
+      
+      <div class="status-badge" [ngClass]="{'active': !user.blocked && user.status === 'active', 'inactive': !user.blocked && user.status === 'inactive', 'blocked': user.blocked}">
+        {{ user.blocked ? 'Bloqué' : (user.status === 'active' ? 'Actif' : 'Inactif') }}
+      </div>
+      
+      <div class="user-stats">
+        <div class="stat-item">
+          <div class="stat-value">{{ user.contributions }}</div>
+          <div class="stat-label">Contributions</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value">{{ user.coins }}</div>
+          <div class="stat-label">COINS</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value">{{ user.projects }}</div>
+          <div class="stat-label">Projets</div>
+        </div>
+      </div>
+      
+      <div class="user-actions">
+        <button class="action-btn delete" (click)="deleteUser(user.id)">
+          <svg class="action-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M3 6h18"/>
+            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+          </svg>
+          Supprimer
+        </button>
+        <button class="action-btn" [ngClass]="{'block': !user.blocked, 'unblock': user.blocked}" (click)="toggleBlockUser(user.id)">
+          <svg class="action-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <ng-container *ngIf="user.blocked">
+              <circle cx="12" cy="12" r="3"/>
+              <path d="M12 1v6m0 6v6"/>
+            </ng-container>
+            <ng-container *ngIf="!user.blocked">
+              <circle cx="12" cy="12" r="10"/>
+              <path d="M4.93 4.93l14.14 14.14"/>
+            </ng-container>
+          </svg>
+          {{ user.blocked ? 'Débloquer' : 'Bloquer' }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de confirmation de suppression -->
+<div class="modal-overlay" id="deleteModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 class="modal-title">Confirmer la suppression</h2>
+      <button class="close-btn" (click)="closeModal('deleteModal')">&times;</button>
+    </div>
+    <p>Êtes-vous sûr de vouloir supprimer cet utilisateur ? Cette action est irréversible.</p>
+    <div class="modal-actions">
+      <button type="button" class="btn btn-secondary" (click)="closeModal('deleteModal')">Annuler</button>
+      <button type="button" class="btn btn-danger" (click)="confirmDelete()">Supprimer</button>
+    </div>
+  </div>
+</div>
+
+<!-- Notification -->
+<div class="notification" *ngIf="notification" [ngClass]="notificationClasses">
+  {{ notification.message }}
+</div>
