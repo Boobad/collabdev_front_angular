@@ -1,9 +1,12 @@
+// modal-create-project.ts
 import { Component } from '@angular/core';
 import { ProjectPayload, ProjectsService } from '../../../core/projects-service';
 import { Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-modal-create-project',
+  imports:[CommonModule],
   templateUrl: './modal-create-project.html',
   styleUrls: ['./modal-create-project.css']
 })
@@ -42,6 +45,9 @@ export class ModalCreateProject {
   async onSubmit(event: Event): Promise<void> {
     event.preventDefault();
     this.isSubmitting = true;
+
+    // Simuler un délai de création pour voir l'animation
+    await new Promise(resolve => setTimeout(resolve, 1500));
 
     const form = event.target as HTMLFormElement;
     const formData = new FormData(form);

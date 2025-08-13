@@ -1,3 +1,47 @@
+
+.password-field {
+  position: relative;
+}
+
+.eye-icon {
+  position: absolute;
+  right: 40px; /* espace pour le lien "mot de passe oublié ?" */
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.eye-icon svg {
+  width: 20px;
+  height: 20px;
+}
+
+.eye-icon:hover svg {
+  stroke: #1e3cfd;
+  transform: scale(1.1);
+}
+
+.input-field input {
+  width: 100%;
+  padding: 14px 40px 14px 16px; /* espace à droite pour icône */
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 15px;
+  transition: all 0.2s ease;
+  background: #f9fafb;
+}
+
+.input-field input:focus {
+  outline: none;
+  border-color: #1e3cfd;
+  background: white;
+  box-shadow: 0 0 0 3px rgba(30, 60, 253, 0.1);
+}
+
 /* Ajoutez ces styles à votre fichier CSS */
 .login-btn {
   position: relative;
@@ -90,10 +134,10 @@
 }
 
 .info-description {
-  font-size: 18px;
+  font-size: 1.5rem;
   line-height: 1.6;
   opacity: 0.9;
-  max-width: 500px;
+  
 }
 
 /* Partie droite avec formulaire */

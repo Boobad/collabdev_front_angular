@@ -12,16 +12,7 @@ import { AuthService } from '../../core/auth-service';
 })
 
 export class Sidebar implements OnInit {
-
   user: any = null;
-
-  ngOnInit(): void {
-    const userData = localStorage.getItem('user');
-    if (userData) {
-      this.user = JSON.parse(userData);
-    }
-  }
-
   isCollapsed = false;
 
   constructor(
@@ -29,13 +20,28 @@ export class Sidebar implements OnInit {
     private router: Router
   ) {}
 
+  ngOnInit(): void {
+    const userData = localStorage.getItem('user');
+    if (userData) {
+      this.user = JSON.parse(userData);
+      this.user.initiales = this.getInitiales(this.user.nom, this.user.prenom);
+    }
+  }
+
   logout(): void {
     this.authService.logout();
-    this.router.navigate(['/login']);
+    this.router.navigateByUrl('/login');
   }
 
   toggleSidebar() {
     this.isCollapsed = !this.isCollapsed;
+  }
+
+  // Fonction pour générer les initiales
+  getInitiales(nom: string, prenom: string): string {
+    const n = nom ? nom[0].toUpperCase() : '';
+    const p = prenom ? prenom[0].toUpperCase() : '';
+    return n + p;
   }
 }
 

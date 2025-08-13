@@ -54,12 +54,28 @@
 
       <!-- Formulaire mot de passe -->
       <div class="form-group">
-        <h3>Mot de passe</h3>
-        <div class="input-field">
-          <input type="password" placeholder="Saisir votre mot de passe" [(ngModel)]="password" name="password">
-          <a routerLink="/forgot" class="forgot-password">Mot de passe oublié ?</a>
-        </div>
-      </div>
+  <h3>Mot de passe</h3>
+  <div class="input-field password-field">
+    <input 
+      [type]="showPassword ? 'text' : 'password'" 
+      placeholder="Saisir votre mot de passe" 
+      [(ngModel)]="password" 
+      name="password"
+    >
+    
+    <!-- Icône œil visible seulement si password non vide -->
+    <span class="eye-icon" *ngIf="password" (click)="togglePassword()">
+      <i *ngIf="!showPassword" class="fa fa-eye"></i>
+      <i *ngIf="showPassword" class="fa fa-eye-slash"></i>
+    </span>
+    
+    <!-- Lien Mot de passe oublié visible seulement si password vide -->
+    <a *ngIf="!password" routerLink="/forgot" class="forgot-password">
+      Mot de passe oublié ?
+    </a>
+  </div>
+</div>
+
 
       <!-- Bouton de connexion -->
       <button type="submit" class="login-btn" (click)="onLogin()" [disabled]="isLoading">
@@ -69,7 +85,7 @@
 
       <!-- Option SSO -->
       <div class="sso-option">
-        <span>ou se connecter avec le SSO</span>
+        <span>ou</span>
       </div>
 
       <!-- Lien d'inscription -->

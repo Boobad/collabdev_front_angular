@@ -37,14 +37,21 @@ export class Login implements OnInit, OnDestroy {
     this.initializeGoogleSignIn();
   }
 
+
+
+
+
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
   }
 
-  togglePassword(): void {
-    this.showPassword = !this.showPassword;
-  }
+
+
+togglePassword(): void {
+  this.showPassword = !this.showPassword;
+}
+
 
   private initializeGoogleSignIn(): void {
     if (typeof google !== 'undefined') {

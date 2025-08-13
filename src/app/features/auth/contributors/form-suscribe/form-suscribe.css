@@ -58,10 +58,10 @@
 }
 
 .info-description {
-  font-size: 18px;
+  font-size: 1.5rem;
   line-height: 1.6;
   opacity: 0.9;
-  max-width: 500px;
+ 
 }
 
 /* Partie droite avec formulaire */

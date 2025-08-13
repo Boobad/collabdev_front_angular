@@ -1,5 +1,10 @@
+<!-- workspace-project.html -->
 <header class="project-header">
   <div class="header-content">
+    <button class="btn btn-back" (click)="goBack()">
+      <i class="fas fa-arrow-left"></i> Retour
+    </button>
+    
     <h1>{{ projectDetails.titre || 'Chargement...' }}</h1>
     <p class="project-description">{{ projectDetails.description }}</p>
     
@@ -8,14 +13,28 @@
         <i class="fas fa-users"></i> 
         {{ projectDetails.nombreParticipants || 0 }} participants
       </span>
+      
       <span class="meta-item">
         <i class="fas fa-tasks"></i> 
-        {{ projectDetails.nombreFonctionnalites || 0 }} fonctionnalités
+        {{ tachesTerminees }}/{{ totalTaches }} tâches terminées
+        ({{ getProgressPercentage() }}%)
       </span>
+      
       <span class="meta-item">
         <i class="fas fa-calendar"></i> 
         Créé le {{ projectDetails.dateCreation | date:'dd/MM/yyyy' }}
       </span>
+    </div>
+    
+    <div class="progress-container">
+      <div class="progress-bar">
+        <div class="progress-fill" 
+             [style.width]="getProgressPercentage() + '%'"
+             [style.background-color]="getProgressPercentage() === 100 ? '#43a047' : 
+                                        getProgressPercentage() >= 50 ? '#fb8c00' : 
+                                        getProgressPercentage() > 0 ? '#1e88e5' : '#9e9e9e'">
+        </div>
+      </div>
     </div>
   </div>
 
@@ -28,7 +47,7 @@
 
 <!-- Modal pour nouvelle fonctionnalité -->
 <div class="modal-overlay" [class.active]="showNewFeatureForm" (click)="handleOverlayClick($event)">
-  <div class="modal-content">
+  <div class="modal-content" (click)="$event.stopPropagation()">
     <div class="modal-header">
       <h3>Créer une nouvelle fonctionnalité</h3>
       <button class="modal-close" (click)="toggleNewFeatureForm()">&times;</button>
@@ -52,6 +71,22 @@
           <label for="dateEcheance">Date d'échéance *</label>
           <input type="date" id="dateEcheance" name="dateEcheance" class="form-control"
                  required [(ngModel)]="newFeature.dateEcheance">
+        </div>
+
+        <div class="form-group">
+          <label for="participant">Assigner à (optionnel)</label>
+          <div class="participant-select">
+            <select id="participant" name="participant" class="form-control" 
+                    [(ngModel)]="newFeature.participantId">
+              <option [ngValue]="null">Non assigné</option>
+              <option *ngFor="let p of projectParticipants" [ngValue]="p.id">
+                {{ p.contributeurPrenom }} {{ p.contributeurNom }} - {{ p.profil }}
+              </option>
+            </select>
+            <div class="participant-avatar">
+              <i class="fas fa-user-circle"></i>
+            </div>
+          </div>
         </div>
 
         <div class="form-group">
@@ -96,6 +131,36 @@
   </div>
 </div>
 
+<!-- Modal de feedback pour création de fonctionnalité -->
+<div class="modal-overlay" [class.active]="showFeedbackModal" (click)="closeFeedbackModal()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3>{{ feedbackTitle }}</h3>
+      <button class="modal-close" (click)="closeFeedbackModal()">&times;</button>
+    </div>
+    
+    <div class="modal-body">
+      <div class="feedback-content">
+        <div class="feedback-icon" [ngClass]="{'success': isFeedbackSuccess, 'error': !isFeedbackSuccess}">
+          <i *ngIf="isFeedbackSuccess" class="fas fa-check-circle"></i>
+          <i *ngIf="!isFeedbackSuccess" class="fas fa-exclamation-circle"></i>
+        </div>
+        
+        <p>{{ feedbackMessage }}</p>
+        
+        <div class="feedback-actions">
+          <button *ngIf="isFeedbackSuccess" class="btn btn-view" (click)="viewCreatedFeature()">
+            <i class="fas fa-eye"></i> Voir la fonctionnalité
+          </button>
+          <button class="btn btn-close" (click)="closeFeedbackModal()">
+            Fermer
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- Navigation Tabs -->
 <nav class="project-tabs">
   <button class="tab-btn" 
@@ -103,11 +168,7 @@
           (click)="changeTab('kanban')">
     <i class="fas fa-table-columns"></i> Kanban
   </button>
-  <button class="tab-btn" 
-          [class.active]="activeTab === 'discussion'"
-          (click)="changeTab('discussion')">
-    <i class="fas fa-comments"></i> Discussion
-  </button>
+  
   <button class="tab-btn" 
           [class.active]="activeTab === 'documents'"
           (click)="changeTab('documents')">
@@ -130,7 +191,8 @@
       <div class="cards-container">
         <app-card-task *ngFor="let task of todoTasks; trackBy: trackById"
                       cdkDrag
-                      [task]="task">
+                      [task]="task"
+                      [id]="'task-' + task.id">
         </app-card-task>
       </div>
     </div>
@@ -147,7 +209,8 @@
       <div class="cards-container">
         <app-card-task *ngFor="let task of inProgressTasks; trackBy: trackById"
                       cdkDrag
-                      [task]="task">
+                      [task]="task"
+                      [id]="'task-' + task.id">
         </app-card-task>
       </div>
     </div>
@@ -164,7 +227,8 @@
       <div class="cards-container">
         <app-card-task *ngFor="let task of doneTasks; trackBy: trackById"
                       cdkDrag
-                      [task]="task">
+                      [task]="task"
+                      [id]="'task-' + task.id">
         </app-card-task>
       </div>
     </div>

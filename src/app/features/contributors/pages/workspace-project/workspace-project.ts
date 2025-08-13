@@ -1,11 +1,14 @@
+// workspace-project.ts
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Location } from '@angular/common';
 import { CdkDragDrop, DragDropModule, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { CardTask } from '../../../../shared/ui-components/card-task/card-task';
 import { FonctionnalitesService } from '../../../../core/services/fonctionnalites.service';
 import { ProjectsService } from '../../../../core/projects-service';
 import { ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-workspace-project',
@@ -24,8 +27,13 @@ export class WorkspaceProject implements OnInit {
   isLoading: boolean = true;
   activeTab: string = 'kanban';
 
+  totalTaches: number = 0;
+  tachesTerminees: number = 0;
+
   showNewFeatureForm: boolean = false;
   isCreating: boolean = false;
+
+  projectParticipants: any[] = [];
 
   newFeature: any = {
     titre: '',
@@ -38,15 +46,28 @@ export class WorkspaceProject implements OnInit {
     motsCles: [],
     motsClesStr: '',
     projetId: 0,
-    participantId: 0
+    participantId: null // Utilisation de null pour "Non assigné"
   };
+
+  // Variables pour le modal de feedback
+  showFeedbackModal: boolean = false;
+  feedbackTitle: string = '';
+  feedbackMessage: string = '';
+  isFeedbackSuccess: boolean = false;
+  createdFeatureId: number | null = null;
 
   constructor(
     private fonctService: FonctionnalitesService,
     private projetsService: ProjectsService,
+    private location : Location,
     private route: ActivatedRoute,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private http: HttpClient
   ) {}
+
+  goBack(): void {
+    this.location.back();
+  }
 
   ngOnInit() {
     this.route.params.subscribe(params => {
@@ -54,6 +75,7 @@ export class WorkspaceProject implements OnInit {
       this.newFeature.projetId = this.projectId;
       this.loadProjectData();
       this.loadProjectDetails();
+      this.loadProjectParticipants();
     });
   }
 
@@ -67,7 +89,6 @@ export class WorkspaceProject implements OnInit {
   toggleNewFeatureForm() {
     this.showNewFeatureForm = !this.showNewFeatureForm;
     
-    // Empêche le défilement de la page quand le modal est ouvert
     if (this.showNewFeatureForm) {
       document.body.style.overflow = 'hidden';
     } else {
@@ -88,7 +109,7 @@ export class WorkspaceProject implements OnInit {
       motsCles: [],
       motsClesStr: '',
       projetId: this.projectId,
-      participantId: 0
+      participantId: null // Réinitialisation à null
     };
   }
 
@@ -104,11 +125,24 @@ export class WorkspaceProject implements OnInit {
     });
   }
 
+  loadProjectParticipants() {
+    this.http.get<any[]>(`http://localhost:8080/api/v1/participants/projet/${this.projectId}`).subscribe({
+      next: (participants) => {
+        this.projectParticipants = participants;
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error('Erreur chargement participants:', err);
+      }
+    });
+  }
+
   loadProjectData() {
     this.isLoading = true;
     this.fonctService.getFonctionnalitesByProjet(this.projectId).subscribe({
       next: (fonctionnalites) => {
         this.organizeTasks(fonctionnalites);
+        this.updateTaskCounters();
         this.isLoading = false;
         this.cdr.detectChanges();
       },
@@ -118,6 +152,11 @@ export class WorkspaceProject implements OnInit {
         this.cdr.detectChanges();
       }
     });
+  }
+
+  updateTaskCounters() {
+    this.totalTaches = this.todoTasks.length + this.inProgressTasks.length + this.doneTasks.length;
+    this.tachesTerminees = this.doneTasks.length;
   }
 
   organizeTasks(fonctionnalites: any[]) {
@@ -195,6 +234,7 @@ export class WorkspaceProject implements OnInit {
       this.fonctService.updateStatus(task.id, newStatus).subscribe({
         next: () => {
           console.log(`Statut de la fonctionnalité ${task.id} mis à jour avec succès.`);
+          this.updateTaskCounters();
         },
         error: (err) => {
           console.error(`Erreur lors de la mise à jour du statut de la fonctionnalité ${task.id}:`, err);
@@ -230,13 +270,25 @@ export class WorkspaceProject implements OnInit {
 
     this.isCreating = true;
 
+    // Traitement des mots-clés
     if (this.newFeature.motsClesStr) {
-      this.newFeature.motsCles = this.newFeature.motsClesStr.split(',').map((m: string) => m.trim());
+      this.newFeature.motsCles = this.newFeature.motsClesStr
+        .split(',')
+        .map((m: string) => m.trim())
+        .filter((m: string) => m.length > 0);
     } else {
       this.newFeature.motsCles = [];
     }
 
-    this.fonctService.createFeature(this.newFeature).subscribe({
+    // Préparation du payload avec gestion des champs manquants
+    const payload = {
+      ...this.newFeature,
+      exigences: this.newFeature.exigences || [],
+      criteresAcceptation: this.newFeature.criteresAcceptation || [],
+      participantId: this.newFeature.participantId || null
+    };
+
+    this.fonctService.createFeature(payload).subscribe({
       next: (createdFeature) => {
         const task = this.convertToTask(createdFeature);
         switch (createdFeature.statusFeatures) {
@@ -247,14 +299,63 @@ export class WorkspaceProject implements OnInit {
         }
         this.isCreating = false;
         this.toggleNewFeatureForm();
+        this.updateTaskCounters();
         this.cdr.detectChanges();
+        
+        // Afficher le modal de succès
+        this.showFeedback(
+          'Fonctionnalité créée !',
+          `La fonctionnalité "${this.newFeature.titre}" a été ajoutée avec succès.`,
+          true,
+          createdFeature.id
+        );
       },
       error: (err) => {
         console.error('Erreur création fonctionnalité:', err);
-        alert('Erreur lors de la création de la fonctionnalité.');
         this.isCreating = false;
         this.cdr.detectChanges();
+        
+        // Afficher le modal d'erreur
+        this.showFeedback(
+          'Erreur de création',
+          'Une erreur est survenue lors de la création de la fonctionnalité. Veuillez réessayer.',
+          false
+        );
       }
     });
+  }
+
+  getProgressPercentage(): number {
+    if (this.totalTaches === 0) return 0;
+    return Math.round((this.tachesTerminees / this.totalTaches) * 100);
+  }
+
+  // Afficher le modal de feedback
+  showFeedback(title: string, message: string, isSuccess: boolean, featureId: number | null = null) {
+    this.feedbackTitle = title;
+    this.feedbackMessage = message;
+    this.isFeedbackSuccess = isSuccess;
+    this.createdFeatureId = featureId;
+    this.showFeedbackModal = true;
+    document.body.style.overflow = 'hidden';
+  }
+
+  // Fermer le modal de feedback
+  closeFeedbackModal() {
+    this.showFeedbackModal = false;
+    document.body.style.overflow = '';
+  }
+
+  // Naviguer vers la fonctionnalité créée
+  viewCreatedFeature() {
+    if (this.createdFeatureId) {
+      const element = document.getElementById(`task-${this.createdFeatureId}`);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        element.classList.add('highlight-task');
+        setTimeout(() => element.classList.remove('highlight-task'), 2000);
+      }
+    }
+    this.closeFeedbackModal();
   }
 }

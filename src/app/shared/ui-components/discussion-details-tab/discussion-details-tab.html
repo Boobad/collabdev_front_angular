@@ -29,7 +29,9 @@
         <div *ngFor="let discussion of discussions" class="discussion-card">
             <div class="discussion-content">
                 <div class="discussion-header">
-                    <h3>{{ discussion.contenu | slice:0:50 }}{{ discussion.contenu.length > 50 ? '...' : '' }}</h3>
+                    <h3>
+                        <!-- <span>{{ discussion.contenu | slice:0:50 }}{{ discussion.contenu.length > 50 ? '...' : '' }}</span> -->
+                    </h3>
                     <button class="btn-reply" (click)="toggleReply(discussion.id)">
                         Répondre
                     </button>
@@ -142,9 +144,9 @@
                       placeholder="Commencer une nouvelle discussion..."></textarea>
             <div class="editor-actions">
                 <div class="attachment-options">
-                    <button class="btn btn-icon"><fa-icon [icon]="icons.paperclip"></fa-icon></button>
+                    <!-- <button class="btn btn-icon"><fa-icon [icon]="icons.paperclip"></fa-icon></button>
                     <button class="btn btn-icon"><fa-icon [icon]="icons.image"></fa-icon></button>
-                    <button class="btn btn-icon"><fa-icon [icon]="icons.code"></fa-icon></button>
+                    <button class="btn btn-icon"><fa-icon [icon]="icons.code"></fa-icon></button> -->
                 </div>
                 <button class="btn btn-primary" 
                         (click)="createDiscussion()" 

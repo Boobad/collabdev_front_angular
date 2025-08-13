@@ -28,12 +28,12 @@ import { ResetPassword } from './features/auth/contributors/reset-password/reset
 import { SearchPage } from './features/contributors/pages/search-page/search-page';
 import { Error404 } from './shared/ui-components/error-404/error-404';
 import { ProjetsRecommandes } from './features/contributors/pages/profil-user/projets-recommandes/projets-recommandes';
-
+import { Login } from './features/auth/contributors/login/login';
 
 export const routes: Routes = [
-
+  // ==================== MainLayout avec authGuard ====================
   {
-    path:'',
+    path: '',
     component: MainLayout,
     canActivate: [authGuard],
     children: [
@@ -53,19 +53,18 @@ export const routes: Routes = [
       { path: 'projets-recommandes', component: ProjetsRecommandes },
       { path: 'formulaire-participation/:idProjet', component: FormulaireParticipation },
       { path: 'voir-participation', component: ListeDemandeParticipation },
-      { path: '', redirectTo: 'home', pathMatch: 'full' },
       { path: 'hist_contribution', component: PageContribution },
-      { path: '**', component: Error404 } // Doit être la dernière !
+      { path: '', redirectTo: 'home', pathMatch: 'full' }
     ]
   },
-  {
-    path:'',
-    component: AuthLayout,
-     children: [
-      { path: '', redirectTo: 'login', pathMatch: 'full' },
 
-      { path: 'login', loadComponent: () => import('./features/auth/contributors/login/login').then(m => m.Login) },
-      { path: 'logAdmin', component: LoginAdmin },
+  // ==================== AuthLayout pour login / reset / register ====================
+  {
+    path: '',
+    component: AuthLayout,
+    children: [
+      { path: '', redirectTo: 'login', pathMatch: 'full' },
+      { path: 'login', component: Login },
       { path: 'suscribe', component: FormSuscribe },
       { path: 'reset', component: ResetPassword },
       { path: 'forgot', component: ForgetPassword },
@@ -73,11 +72,14 @@ export const routes: Routes = [
       { path: 'submit-contribution', component: SubmitContribution },
       { path: 'task-details', component: TaskDetails },
       { path: 'parametre-coins', component: ParametrageCoins },
+      { path: 'gestion-fonctionnalite', component: GestionFonctionnalite },
       { path: 'badge-recompense', component: RecompenseBadge },
       { path: 'projets-recommandes', component: ProjetsRecommandes },
       { path: 'gestion-fonctionnalite', component : GestionFonctionnalite },
+      { path: 'logAdmin', component: LoginAdmin }
     ]
-  }
-,
-  { path: '**', redirectTo: '' } // Redirection pour les routes inconnues
+  },
+
+  // ==================== 404 globale ====================
+  { path: '**', component: Error404 }
 ];
