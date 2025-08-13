@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectorRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
@@ -13,34 +13,51 @@ import { CommonModule } from '@angular/common';
 })
 export class ForgetPassword {
   email: string = '';
-  isLoading: boolean = false;
-  errorMessage: string = '';
-  successMessage: string = '';
+  isLoading = false;
+  errorMessage = '';
+  successMessage = '';
 
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(
+    private http: HttpClient,
+    private router: Router,
+    private cdRef: ChangeDetectorRef
+  ) {}
 
   onSubmit() {
     if (!this.email) {
       this.errorMessage = 'Veuillez entrer votre adresse email';
+      this.cdRef.detectChanges();
       return;
     }
 
     this.isLoading = true;
     this.errorMessage = '';
     this.successMessage = '';
+    this.cdRef.detectChanges();
 
-    this.http.post('http://localhost:8080/api/v1/auth/forgot-password', { email: this.email })
+    this.http.get<{ id: number; email: string }[]>('http://localhost:8080/api/v1/auth/users')
       .subscribe({
-        next: () => {
+        next: (users) => {
+          const user = users.find(u => u.email.toLowerCase() === this.email.toLowerCase());
           this.isLoading = false;
-          this.successMessage = 'Un email de réinitialisation a été envoyé si ce compte existe';
-          setTimeout(() => {
-            this.router.navigate(['/reset']);
-          }, 3000);
+
+          if (user) {
+            this.successMessage = 'Email trouvé, redirection vers la page de réinitialisation...';
+            this.errorMessage = '';
+            this.cdRef.detectChanges();
+
+            this.router.navigate(['/reset'], { queryParams: { id: user.id } });
+          } else {
+            this.errorMessage = 'Cet email n’existe pas dans notre base.';
+            this.successMessage = '';
+            this.cdRef.detectChanges();
+          }
         },
         error: () => {
           this.isLoading = false;
-          this.errorMessage = 'Un email de réinitialisation a été envoyé si ce compte existe';
+          this.errorMessage = 'Erreur serveur lors de la vérification de l’email.';
+          this.successMessage = '';
+          this.cdRef.detectChanges();
         }
       });
   }

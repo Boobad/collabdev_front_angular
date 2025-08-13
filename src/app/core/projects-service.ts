@@ -32,6 +32,13 @@ export class ProjectsService {
   private apiUrl = 'http://localhost:8080/api/v1/projets/contributeur';
 
   constructor(private http: HttpClient) {}
+    private apiUrll = 'http://localhost:8080/api/v1/projets';
+
+  
+
+  getProjetById(id: number): Observable<any> {
+    return this.http.get(`${this.apiUrll}/${id}`);
+  }
 
   uploadFile(file: File): Observable<{ fileUrl: string }> {
     const formData = new FormData();

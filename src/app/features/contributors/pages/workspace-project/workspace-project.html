@@ -1,17 +1,131 @@
-<!-- workspace-project.html -->
-<app-wspace-page-header></app-wspace-page-header>
+<header class="project-header">
+  <div class="header-content">
+    <h1>{{ projectDetails.titre || 'Chargement...' }}</h1>
+    <p class="project-description">{{ projectDetails.description }}</p>
+    
+    <div class="project-meta">
+      <span class="meta-item">
+        <i class="fas fa-users"></i> 
+        {{ projectDetails.nombreParticipants || 0 }} participants
+      </span>
+      <span class="meta-item">
+        <i class="fas fa-tasks"></i> 
+        {{ projectDetails.nombreFonctionnalites || 0 }} fonctionnalités
+      </span>
+      <span class="meta-item">
+        <i class="fas fa-calendar"></i> 
+        Créé le {{ projectDetails.dateCreation | date:'dd/MM/yyyy' }}
+      </span>
+    </div>
+  </div>
 
-<main class="modern-page-layout">
-  <!-- Colonne gauche : Kanban -->
+  <div class="header-actions">
+    <button class="btn btn-primary" (click)="toggleNewFeatureForm()">
+      <i class="fas fa-plus"></i> Nouvelle fonctionnalité
+    </button>
+  </div>
+</header>
+
+<!-- Modal pour nouvelle fonctionnalité -->
+<div class="modal-overlay" [class.active]="showNewFeatureForm" (click)="handleOverlayClick($event)">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3>Créer une nouvelle fonctionnalité</h3>
+      <button class="modal-close" (click)="toggleNewFeatureForm()">&times;</button>
+    </div>
+    
+    <div class="modal-body">
+      <form (ngSubmit)="createFeature()" #featureForm="ngForm">
+        <div class="form-group">
+          <label for="titre">Titre *</label>
+          <input type="text" id="titre" name="titre" class="form-control" 
+                 required [(ngModel)]="newFeature.titre">
+        </div>
+
+        <div class="form-group">
+          <label for="contenu">Description *</label>
+          <textarea id="contenu" name="contenu" class="form-control"
+                    required [(ngModel)]="newFeature.contenu"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="dateEcheance">Date d'échéance *</label>
+          <input type="date" id="dateEcheance" name="dateEcheance" class="form-control"
+                 required [(ngModel)]="newFeature.dateEcheance">
+        </div>
+
+        <div class="form-group">
+          <label for="importance">Importance *</label>
+          <select id="importance" name="importance" class="form-control"
+                  required [(ngModel)]="newFeature.importance">
+            <option value="HAUTE">Haute</option>
+            <option value="MOYENNE" selected>Moyenne</option>
+            <option value="FAIBLE">Faible</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="statusFeatures">Statut initial *</label>
+          <select id="statusFeatures" name="statusFeatures" class="form-control"
+                  required [(ngModel)]="newFeature.statusFeatures">
+            <option value="A_FAIRE" selected>À faire</option>
+            <option value="EN_COURS">En cours</option>
+            <option value="TERMINE">Terminé</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="motsCles">Mots-clés (séparés par virgule)</label>
+          <input type="text" id="motsCles" name="motsCles" class="form-control"
+                 [(ngModel)]="newFeature.motsClesStr" placeholder="ex: login, sécurité">
+        </div>
+
+        <div class="form-footer">
+          <button type="button" class="btn btn-secondary" (click)="toggleNewFeatureForm()">
+            Annuler
+          </button>
+          <button type="submit" class="btn btn-primary" [disabled]="featureForm.invalid || isCreating">
+            <span *ngIf="!isCreating">Créer</span>
+            <span *ngIf="isCreating">
+              <i class="fas fa-spinner fa-spin"></i> Création...
+            </span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Navigation Tabs -->
+<nav class="project-tabs">
+  <button class="tab-btn" 
+          [class.active]="activeTab === 'kanban'"
+          (click)="changeTab('kanban')">
+    <i class="fas fa-table-columns"></i> Kanban
+  </button>
+  <button class="tab-btn" 
+          [class.active]="activeTab === 'discussion'"
+          (click)="changeTab('discussion')">
+    <i class="fas fa-comments"></i> Discussion
+  </button>
+  <button class="tab-btn" 
+          [class.active]="activeTab === 'documents'"
+          (click)="changeTab('documents')">
+    <i class="fas fa-folder"></i> Documents
+  </button>
+</nav>
+
+<!-- Kanban Tab Content -->
+<main class="modern-page-layout" *ngIf="activeTab === 'kanban'">
   <section class="modern-kanban" cdkDropListGroup>
-    <!-- Colonne À faire -->
-    <div class="kanban-column todo"
+    <!-- Todo Column -->
+    <div id="todo-column" class="kanban-column todo"
          cdkDropList
          [cdkDropListData]="todoTasks"
-         (cdkDropListDropped)="drop($event)">
+         (cdkDropListDropped)="drop($event)"
+         [id]="'cdk-drop-list-0'">
       <div class="column-header">
         <h2>À faire <span class="count-bubble">{{todoTasks.length}}</span></h2>
-        <button class="add-task-btn" (click)="addTask('todo')">+</button>
       </div>
       <div class="cards-container">
         <app-card-task *ngFor="let task of todoTasks; trackBy: trackById"
@@ -21,14 +135,14 @@
       </div>
     </div>
 
-    <!-- Colonne En cours -->
-    <div class="kanban-column in-progress"
+    <!-- In Progress Column -->
+    <div id="inprogress-column" class="kanban-column in-progress"
          cdkDropList
          [cdkDropListData]="inProgressTasks"
-         (cdkDropListDropped)="drop($event)">
+         (cdkDropListDropped)="drop($event)"
+         [id]="'cdk-drop-list-1'">
       <div class="column-header">
         <h2>En cours <span class="count-bubble">{{inProgressTasks.length}}</span></h2>
-        <button class="add-task-btn" (click)="addTask('inProgress')">+</button>
       </div>
       <div class="cards-container">
         <app-card-task *ngFor="let task of inProgressTasks; trackBy: trackById"
@@ -38,14 +152,14 @@
       </div>
     </div>
 
-    <!-- Colonne Terminé -->
-    <div class="kanban-column done"
+    <!-- Done Column -->
+    <div id="done-column" class="kanban-column done"
          cdkDropList
          [cdkDropListData]="doneTasks"
-         (cdkDropListDropped)="drop($event)">
+         (cdkDropListDropped)="drop($event)"
+         [id]="'cdk-drop-list-2'">
       <div class="column-header">
         <h2>Terminé <span class="count-bubble">{{doneTasks.length}}</span></h2>
-        <button class="add-task-btn" (click)="addTask('done')">+</button>
       </div>
       <div class="cards-container">
         <app-card-task *ngFor="let task of doneTasks; trackBy: trackById"
@@ -55,7 +169,30 @@
       </div>
     </div>
   </section>
-
-  <!-- Colonne droite : Discussion -->
-  <!-- <app-wspace-page-right-side></app-wspace-page-right-side> -->
 </main>
+
+<!-- Discussion Tab Content -->
+<div *ngIf="activeTab === 'discussion'" class="discussion-tab">
+  <div class="empty-state">
+    <i class="fas fa-comments"></i>
+    <h3>Discussion du projet</h3>
+    <p>Cette fonctionnalité sera disponible prochainement</p>
+  </div>
+</div>
+
+<!-- Documents Tab Content -->
+<div *ngIf="activeTab === 'documents'" class="documents-tab">
+  <div class="empty-state">
+    <i class="fas fa-folder-open"></i>
+    <h3>Documents du projet</h3>
+    <p>Cette fonctionnalité sera disponible prochainement</p>
+  </div>
+</div>
+
+<!-- Loading Overlay -->
+<div *ngIf="isLoading" class="loading-overlay">
+  <div class="loading-spinner">
+    <i class="fas fa-spinner fa-spin"></i>
+    <span>Chargement des données...</span>
+  </div>
+</div>

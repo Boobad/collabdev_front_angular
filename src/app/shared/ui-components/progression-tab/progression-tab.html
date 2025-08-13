@@ -1,45 +1,58 @@
 <div class="project-progress">
-  <h2><i class="fas fa-chart-line"></i> Progression</h2>
+  <h2><i class="fas fa-chart-line"></i> Progression du projet</h2>
 
-  <div class="progress-content">
+ <div *ngIf="isLoading" class="loading-message">
+  <i class="fas fa-spinner fa-spin"></i> 
+  Chargement des données pour le projet {{projectId}}...
+</div>
 
+<div *ngIf="error" class="error-message">
+  <i class="fas fa-exclamation-triangle"></i> 
+  {{ error }}
+  <button (click)="fetchProjectFeatures()" class="retry-button">
+    <i class="fas fa-sync-alt"></i> Réessayer
+  </button>
+  <div class="error-details" *ngIf="features.length === 0">
+    Aucune donnée disponible pour ce projet
+  </div>
+</div>
+
+  <div *ngIf="!isLoading && !error && features.length > 0" class="progress-content">
     <div class="progress-stats">
       <div class="stat-card">
-        <div class="stat-value">48%</div>
+        <div class="stat-value">{{ completionPercent }}%</div>
         <div class="stat-label">Complétion</div>
       </div>
       <div class="stat-card">
-        <div class="stat-value">12/25</div>
+        <div class="stat-value">{{ tasksCompleted }}/{{ totalTasks }}</div>
         <div class="stat-label">Tâches terminées</div>
       </div>
       <div class="stat-card">
-        <div class="stat-value">5</div>
+        <div class="stat-value">{{ collaboratorsCount }}</div>
         <div class="stat-label">Collaborateurs</div>
       </div>
     </div>
 
     <div class="progress-chart">
       <div class="chart-container">
-        <canvas id="progressChart"></canvas>
+        <canvas #progressChart></canvas>
       </div>
     </div>
 
     <div class="progress-bars">
-  <div class="progress-item" *ngFor="let item of progressItems">
-    <div class="progress-label">{{ item.label }}</div>
-    <div class="progress-container">
-      <div
-        class="progress-bar"
-        [ngStyle]="{
-          width: item.percent + '%',
-          backgroundColor: item.color
-        }"
-      ></div>
+      <div class="progress-item" *ngFor="let item of progressItems">
+        <div class="progress-label">{{ item.label }}</div>
+        <div class="progress-container">
+          <div class="progress-bar"
+               [ngStyle]="{'width': item.percent + '%', 'backgroundColor': item.color}">
+          </div>
+        </div>
+        <div class="progress-percent">{{ item.percent }}%</div>
+      </div>
     </div>
-    <div class="progress-percent">{{ item.percent }}%</div>
   </div>
-</div>
 
-
+  <div *ngIf="!isLoading && !error && features.length === 0" class="no-data-message">
+    <i class="fas fa-info-circle"></i> Aucune donnée de progression disponible
   </div>
 </div>

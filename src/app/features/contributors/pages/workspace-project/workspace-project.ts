@@ -1,122 +1,260 @@
-// workspace-project.ts
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CdkDragDrop, DragDropModule, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
-import { WspacePageHeader } from '../../../../shared/wspace-page-header/wspace-page-header';
-import { WspacePageRightSide } from '../../../../shared/wspace-page-right-side/wspace-page-right-side';
 import { CardTask } from '../../../../shared/ui-components/card-task/card-task';
+import { FonctionnalitesService } from '../../../../core/services/fonctionnalites.service';
+import { ProjectsService } from '../../../../core/projects-service';
+import { ActivatedRoute } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-workspace-project',
   standalone: true,
-  imports: [
-    CommonModule,
-    DragDropModule,
-    WspacePageHeader,
-    WspacePageRightSide,
-    CardTask
-  ],
+  imports: [CommonModule, FormsModule, DragDropModule, CardTask],
   templateUrl: './workspace-project.html',
   styleUrls: ['./workspace-project.css']
 })
 export class WorkspaceProject implements OnInit {
-  // Tableaux pour les différentes colonnes
   todoTasks: any[] = [];
   inProgressTasks: any[] = [];
   doneTasks: any[] = [];
+  
+  projectId: number = 1;
+  projectDetails: any = {};
+  isLoading: boolean = true;
+  activeTab: string = 'kanban';
+
+  showNewFeatureForm: boolean = false;
+  isCreating: boolean = false;
+
+  newFeature: any = {
+    titre: '',
+    contenu: '',
+    statusFeatures: 'A_FAIRE',
+    dateEcheance: '',
+    exigences: [],
+    criteresAcceptation: [],
+    importance: 'MOYENNE',
+    motsCles: [],
+    motsClesStr: '',
+    projetId: 0,
+    participantId: 0
+  };
+
+  constructor(
+    private fonctService: FonctionnalitesService,
+    private projetsService: ProjectsService,
+    private route: ActivatedRoute,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit() {
-    this.loadTasks();
+    this.route.params.subscribe(params => {
+      this.projectId = +params['id'];
+      this.newFeature.projetId = this.projectId;
+      this.loadProjectData();
+      this.loadProjectDetails();
+    });
   }
 
-  // Charge les tâches depuis le localStorage
-  loadTasks() {
-    const savedTasks = localStorage.getItem('kanbanTasks');
-    if (savedTasks) {
-      const tasks = JSON.parse(savedTasks);
-      this.todoTasks = tasks.todo || [];
-      this.inProgressTasks = tasks.inProgress || [];
-      this.doneTasks = tasks.done || [];
-    } else {
-      // Valeurs par défaut si aucune donnée sauvegardée
-      this.todoTasks = [
-        { id: 1, title: 'Interface de connexion patient', description: 'Créer l\'interface de connexion pour les patients', tags: ['Frontend', 'UI/UX'], priority: 'high' },
-        { id: 2, title: 'API Authentification', description: 'Développer le endpoint d\'authentification', tags: ['Backend'], priority: 'medium' },
-        { id: 3, title: 'Maquettes dashboard', description: 'Finaliser les maquettes Figma', tags: ['Design'], priority: 'low' }
-      ];
-
-      this.inProgressTasks = [
-        { id: 4, title: 'Base de données patients', description: 'Modéliser la structure de la DB', tags: ['Backend'], priority: 'high' },
-        { id: 5, title: 'Component header', description: 'Intégrer le header responsive', tags: ['Frontend'], priority: 'medium' }
-      ];
-
-      this.doneTasks = [
-        { id: 6, title: 'Setup projet', description: 'Initialiser le repository Git', tags: ['DevOps'], priority: 'low' },
-        { id: 7, title: 'User stories', description: 'Rédiger toutes les user stories', tags: ['Documentation'], priority: 'medium' }
-      ];
-
-      this.saveTasks(); // Sauvegarde les tâches par défaut
+  handleOverlayClick(event: MouseEvent) {
+    const target = event.target as HTMLElement;
+    if (target.classList.contains('modal-overlay')) {
+      this.toggleNewFeatureForm();
     }
   }
 
-  // Sauvegarde les tâches dans le localStorage
-  saveTasks() {
-    const tasks = {
-      todo: this.todoTasks,
-      inProgress: this.inProgressTasks,
-      done: this.doneTasks
-    };
-    localStorage.setItem('kanbanTasks', JSON.stringify(tasks));
+  toggleNewFeatureForm() {
+    this.showNewFeatureForm = !this.showNewFeatureForm;
+    
+    // Empêche le défilement de la page quand le modal est ouvert
+    if (this.showNewFeatureForm) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+      this.resetNewFeatureForm();
+    }
   }
 
-  // Gestion du drag and drop
+  resetNewFeatureForm() {
+    this.newFeature = {
+      titre: '',
+      contenu: '',
+      statusFeatures: 'A_FAIRE',
+      dateEcheance: '',
+      exigences: [],
+      criteresAcceptation: [],
+      importance: 'MOYENNE',
+      motsCles: [],
+      motsClesStr: '',
+      projetId: this.projectId,
+      participantId: 0
+    };
+  }
+
+  loadProjectDetails() {
+    this.projetsService.getProjetById(this.projectId).subscribe({
+      next: (details) => {
+        this.projectDetails = details;
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error('Erreur chargement détails projet:', err);
+      }
+    });
+  }
+
+  loadProjectData() {
+    this.isLoading = true;
+    this.fonctService.getFonctionnalitesByProjet(this.projectId).subscribe({
+      next: (fonctionnalites) => {
+        this.organizeTasks(fonctionnalites);
+        this.isLoading = false;
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error('Erreur de chargement:', err);
+        this.isLoading = false;
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
+  organizeTasks(fonctionnalites: any[]) {
+    this.todoTasks = [];
+    this.inProgressTasks = [];
+    this.doneTasks = [];
+
+    fonctionnalites.forEach(f => {
+      const task = this.convertToTask(f);
+      switch(f.statusFeatures) {
+        case 'A_FAIRE': this.todoTasks.push(task); break;
+        case 'EN_COURS': this.inProgressTasks.push(task); break;
+        case 'TERMINE': this.doneTasks.push(task); break;
+        default: this.todoTasks.push(task);
+      }
+    });
+    this.cdr.detectChanges();
+  }
+
+  convertToTask(fonctionnalite: any): any {
+    return {
+      id: fonctionnalite.id ?? 0,
+      title: fonctionnalite.titre,
+      description: fonctionnalite.contenu,
+      status: fonctionnalite.statusFeatures,
+      assignee: fonctionnalite.participantNomComplet || 'Non assigné',
+      assigneeEmail: fonctionnalite.participantEmail || '',
+      tags: fonctionnalite.motsCles || [],
+      priority: this.getPriority(fonctionnalite.importance),
+      progress: this.getProgress(fonctionnalite.statusFeatures),
+      deadline: fonctionnalite.dateEcheance,
+      isOverdue: this.checkIfOverdue(fonctionnalite.dateEcheance)
+    };
+  }
+
+  getPriority(importance: string): string {
+    switch(importance) {
+      case 'HAUTE': return 'high';
+      case 'MOYENNE': return 'medium';
+      default: return 'low';
+    }
+  }
+
+  getProgress(status: string): number {
+    switch(status) {
+      case 'A_FAIRE': return 0;
+      case 'EN_COURS': return 50;
+      case 'TERMINE': return 100;
+      default: return 0;
+    }
+  }
+
+  checkIfOverdue(dateEcheance: string): boolean {
+    if (!dateEcheance) return false;
+    return new Date(dateEcheance) < new Date();
+  }
+
   drop(event: CdkDragDrop<any[]>) {
     if (event.previousContainer === event.container) {
-      // Déplacement dans la même colonne
-      moveItemInArray(
-        event.container.data,
-        event.previousIndex,
-        event.currentIndex
-      );
+      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
     } else {
-      // Transfert entre colonnes
       transferArrayItem(
         event.previousContainer.data,
         event.container.data,
         event.previousIndex,
         event.currentIndex
       );
+
+      const task = event.container.data[event.currentIndex];
+      const newStatus = this.getStatusFromContainerId(event.container.id);
+      
+      task.status = newStatus;
+      task.progress = this.getProgress(newStatus);
+
+      this.fonctService.updateStatus(task.id, newStatus).subscribe({
+        next: () => {
+          console.log(`Statut de la fonctionnalité ${task.id} mis à jour avec succès.`);
+        },
+        error: (err) => {
+          console.error(`Erreur lors de la mise à jour du statut de la fonctionnalité ${task.id}:`, err);
+        }
+      });
     }
-    this.saveTasks(); // Sauvegarde après chaque modification
+    this.cdr.detectChanges();
   }
 
-  // Ajoute une nouvelle tâche
-  addTask(column: string) {
-    const newTask = {
-      id: Date.now(), // ID unique basé sur le timestamp
-      title: 'Nouvelle tâche',
-      description: 'Description de la tâche',
-      tags: [],
-      priority: 'medium'
-    };
-
-    switch (column) {
-      case 'todo':
-        this.todoTasks.unshift(newTask);
-        break;
-      case 'inProgress':
-        this.inProgressTasks.unshift(newTask);
-        break;
-      case 'done':
-        this.doneTasks.unshift(newTask);
-        break;
-    }
-
-    this.saveTasks();
+  changeTab(tab: string) {
+    this.activeTab = tab;
+    this.cdr.detectChanges();
   }
 
-  // Fonction de suivi pour ngFor
-  trackById(index: number, task: any): number {
-    return task.id;
+  getStatusFromContainerId(containerId: string): string {
+    switch(containerId) {
+      case 'cdk-drop-list-0': return 'A_FAIRE';
+      case 'cdk-drop-list-1': return 'EN_COURS';
+      case 'cdk-drop-list-2': return 'TERMINE';
+      default: return 'A_FAIRE';
+    }
+  }
+
+  trackById(index: number, item: any): number {
+    return item.id ?? index;
+  }
+
+  createFeature() {
+    if (!this.newFeature.titre || this.newFeature.titre.trim() === '') {
+      alert('Le titre est obligatoire');
+      return;
+    }
+
+    this.isCreating = true;
+
+    if (this.newFeature.motsClesStr) {
+      this.newFeature.motsCles = this.newFeature.motsClesStr.split(',').map((m: string) => m.trim());
+    } else {
+      this.newFeature.motsCles = [];
+    }
+
+    this.fonctService.createFeature(this.newFeature).subscribe({
+      next: (createdFeature) => {
+        const task = this.convertToTask(createdFeature);
+        switch (createdFeature.statusFeatures) {
+          case 'A_FAIRE': this.todoTasks.unshift(task); break;
+          case 'EN_COURS': this.inProgressTasks.unshift(task); break;
+          case 'TERMINE': this.doneTasks.unshift(task); break;
+          default: this.todoTasks.unshift(task);
+        }
+        this.isCreating = false;
+        this.toggleNewFeatureForm();
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error('Erreur création fonctionnalité:', err);
+        alert('Erreur lors de la création de la fonctionnalité.');
+        this.isCreating = false;
+        this.cdr.detectChanges();
+      }
+    });
   }
 }

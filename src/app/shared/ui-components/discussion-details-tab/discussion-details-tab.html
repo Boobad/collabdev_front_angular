@@ -1,74 +1,157 @@
-<!-- Discussions Tab -->
 <div id="discussions" class="tab-content">
+    <!-- Messages d'état -->
+    <div *ngIf="isLoading" class="loading-message">
+        <fa-icon [icon]="icons.spinner" [animation]="'spin'"></fa-icon> Chargement des discussions...
+    </div>
+    
+    <div *ngIf="error" class="error-message">
+        {{ error }}
+    </div>
+
+    <!-- En-tête -->
     <div class="discussions-header">
-        <h2>Discussions du Projet</h2>
-        <button class="btn btn-primary"><i class="fas fa-plus"></i> Nouvelle Discussion</button>
+        <h2><fa-icon [icon]="icons.comment"></fa-icon> Discussions du Projet</h2>
+        <button class="btn btn-primary" 
+                (click)="createDiscussion()" 
+                [disabled]="!newDiscussionContent.trim()">
+            <fa-icon [icon]="icons.plus"></fa-icon> Nouvelle Discussion
+        </button>
     </div>
     
+    <!-- Liste des discussions -->
     <div class="discussion-list">
-        <div class="discussion-card pinned">
-            <div class="discussion-badge">
-                <i class="fas fa-thumbtack"></i>
-            </div>
-            <div class="discussion-content">
-                <h3>Questions sur l'API d'authentification</h3>
-                <div class="discussion-meta">
-                    <span class="author"><img src="https://randomuser.me/api/portraits/men/22.jpg" alt="Aboubacar Sogoba"> Aboubacar Sogoba</span>
-                    <span class="date"><i class="far fa-clock"></i> 15/07/2023</span>
-                    <span class="comments"><i class="far fa-comment"></i> 8 réponses</span>
-                </div>
-                <p class="excerpt">J'ai des questions sur l'implémentation de l'authentification à deux facteurs. Quelqu'un peut m'aider?</p>
-            </div>
+        <!-- Message si pas de discussions -->
+        <div *ngIf="!isLoading && discussions.length === 0" class="no-discussions">
+            Aucune discussion pour le moment. Soyez le premier à commenter !
         </div>
-        
-        <div class="discussion-card unread">
+
+        <!-- Boucle sur les discussions -->
+        <div *ngFor="let discussion of discussions" class="discussion-card">
             <div class="discussion-content">
-                <h3>Feedback sur les maquettes UI</h3>
-                <div class="discussion-meta">
-                    <span class="author"><img src="https://randomuser.me/api/portraits/women/68.jpg" alt="Djeneba Maiga"> Djeneba Maiga</span>
-                    <span class="date"><i class="far fa-clock"></i> 18/07/2023</span>
-                    <span class="comments"><i class="far fa-comment"></i> 3 réponses</span>
+                <div class="discussion-header">
+                    <h3>{{ discussion.contenu | slice:0:50 }}{{ discussion.contenu.length > 50 ? '...' : '' }}</h3>
+                    <button class="btn-reply" (click)="toggleReply(discussion.id)">
+                        Répondre
+                    </button>
                 </div>
-                <p class="excerpt">J'ai mis à jour les maquettes pour la page de consultation. Merci de me faire vos retours.</p>
-            </div>
-        </div>
-        
-        <div class="discussion-card">
-            <div class="discussion-content">
-                <h3>Problème de déploiement</h3>
+                
                 <div class="discussion-meta">
-                    <span class="author"><img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Madjess Sylla"> Madjess Sylla</span>
-                    <span class="date"><i class="far fa-clock"></i> 10/07/2023</span>
-                    <span class="comments"><i class="far fa-comment"></i> 5 réponses</span>
+                    <span class="author">
+  <ng-container *ngIf="discussion.auteurPhotoProfilUrl; else initialsAvatar">
+    <img [src]="discussion.auteurPhotoProfilUrl" 
+         [alt]="discussion.auteurNomComplet"
+         (error)="handleImageError($event)">
+  </ng-container>
+  <ng-template #initialsAvatar>
+    <div class="avatar-initials">
+      {{ getInitials(discussion.auteurNomComplet) }}
+    </div>
+  </ng-template>
+  {{ discussion.auteurNomComplet }}
+</span>
+
+                   
+                    <span class="date">
+                        <fa-icon [icon]="icons.clock"></fa-icon> 
+                        {{ formatDate(discussion.creationDate) }}
+                    </span>
+                    <span class="comments">
+                        <fa-icon [icon]="icons.comment"></fa-icon> 
+                        {{ discussion.reponses.length || 0 }} réponses
+                    </span>
                 </div>
-                <p class="excerpt">Le déploiement sur le serveur de test rencontre des problèmes de permissions. Solutions?</p>
-            </div>
-        </div>
-        
-        <div class="discussion-card">
-            <div class="discussion-content">
-                <h3>Réunion hebdomadaire</h3>
-                <div class="discussion-meta">
-                    <span class="author"><img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Bakary Diallo"> Bakary Diallo</span>
-                    <span class="date"><i class="far fa-clock"></i> 05/07/2023</span>
-                    <span class="comments"><i class="far fa-comment"></i> 12 réponses</span>
+                
+                <p class="excerpt">{{ discussion.contenu }}</p>
+                
+                <!-- Zone de réponse -->
+                <div *ngIf="isReplying === discussion.id" class="reply-editor">
+                    <textarea [(ngModel)]="replyContent" 
+                              placeholder="Écrire votre réponse..."></textarea>
+                    <div class="editor-actions">
+                        <div class="attachment-options">
+                            <button class="btn btn-icon"><fa-icon [icon]="icons.paperclip"></fa-icon></button>
+                            <button class="btn btn-icon"><fa-icon [icon]="icons.image"></fa-icon></button>
+                            <button class="btn btn-icon"><fa-icon [icon]="icons.code"></fa-icon></button>
+                        </div>
+                        <div>
+                            <button class="btn btn-secondary" (click)="toggleReply(discussion.id)">
+                                Annuler
+                            </button>
+                            <button class="btn btn-primary" 
+                                    (click)="postReply(discussion.id)" 
+                                    [disabled]="!replyContent.trim()">
+                                Publier
+                            </button>
+                        </div>
+                    </div>
                 </div>
-                <p class="excerpt">Point sur l'avancement du projet et planning pour la semaine prochaine.</p>
+                
+                <!-- Réponses imbriquées -->
+                <div *ngIf="discussion.reponses.length" class="replies-container">
+                    <div *ngFor="let reply of discussion.reponses" class="reply">
+                        <div class="discussion-meta">
+                            <span class="author">
+  <ng-container *ngIf="discussion.auteurPhotoProfilUrl; else initialsAvatar">
+    <img [src]="discussion.auteurPhotoProfilUrl" 
+         [alt]="discussion.auteurNomComplet"
+         (error)="handleImageError($event)">
+  </ng-container>
+  <ng-template #initialsAvatar>
+    <div class="avatar-initials">
+      {{ getInitials(discussion.auteurNomComplet) }}
+    </div>
+  </ng-template>
+  {{ discussion.auteurNomComplet }}
+</span>
+
+                            <span class="date">
+                                <fa-icon [icon]="icons.clock"></fa-icon> 
+                                {{ formatDate(reply.creationDate) }}
+                            </span>
+                        </div>
+                        <p class="reply-content">{{ reply.contenu }}</p>
+
+                        <!-- Sous-réponses -->
+                        <div *ngIf="reply.reponses.length" class="sub-replies">
+                            <div *ngFor="let subReply of reply.reponses" class="sub-reply">
+                                <div class="discussion-meta">
+                                    <span class="author">
+                                        <img [src]="subReply.auteurPhotoProfilUrl || 'assets/images/default-profile.png'" 
+                                             [alt]="subReply.auteurNomComplet"
+                                             (error)="handleImageError($event)">
+                                        {{ subReply.auteurNomComplet }}
+                                    </span>
+                                    <span class="date">
+                                        <fa-icon [icon]="icons.clock"></fa-icon> 
+                                        {{ formatDate(subReply.creationDate) }}
+                                    </span>
+                                </div>
+                                <p class="reply-content">{{ subReply.contenu }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
     
+    <!-- Nouvelle discussion -->
     <div class="new-discussion">
         <div class="discussion-editor">
-            <textarea placeholder="Commencer une nouvelle discussion..."></textarea>
+            <textarea [(ngModel)]="newDiscussionContent" 
+                      placeholder="Commencer une nouvelle discussion..."></textarea>
             <div class="editor-actions">
                 <div class="attachment-options">
-                    <button class="btn btn-icon"><i class="fas fa-paperclip"></i></button>
-                    <button class="btn btn-icon"><i class="fas fa-image"></i></button>
-                    <button class="btn btn-icon"><i class="fas fa-code"></i></button>
+                    <button class="btn btn-icon"><fa-icon [icon]="icons.paperclip"></fa-icon></button>
+                    <button class="btn btn-icon"><fa-icon [icon]="icons.image"></fa-icon></button>
+                    <button class="btn btn-icon"><fa-icon [icon]="icons.code"></fa-icon></button>
                 </div>
-                <button class="btn btn-primary">Publier</button>
+                <button class="btn btn-primary" 
+                        (click)="createDiscussion()" 
+                        [disabled]="!newDiscussionContent.trim()">
+                    Publier
+                </button>
             </div>
         </div>
     </div>
-</div> 
+</div>

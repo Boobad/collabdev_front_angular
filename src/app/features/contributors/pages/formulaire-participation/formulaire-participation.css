@@ -174,3 +174,59 @@ input[type="radio"] {
     grid-template-columns: 1fr;
   }
 }
+
+
+/* Fond sombre derrière le modal */
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+}
+
+/* Fenêtre modal */
+.modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  border-radius: 12px;
+  padding: 2rem;
+  max-width: 350px;
+  width: 90%;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  z-index: 1001;
+  text-align: center;
+}
+
+/* Contenu modal */
+.modal-content h2 {
+  margin-bottom: 1rem;
+  color: #d9534f; /* rouge danger */
+}
+
+.modal-content p {
+  margin-bottom: 2rem;
+  font-size: 1.1rem;
+  color: #333;
+}
+
+/* Bouton fermer */
+.btn-close {
+  background: linear-gradient(135deg, #435fee, #6c63ff);
+  color: white;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.btn-close:hover {
+  background: linear-gradient(135deg, #3548d1, #5547e0);
+}

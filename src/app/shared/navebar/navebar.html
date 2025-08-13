@@ -1,8 +1,13 @@
  <!-- Top Navigation -->
             <header class="top-nav">
-                <div class="search-bar">
+                 <div class="search-bar">
                     <i class="fas fa-search"></i>
-                    <input type="text" placeholder="Rechercher des projets, collaborateurs...">
+                    <input
+                    type="text"
+                    placeholder="Rechercher des projets, collaborateurs..."
+                    [(ngModel)]="searchQuery"
+                    (keyup.enter)="goToSearchPage()"
+                    >
                 </div>
                 <div class="nav-actions">
                     <div class="user-stats">
@@ -21,7 +26,7 @@
                     </div>
                     <button class="notification-btn" (click)="toggleNotifications()">
                         <i class="fas fa-bell"></i>
-                        <span class="notification-badge">3</span>
+                        <span class="notification-badge" *ngIf="notificationCount > 0">{{ notificationCount }}</span>
                     </button>
                     <button class="new-project-btn pulse" (click)="openModal()">
                         <i class="fas fa-plus"></i> Nouveau Projet
@@ -30,7 +35,7 @@
             </header>
 
 
-            <app-modal-create-project ></app-modal-create-project>
+<app-modal-create-project ></app-modal-create-project>
   <ng-container *ngIf="showNotifications">
   <app-notification-modal (close)="toggleNotifications()"></app-notification-modal>
 </ng-container>

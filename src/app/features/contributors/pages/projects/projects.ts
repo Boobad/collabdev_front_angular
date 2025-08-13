@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
 import { Location } from '@angular/common';
 import { MesCardProject } from '../../../../shared/ui-components/mes-card-project/mes-card-project';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-projects',
-  imports: [MesCardProject],
+  imports: [MesCardProject,RouterLink],
   templateUrl: './projects.html',
   styleUrl: './projects.css'
 })

@@ -1,40 +1,81 @@
-<div class="card">
+<div *ngIf="isLoading" class="spinner-container">
+  <div class="spinner"></div>
+</div>
+
+<div *ngIf="error" class="error-message">
+  <mat-icon>error_outline</mat-icon>
+  <p>{{ error }}</p>
+</div>
+
+<div class="cards-container" *ngIf="!isLoading && !error && filteredProjects.length > 0">
+  <div *ngFor="let project of filteredProjects" class="card">
     <div class="titres">
-        <div class="category">
-            SANTE
-        </div>
-        <div class="coins">
-            <i class="fas fa-coins"></i>
-            <span>100</span>
-        </div>
+      <div class="category" [ngClass]="getDomainClass(project.domaine)" 
+           [title]="project.domaine || 'Domaine non renseigné'">
+        {{ project.domaine || 'Domaine inconnu' }}
+      </div>
+
+      <div class="coins" [title]="'Coins requis: ' + (project.coinsRequired ?? 0)">
+        <i class="fas fa-coins" aria-hidden="true"></i>
+        <span>{{ project.coinsRequired ?? 0 }}</span>
+      </div>
     </div>
+
     <div class="divider"></div>
+
     <div class="info">
-        <h1>Plateforme de télémédecine</h1>
-        <p>Une solution innovante pour des consultations médicales à distance.Application mobile pour consultations
-          médicales à distance avec suivi des
-          patients.
-        </p>
+      <h1 [title]="project.titre">{{ project.titre || 'Titre indisponible' }}</h1>
+      <p class="description" [title]="project.description">
+        {{ project.description || 'Description non disponible' }}
+      </p>
     </div>
+
     <div class="details">
-        <div class="langages">
+      <div class="badge secteur" [title]="project.secteur || 'Secteur non renseigné'">
+        {{ project.secteur || 'Secteur inconnu' }}
+      </div>
 
-            <span>Python</span>
-        </div>
-        <div class="langages">
+      <div class="badge niveau" [ngClass]="'niveau-' + toCssClass(project.niveau)" 
+           [title]="project.niveau || 'Niveau non renseigné'">
+        {{ project.niveau || 'Niveau inconnu' }}
+      </div>
 
-            <span>mobile</span>
-        </div>
-        <div class="langages">
-
-            <span>Aws</span>
-        </div>
-
+      <div class="badge date" *ngIf="project.dateCreation" 
+           [title]="project.dateCreation">
+        {{ project.dateCreation | date:'shortDate' }}
+      </div>
     </div>
+
     <div class="divider"></div>
 
-    <div class="buttons" >
-        <button routerLink="/voir-participation">voir participants</button>
+    <div class="buttons">
+      <button (click)="goToProject(project)">
+        {{ isUserParticipant(project.id) ? 'Détails projet' : 'Voir détails' }}
+      </button>
     </div>
+  </div>
+</div>
 
+<div *ngIf="!isLoading && !error && filteredProjects.length === 0" class="no-projects">
+  <mat-icon>info_outline</mat-icon>
+  <p>Aucun projet disponible</p>
+</div>
+
+<!-- Modal pour utilisateurs non participants -->
+<div class="modal-backdrop" *ngIf="selectedProject">
+  <div class="modal">
+    <h2>{{ selectedProject.titre }}</h2>
+    <p><strong>Domaine :</strong> {{ selectedProject.domaine || 'Non renseigné' }}</p>
+    <p><strong>Secteur :</strong> {{ selectedProject.secteur || 'Non renseigné' }}</p>
+    <p><strong>Niveau :</strong> {{ selectedProject.niveau || 'Non renseigné' }}</p>
+    <p><strong>Description :</strong></p>
+    <p>{{ selectedProject.description || 'Description non disponible' }}</p>
+    <button (click)="closeModal()" style="width: 100px;
+    background: blue;
+    color: white;
+    border-radius: 20px;
+    border: navajowhite;
+    padding: 12px;
+    margin-top: 10px;">Fermer</button>
+  </div>
 </div>

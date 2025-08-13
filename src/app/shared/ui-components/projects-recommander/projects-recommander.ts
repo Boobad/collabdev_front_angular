@@ -1,6 +1,5 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
-import { AppInsufficientCoinsDialog } from '../app-insufficient-coins-dialog/app-insufficient-coins-dialog';
 import { MatDialog } from '@angular/material/dialog';
 import { HttpClient } from '@angular/common/http';
 import { MatDividerModule } from '@angular/material/divider';
@@ -9,7 +8,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { CommonModule } from '@angular/common';
 import { CoinsService } from '../../../core/coins-service';
-
+import { AppInsufficientCoinsDialog } from '../app-insufficient-coins-dialog/app-insufficient-coins-dialog';
 
 interface Project {
   id: number;
@@ -21,6 +20,18 @@ interface Project {
   niveau: string;
   dateCreation: string;
   coinsRequired?: number;
+}
+
+interface Participant {
+  id: number;
+  profil: string;
+  statut: string;
+  scoreQuiz: string;
+  estDebloque: boolean;
+  contributeurNom: string;
+  contributeurPrenom: string;
+  contributeurEmail: string;
+  projetTitre: string;
 }
 
 interface ContributorResponse {
@@ -45,6 +56,7 @@ export class ProjectsRecommander implements OnInit {
   userCoins: number = 0;
   projects: Project[] = [];
   filteredProjects: Project[] = [];
+  participants: { [projectId: number]: Participant[] } = {};
   isLoading: boolean = true;
   error: string | null = null;
 
@@ -60,6 +72,7 @@ export class ProjectsRecommander implements OnInit {
     this.loadUserCoins();
   }
 
+  // 🔹 Charger les coins de l'utilisateur
   loadUserCoins(): void {
     const userStr = localStorage.getItem('user');
     if (!userStr) {
@@ -98,6 +111,7 @@ export class ProjectsRecommander implements OnInit {
     }
   }
 
+  // 🔹 Charger tous les projets ouverts
   fetchProjects(): void {
     this.isLoading = true;
     this.error = null;
@@ -106,10 +120,27 @@ export class ProjectsRecommander implements OnInit {
     this.http.get<Project[]>('http://localhost:8080/api/v1/projets')
       .subscribe({
         next: (data) => {
-          this.projects = data;
+          this.projects = data.map(project => {
+            let coins = 0;
+            switch (project.niveau?.trim()?.toLowerCase()) {
+              case 'debutant': coins = 10; break;
+              case 'intermediaire': coins = 20; break;
+              case 'avance': coins = 40; break;
+              case 'difficile': coins = 50; break;
+              case 'expert': coins = 70; break;
+              default: coins = 100;
+            }
+            return { ...project, coinsRequired: coins };
+          });
+
           this.filteredProjects = this.projects.filter(
-            project => project.status?.trim()?.toUpperCase() === 'EN_ATTENTE'
+            project => project.status?.trim()?.toUpperCase() === 'OUVERT'
           );
+
+          // 🔹 Charger les participants pour chaque projet
+          this.filteredProjects.forEach(project => {
+            this.fetchParticipants(project.id);
+          });
 
           if (this.filteredProjects.length === 0) {
             this.error = 'Aucun projet en attente disponible';
@@ -127,14 +158,44 @@ export class ProjectsRecommander implements OnInit {
       });
   }
 
+  // 🔹 Charger les participants d'un projet
+  fetchParticipants(projectId: number): void {
+    this.http.get<Participant[]>(`http://localhost:8080/api/v1/participants/projet/${projectId}`)
+      .subscribe({
+        next: (data) => {
+          this.participants[projectId] = data;
+          this.cdRef.detectChanges();
+        },
+        error: (err) => {
+          console.error('Erreur récupération participants:', err);
+        }
+      });
+  }
+
+  // 🔹 Vérifier si l'utilisateur est participant
+  isUserParticipant(projectId: number): boolean {
+    const userStr = localStorage.getItem('user');
+    if (!userStr) return false;
+
+    const userEmail = JSON.parse(userStr).email;
+    const participants: Participant[] = this.participants[projectId] || [];
+    return participants.some(p => p.contributeurEmail === userEmail);
+  }
+
+  // 🔹 Rejoindre le projet ou accéder aux détails
   onJoinProject(projectId: number, requiredCoins: number): void {
-    if (this.userCoins >= requiredCoins) {
-      this.router.navigate(['/formulaire-participation', projectId]);
+    if (!this.isUserParticipant(projectId)) {
+      if (this.userCoins >= requiredCoins) {
+        this.router.navigate(['/formulaire-participation', projectId]);
+      } else {
+        this.openInsufficientCoinsModal(requiredCoins);
+      }
     } else {
-      this.openInsufficientCoinsModal(requiredCoins);
+      this.router.navigate(['/details', projectId]);
     }
   }
 
+  // 🔹 Modal d'insuffisance de coins
   openInsufficientCoinsModal(requiredCoins: number): void {
     this.dialog.open(AppInsufficientCoinsDialog, {
       width: '300px',
@@ -145,6 +206,7 @@ export class ProjectsRecommander implements OnInit {
     });
   }
 
+  // 🔹 Définir la classe CSS selon le domaine
   getDomainClass(domaine: string): string {
     const domainMap: {[key: string]: string} = {
       'WEB': 'web',

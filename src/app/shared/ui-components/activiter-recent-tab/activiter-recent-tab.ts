@@ -1,11 +1,70 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
+
+import { CommonModule, DatePipe } from '@angular/common';
+
+interface Commentaire {
+  id: number;
+  contenu: string;
+  creationDate: string;
+  auteurId: number;
+  auteurNomComplet: string;
+  auteurPhotoProfilUrl?: string | null;
+  parentId?: number | null;
+  reponses: Commentaire[];
+}
 
 @Component({
   selector: 'app-activiter-recent-tab',
-  imports: [],
+  standalone: true,
+  imports: [CommonModule, DatePipe],
   templateUrl: './activiter-recent-tab.html',
-  styleUrl: './activiter-recent-tab.css'
+  styleUrls: ['./activiter-recent-tab.css']
 })
-export class ActiviterRecentTab {
+export class ActiviterRecentTab implements OnInit {
 
+  encodeURIComponent = encodeURIComponent; // exposer la fonction JS globale
+
+  projectId: number = 0;
+  commentaires: Commentaire[] = [];
+  isLoading = false;
+  error: string | null = null;
+
+  constructor(
+    private route: ActivatedRoute,
+    private http: HttpClient,
+    private cdRef: ChangeDetectorRef
+  ) {}
+
+  ngOnInit(): void {
+    this.route.params.subscribe(params => {
+      const id = +params['id'];
+      if (id && id > 0) {
+        this.projectId = id;
+        this.loadCommentaires();
+      } else {
+        this.error = "ID de projet invalide";
+      }
+    });
+  }
+
+  loadCommentaires(): void {
+    this.isLoading = true;
+    this.error = null;
+
+    this.http.get<Commentaire[]>(`http://localhost:8080/api/v1/commentaires/projet/${this.projectId}`)
+      .subscribe({
+        next: (data) => {
+          this.commentaires = data;
+          this.isLoading = false;
+          this.cdRef.detectChanges();
+        },
+        error: (err) => {
+          this.error = `Erreur lors du chargement des commentaires : ${err.message || 'Serveur inaccessible'}`;
+          this.isLoading = false;
+          this.cdRef.detectChanges();
+        }
+      });
+  }
 }

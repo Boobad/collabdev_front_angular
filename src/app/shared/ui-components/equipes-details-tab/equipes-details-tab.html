@@ -1,25 +1,118 @@
 <div id="team" class="tab-content">
   <div class="team-header">
-    <h2>Équipe du Projet</h2>
-    <button class="btn btn-primary"><i class="fas fa-user-plus"></i> Inviter un membre</button>
-  </div>
-
-  <div class="team-stats">
-    <div class="stat-card">
-      <div class="stat-value">{{ participants.length }}</div>
-      <div class="stat-label">Membres</div>
+    <div class="header-content">
+      <h2><i class="fas fa-users"></i> Équipe du Projet</h2>
+      <p class="subtitle">Gérez les membres et leurs contributions au projet</p>
     </div>
-    <!-- Autres stats si nécessaire -->
+    <!-- <button class="btn btn-primary invite-btn">
+      <i class="fas fa-user-plus"></i> Inviter un membre
+    </button> -->
   </div>
 
-  <div class="participants-list">
-    <h3>Liste des participants</h3>
-    <ul>
-      <li *ngFor="let p of participants">
-        <strong>{{ p.contributeurPrenom }} {{ p.contributeurNom }}</strong> -
-        {{ p.profil }} - Statut: {{ p.statut }} - Score Quiz: {{ p.scoreQuiz }}
-        <span *ngIf="p.estDebloque">✔️ Débloqué</span>
-      </li>
-    </ul>
+  <div class="team-dashboard">
+    <div class="team-stats">
+      <div class="stat-card members-card">
+        <div class="stat-icon">
+          <i class="fas fa-users"></i>
+        </div>
+        <div class="stat-content">
+          <div class="stat-value">{{ participants.length }}</div>
+          <div class="stat-label">Membres</div>
+        </div>
+      </div>
+      
+      <div class="stat-card active-card">
+        <div class="stat-icon">
+          <i class="fas fa-check-circle"></i>
+        </div>
+        <div class="stat-content">
+          <div class="stat-value">{{ getActiveParticipantsCount() }}</div>
+          <div class="stat-label">Actifs</div>
+        </div>
+      </div>
+      
+      <div class="stat-card quiz-card">
+        <div class="stat-icon">
+          <i class="fas fa-star"></i>
+        </div>
+        <div class="stat-content">
+          <div class="stat-value">{{ getAverageQuizScore() }}</div>
+          <div class="stat-label">Score moyen</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="team-grid">
+      <div class="participants-section">
+        <div class="section-header">
+          <h3><i class="fas fa-list"></i> Liste des participants</h3>
+          <div class="search-box">
+            <i class="fas fa-search"></i>
+            <input type="text" placeholder="Rechercher un membre..." (input)="filterParticipants($event)">
+          </div>
+        </div>
+        
+        <div class="participants-list">
+          <div class="participant-card" *ngFor="let p of filteredParticipants" [class.highlight]="p.contributeurEmail === user?.email">
+            <div class="participant-avatar">
+              <img [src]="getAvatarUrl(p)" alt="{{ p.contributeurPrenom }} {{ p.contributeurNom }}">
+              <!-- <div class="status-badge" [class.active]="p.statut === 'actif'" 
+                   [class.inactive]="p.statut !== 'actif'"></div> -->
+            </div>
+            
+            <div class="participant-info">
+              <h4>{{ p.contributeurPrenom }} {{ p.contributeurNom }}</h4>
+              <div class="participant-meta">
+                <span class="badge role-badge">{{ p.profil }}</span>
+                <span class="badge status-badge" [ngClass]="getStatusClass(p.statut)">{{ p.statut }}</span>
+              </div>
+              <div class="participant-details">
+                <div class="detail-item">
+                  <i class="fas fa-envelope"></i>
+                  <span>{{ p.contributeurEmail }}</span>
+                </div>
+                <div class="detail-item" *ngIf="p.scoreQuiz !== null && p.scoreQuiz !== undefined">
+                  <i class="fas fa-star"></i>
+                  <span>Score Quiz: {{ p.scoreQuiz }}/100</span>
+                </div>
+              </div>
+            </div>
+            
+            <div class="participant-actions">
+              <button class="btn-icon" *ngIf="p.estDebloque" title="Débloqué">
+                <i class="fas fa-lock-open success-icon"></i>
+              </button>
+              <button class="btn-icon" *ngIf="!p.estDebloque" title="Bloqué">
+                <i class="fas fa-lock danger-icon"></i>
+              </button>
+              <button class="btn-icon" title="Envoyer un message">
+                <i class="fas fa-paper-plane primary-icon"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- <div class="team-activity">
+        <div class="section-header">
+          <h3><i class="fas fa-chart-line"></i> Activité récente</h3>
+        </div>
+        <div class="activity-feed">
+          <div class="activity-item" *ngFor="let activity of recentActivities">
+            <div class="activity-avatar">
+              <img [src]="getAvatarUrl(activity.user)" alt="{{ activity.user.name }}">
+            </div>
+            <div class="activity-content">
+              <p><strong>{{ activity.user.name }}</strong> {{ activity.action }}</p>
+              <small class="activity-time">{{ activity.time }}</small>
+            </div>
+          </div>
+          <div class="no-activities" *ngIf="recentActivities.length === 0">
+            <i class="fas fa-info-circle"></i>
+            <p>Aucune activité récente à afficher</p>
+          </div>
+        </div>
+      </div> -->
+    </div>
   </div>
 </div>

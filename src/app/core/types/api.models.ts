@@ -56,6 +56,7 @@ export interface MessageResponse {
 }
 
 export interface Project {
+coinsRequired: any
   id: ID
   titre: string
   description: string

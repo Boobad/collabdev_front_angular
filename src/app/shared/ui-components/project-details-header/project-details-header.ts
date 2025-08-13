@@ -1,6 +1,6 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Location } from '@angular/common';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { CommonModule, DatePipe } from '@angular/common';
 
 import { ProjectsService } from '../../../core/services/projects.service';
@@ -9,7 +9,7 @@ import { SecteurDisplayPipe, StatutDisplayPipe } from './pipes';
 @Component({
   selector: 'app-project-details-header',
   standalone: true,
-  imports: [CommonModule, DatePipe, SecteurDisplayPipe, StatutDisplayPipe],
+  imports: [CommonModule, DatePipe, SecteurDisplayPipe, StatutDisplayPipe,RouterLink],
   templateUrl: './project-details-header.html',
   styleUrls: ['./project-details-header.css']
 })
@@ -18,6 +18,8 @@ export class ProjectDetailsHeader implements OnInit {
   
   loading = true;
   error = false;
+
+
 
   constructor(
     private location: Location,
@@ -31,6 +33,46 @@ export class ProjectDetailsHeader implements OnInit {
       const projectId = params['id'];
       this.loadProject(projectId);
     });
+  }
+
+   showShareModal = false;
+
+  // ...
+
+  openShareModal() {
+    this.showShareModal = true;
+  }
+
+  closeShareModal() {
+    this.showShareModal = false;
+  }
+
+  share(network: string) {
+    if (!this.project) return;
+
+    const url = encodeURIComponent(window.location.href);
+    const title = encodeURIComponent(this.project.titre || 'Projet');
+
+    let shareUrl = '';
+
+    switch(network) {
+      case 'facebook':
+        shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`;
+        break;
+      case 'twitter':
+        shareUrl = `https://twitter.com/intent/tweet?url=${url}&text=${title}`;
+        break;
+      case 'linkedin':
+        shareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${url}`;
+        break;
+      case 'whatsapp':
+        shareUrl = `https://api.whatsapp.com/send?text=${title}%20${url}`;
+        break;
+      default:
+        return;
+    }
+
+    window.open(shareUrl, '_blank', 'width=600,height=400');
   }
 
   loadProject(id: string): void {

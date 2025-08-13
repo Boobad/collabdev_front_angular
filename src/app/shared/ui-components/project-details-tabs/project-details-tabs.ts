@@ -16,6 +16,7 @@ type UserRole = 'ideateur' | 'gestionnaire';
   styleUrls: ['./project-details-tabs.css']
 })
 export class ProjectDetailsTabs {
+  
   @Input() userRole: UserRole = 'gestionnaire'; // Rôle par défaut
   activeTab: string = 'overview';
 

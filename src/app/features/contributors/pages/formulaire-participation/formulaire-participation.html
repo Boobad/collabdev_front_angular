@@ -10,11 +10,9 @@
       <p>Remplissez ce formulaire pour contribuer à ce projet collaboratif</p>
     </div>
 
-    <!-- Informations personnelles -->
+    <!-- Nom complet -->
     <div class="form-group">
-      <label for="fullname" class="form-label required-field"
-        >Nom complet</label
-      >
+      <label for="fullname" class="form-label required-field">Nom complet</label>
       <input
         type="text"
         id="fullname"
@@ -32,6 +30,7 @@
       </div>
     </div>
 
+    <!-- Email -->
     <div class="form-group">
       <label for="email" class="form-label required-field">Email</label>
       <input
@@ -44,18 +43,16 @@
         email
         #email="ngModel"
       />
-      <div
-        *ngIf="email.invalid && (email.dirty || email.touched)"
-        class="error"
-      >
+      <div *ngIf="email.invalid && (email.dirty || email.touched)" class="error">
         Veuillez entrer un email valide.
       </div>
     </div>
 
+    <!-- Portfolio -->
     <div class="form-group">
-      <label for="portfolio" class="form-label"
-        >Lien vers portfolio/profil (GitHub, Behance, etc.)</label
-      >
+      <label for="portfolio" class="form-label">
+        Lien vers portfolio/profil (GitHub, Behance, etc.)
+      </label>
       <input
         type="url"
         id="portfolio"
@@ -67,9 +64,7 @@
 
     <!-- Rôle souhaité -->
     <div class="form-group">
-      <label class="form-label required-field"
-        >Je souhaite contribuer en tant que :</label
-      >
+      <label class="form-label required-field">Je souhaite contribuer en tant que :</label>
       <div class="role-options">
         <label
           class="role-card"
@@ -134,9 +129,7 @@
 
     <!-- Motivations -->
     <div class="form-group">
-      <label for="motivation" class="form-label required-field"
-        >Vos motivations</label
-      >
+      <label for="motivation" class="form-label required-field">Vos motivations</label>
       <textarea
         id="motivation"
         class="form-control"
@@ -158,9 +151,9 @@
 
     <!-- Expérience -->
     <div class="form-group">
-      <label for="experience" class="form-label required-field"
-        >Votre expérience pertinente</label
-      >
+      <label for="experience" class="form-label required-field">
+        Votre expérience pertinente
+      </label>
       <textarea
         id="experience"
         class="form-control"
@@ -169,29 +162,13 @@
         required
         #experience="ngModel"
       ></textarea>
-      <small
-        >Décrivez vos compétences et expériences en lien avec ce projet</small
-      >
+      <small>Décrivez vos compétences et expériences en lien avec ce projet</small>
       <div
         *ngIf="experience.invalid && (experience.dirty || experience.touched)"
         class="error"
       >
         L'expérience est requise.
       </div>
-    </div>
-
-    <!-- Test de compétences -->
-    <div class="test-info">
-      <h3><i class="fas fa-clipboard-check"></i> Test de compétences</h3>
-      <p>
-        Après soumission de ce formulaire, vous serez redirigé vers un test
-        technique adapté au rôle que vous avez sélectionné. Ce test prend
-        environ 20-30 minutes.
-      </p>
-      <p>
-        <strong>Préparation conseillée :</strong> Soyez prêt à démontrer vos
-        compétences pratiques.
-      </p>
     </div>
 
     <!-- Soumission -->
@@ -203,4 +180,17 @@
       <i class="fas fa-paper-plane"></i> Soumettre ma candidature
     </button>
   </form>
+</div>
+<!-- Modal d'erreur "déjà postulé" -->
+<div
+  class="modal-backdrop"
+  *ngIf="duplicateError"
+  (click)="duplicateError = false"
+></div>
+<div class="modal" *ngIf="duplicateError">
+  <div class="modal-content">
+    <h2>Attention</h2>
+    <p>{{ errorMessage }}</p>
+    <button class="btn-close" (click)="duplicateError = false">Fermer</button>
+  </div>
 </div>

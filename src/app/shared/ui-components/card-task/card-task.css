@@ -15,6 +15,160 @@
   transform: translateY(-2px);
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
 }
+.task-card {
+  background: white;
+  border-radius: 10px;
+  padding: 16px;
+  margin-bottom: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+  border-top: 4px solid #e2e8f0;
+}
+
+.task-card.todo {
+  border-top-color: #6366f1;
+}
+
+.task-card.inprogress {
+  border-top-color: #f59e0b;
+}
+
+.task-card.done {
+  border-top-color: #10b981;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.priority-badge {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 8px;
+  border-radius: 12px;
+}
+
+.priority-badge.high {
+  background-color: #fee2e2;
+  color: #b91c1c;
+}
+
+.priority-badge.medium {
+  background-color: #fef3c7;
+  color: #92400e;
+}
+
+.priority-badge.low {
+  background-color: #dcfce7;
+  color: #166534;
+}
+
+.card-content {
+  margin-bottom: 12px;
+}
+
+.task-title {
+  font-size: 15px;
+  font-weight: 600;
+  margin: 0 0 8px 0;
+  color: #1e293b;
+}
+
+.task-desc {
+  font-size: 13px;
+  color: #64748b;
+  margin: 0 0 12px 0;
+  line-height: 1.4;
+}
+
+.progress-container {
+  margin: 12px 0;
+}
+
+.progress-bar {
+  height: 6px;
+  background: #e2e8f0;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: #3b82f6;
+  border-radius: 3px;
+}
+
+.progress-info {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 4px;
+}
+
+.progress-percent {
+  font-size: 11px;
+  color: #64748b;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 12px;
+}
+
+.tag {
+  font-size: 11px;
+  padding: 4px 8px;
+  border-radius: 6px;
+  background: #f1f5f9;
+  color: #64748b;
+}
+
+.card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  padding-top: 12px;
+  border-top: 1px solid #f1f5f9;
+}
+
+.assignee-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.assignee-label {
+  color: #94a3b8;
+  font-size: 11px;
+}
+
+.assignee-name {
+  font-weight: 500;
+  color: #334155;
+}
+
+.deadline {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #64748b;
+}
+
+.deadline.overdue {
+  color: #dc2626;
+}
+
+.status-badge {
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: 10px;
+  background: #fee2e2;
+  color: #b91c1c;
+}
 
 .task-card.is-dragging {
   opacity: 0.8;

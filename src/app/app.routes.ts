@@ -28,6 +28,8 @@ import { ForgetPassword } from './features/auth/contributors/forget-password/for
 import { Coinssolde } from './features/contributors/pages/coinssolde/coinssolde';
 import { UpadateProfil } from './shared/ui-components/upadate-profil/upadate-profil';
 import { ResetPassword } from './features/auth/contributors/reset-password/reset-password';
+import { SearchPage } from './features/contributors/pages/search-page/search-page';
+import { Error404 } from './shared/ui-components/error-404/error-404';
 
 
 export const routes: Routes = [
@@ -44,15 +46,18 @@ export const routes: Routes = [
       { path: 'quiz', component: Quiz },
       { path: 'workspace-projetc-resource', component: WorkspaceProjectResources },
        { path: 'coins', component: Coinssolde },
-        {path: 'update-profil', component: UpadateProfil },
-
+        {path: 'update-profil/:id', component: UpadateProfil },
+         { path: 'list-demande-participation/:idProjet', component: ListeDemandeParticipation },
+      { path: 'search', component: SearchPage },
              { path: 'badge-recompense', component: RecompenseBadge },
        { path: 'details/:id', component: DetailsPages },
-      { path: 'workspace-project', component: WorkspaceProject },
+      { path: 'workspace-project/:id', component: WorkspaceProject },
        { path: 'projets-recommandes', component: ProjetsRecommandes },
-       { path: 'formulaire-participation/:id', component: FormulaireParticipation },
+       { path: 'formulaire-participation/:idProjet', component: FormulaireParticipation },
         { path: 'voir-participation', component: ListeDemandeParticipation },
-      { path: '', redirectTo: 'home', pathMatch: 'full' }
+      { path: '', redirectTo: 'home', pathMatch: 'full' },
+       { path: 'hist_contribution', component: PageContribution },
+       { path: '**', component: Error404 } // Doit être la dernière !
     ]
   },
   {
@@ -74,9 +79,9 @@ export const routes: Routes = [
 
       { path: 'parametre-coins', component: ParametrageCoins },
       { path: 'badge-recompense', component: RecompenseBadge },
-      { path: 'hist_contribution', component: PageContribution },
+     
       { path: 'projets-recommandes', component: ProjetsRecommandes },
-      { path: 'list-demande-participation', component: ListeDemandeParticipation },
+     
 
       { path: 'gestion-fonctionnalite', component : GestionFonctionnalite },
 

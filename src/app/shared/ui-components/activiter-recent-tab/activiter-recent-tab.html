@@ -1,61 +1,48 @@
-  <div class="project-activity">
-                            <h2><i class="fas fa-history"></i> Activité Récente</h2>
-                            <div class="activity-list">
-                                <div class="activity-item">
-                                    <div class="activity-avatar">
-                                        <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="User">
-                                    </div>
-                                    <div class="activity-content">
-                                        <div class="activity-header">
-                                            <span class="activity-user">Marie Lambert</span>
-                                            <span class="activity-time">Il y a 2 heures</span>
-                                        </div>
-                                        <p class="activity-text">A terminé la tâche "Concevoir l'interface de consultation"</p>
-                                        
-                                    </div>
-                                </div>
-                                
-                                <div class="activity-item">
-                                    <div class="activity-avatar">
-                                        <img src="https://randomuser.me/api/portraits/men/22.jpg" alt="User">
-                                    </div>
-                                    <div class="activity-content">
-                                        <div class="activity-header">
-                                            <span class="activity-user">Pierre Martin</span>
-                                            <span class="activity-time">Il y a 5 heures</span>
-                                        </div>
-                                        <p class="activity-text">A commenté la tâche "Implémenter l'authentification"</p>
-                                       
-                                    </div>
-                                </div>
-                                
-                                <div class="activity-item">
-                                    <div class="activity-avatar">
-                                        <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="User">
-                                    </div>
-                                    <div class="activity-content">
-                                        <div class="activity-header">
-                                            <span class="activity-user">Sophie Dubois</span>
-                                            <span class="activity-time">Hier</span>
-                                        </div>
-                                        <p class="activity-text">A rejoint le projet en tant que Designer UI/UX</p>
-                                       
-                                    </div>
-                                </div>
-                                
-                                <div class="activity-item">
-                                    <div class="activity-avatar">
-                                        <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="User">
-                                    </div>
-                                    <div class="activity-content">
-                                        <div class="activity-header">
-                                            <span class="activity-user">Jean Dupont</span>
-                                            <span class="activity-time">15/07/2023</span>
-                                        </div>
-                                        <p class="activity-text">A ajouté une nouvelle fonctionnalité "Historique médical"</p>
-                                       
-                                    </div>
-                                </div>
-                            </div>
-                            
-                        </div>
+<div class="project-activity">
+  <h2><i class="fas fa-history"></i> Activité Récente</h2>
+
+  <div *ngIf="isLoading">Chargement des commentaires...</div>
+  <div *ngIf="error" class="error">{{ error }}</div>
+
+  <div class="activity-list" *ngIf="!isLoading && !error && commentaires.length === 0">
+    <p>Aucun commentaire récent.</p>
+  </div>
+
+  <div class="activity-list" *ngIf="commentaires.length > 0">
+    <ng-container *ngFor="let comment of commentaires">
+      <div class="activity-item">
+        <div class="activity-avatar">
+          <img [src]="comment.auteurPhotoProfilUrl || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(comment.auteurNomComplet)" alt="User">
+
+
+        </div>
+        <div class="activity-content">
+          <div class="activity-header">
+            <span class="activity-user">{{ comment.auteurNomComplet }}</span>
+            <span class="activity-time">{{ comment.creationDate | date:'shortDate' }}</span>
+          </div>
+          <p class="activity-text">{{ comment.contenu }}</p>
+
+          <!-- Affichage récursif des réponses -->
+       <div *ngIf="comment.reponses && comment.reponses.length > 0" class="reponses-list" style="margin-left: 30px; border-left: 2px solid #ddd; padding-left: 10px;">
+
+            <ng-container *ngFor="let reponse of comment.reponses">
+              <div class="activity-item">
+                <div class="activity-avatar">
+                  <img [src]="reponse.auteurPhotoProfilUrl || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(reponse.auteurNomComplet)" alt="User">
+                </div>
+                <div class="activity-content">
+                  <div class="activity-header">
+                    <span class="activity-user">{{ reponse.auteurNomComplet }}</span>
+                    <span class="activity-time">{{ reponse.creationDate | date:'shortDate' }}</span>
+                  </div>
+                  <p class="activity-text">{{ reponse.contenu }}</p>
+                </div>
+              </div>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+</div>
