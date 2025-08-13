@@ -29,7 +29,9 @@
         <div *ngFor="let discussion of discussions" class="discussion-card">
             <div class="discussion-content">
                 <div class="discussion-header">
-                    <h3>{{ discussion.contenu | slice:0:50 }}{{ discussion.contenu.length > 50 ? '...' : '' }}</h3>
+                    <h3>
+                        <!-- <span>{{ discussion.contenu | slice:0:50 }}{{ discussion.contenu.length > 50 ? '...' : '' }}</span> -->
+                    </h3>
                     <button class="btn-reply" (click)="toggleReply(discussion.id)">
                         Répondre
                     </button>

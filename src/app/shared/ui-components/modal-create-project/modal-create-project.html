@@ -1,4 +1,7 @@
 <!-- New Project Modal -->
+
+
+<!-- modal-create-project.html -->
 <div class="modal-overlay" id="projectModal">
   <div class="modal-container">
     <div class="modal-header">
@@ -6,8 +9,17 @@
       <button class="close-modal" (click)="closeModal()">&times;</button>
     </div>
     <div class="modal-body">
-      <form id="newProjectForm" (submit)="onSubmit($event)">
-        <div class="form-group">
+      <!-- Indicateur de chargement pendant la création -->
+      <div class="creation-loading" *ngIf="isSubmitting">
+        <div class="loading-animation">
+          <div class="spinner"></div>
+        </div>
+        <p>Création du projet en cours...</p>
+      </div>
+
+      <form id="newProjectForm" (submit)="onSubmit($event)" *ngIf="!isSubmitting">
+        <!-- ... (le reste du formulaire reste inchangé) ... -->
+          <div class="form-group">
           <label for="projectTitle">Titre du projet *</label>
           <input
             type="text"
@@ -86,6 +98,7 @@
           <div class="file-upload">
             <input
               type="file"
+              name="url_cahier_de_charge"
               id="projectFile"
               (change)="onFileSelected($event)"
               accept=".pdf,.doc,.docx,.ppt,.pptx"
@@ -114,24 +127,11 @@
 <!-- Success Modal -->
 <div class="success-modal-overlay" id="successModal">
   <div class="success-modal-container">
+    <!-- Animation de succès -->
     <div class="success-animation">
-      <svg
-        class="checkmark"
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 52 52"
-      >
-        <circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none" />
-        <path
-          class="checkmark__check"
-          fill="none"
-          d="M14.1 27.2l7.1 7.2 16.7-16.8"
-        />
-      </svg>
-      <div class="confetti"></div>
-      <div class="confetti"></div>
-      <div class="confetti"></div>
-      <div class="confetti"></div>
-      <div class="confetti"></div>
+      <div class="success-icon">
+        <i class="fas fa-check-circle"></i>
+      </div>
       <div class="confetti"></div>
       <div class="confetti"></div>
       <div class="confetti"></div>
@@ -141,7 +141,7 @@
     <p>Votre projet a été publié et est maintenant en cours de verifications.</p>
 
     <div class="success-actions">
-      <button class="view-project-btn" (click)="viewProject()">Voir le projet</button>
+     
       <button class="close-success-btn" (click)="closeSuccessModal()">Fermer</button>
     </div>
   </div>

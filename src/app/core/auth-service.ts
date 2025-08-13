@@ -12,6 +12,21 @@ export class AuthService {
   private apiUrl = 'http://localhost:8080/api/v1/auth';
 
   constructor(private http: HttpClient) {}
+
+   uploadProfilePhoto(userId: number, file: File): Observable<any> {
+    const formData = new FormData();
+    formData.append('file', file);
+    
+    return this.http.post(
+      `http://localhost:8080/api/v1/uploads/contributeurs/${userId}/photo`, 
+      formData,
+      {
+        reportProgress: true,
+        responseType: 'json'
+      }
+    );
+  }
+
 loginWithGoogle(userData: any) {
   return this.http.post<any>('http://localhost:8080/api/v1/auth/login', userData);
 }
