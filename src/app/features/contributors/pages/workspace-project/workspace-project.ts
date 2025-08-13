@@ -1,5 +1,6 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Location } from '@angular/common'; // <- importer Location
 import { CdkDragDrop, DragDropModule, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { CardTask } from '../../../../shared/ui-components/card-task/card-task';
 import { FonctionnalitesService } from '../../../../core/services/fonctionnalites.service';
@@ -44,10 +45,14 @@ export class WorkspaceProject implements OnInit {
   constructor(
     private fonctService: FonctionnalitesService,
     private projetsService: ProjectsService,
+    private location : Location,
     private route: ActivatedRoute,
     private cdr: ChangeDetectorRef
   ) {}
 
+  goBack(): void {
+  this.location.back();
+}
   ngOnInit() {
     this.route.params.subscribe(params => {
       this.projectId = +params['id'];

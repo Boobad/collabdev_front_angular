@@ -1,3 +1,18 @@
+
+.avatar-text {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #4CAF50; /* Couleur de fond */
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  font-size: 16px;
+  text-transform: uppercase;
+}
+
 /* Sidebar Styles */
 .sidebar {
     width: var(--sidebar-width);

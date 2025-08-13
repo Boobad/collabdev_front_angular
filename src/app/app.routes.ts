@@ -31,11 +31,10 @@ import { ResetPassword } from './features/auth/contributors/reset-password/reset
 import { SearchPage } from './features/contributors/pages/search-page/search-page';
 import { Error404 } from './shared/ui-components/error-404/error-404';
 
-
 export const routes: Routes = [
-
+  // ==================== MainLayout avec authGuard ====================
   {
-    path:'',
+    path: '',
     component: MainLayout,
     canActivate: [authGuard],
     children: [
@@ -44,49 +43,43 @@ export const routes: Routes = [
       { path: 'profil-user', component: ProfilUser },
       { path: 'demarrage-quiz', component: DemarrageQuiz },
       { path: 'quiz', component: Quiz },
-      { path: 'workspace-projetc-resource', component: WorkspaceProjectResources },
-       { path: 'coins', component: Coinssolde },
-        {path: 'update-profil/:id', component: UpadateProfil },
-         { path: 'list-demande-participation/:idProjet', component: ListeDemandeParticipation },
+      { path: 'workspace-project-resources', component: WorkspaceProjectResources },
+      { path: 'coins', component: Coinssolde },
+      { path: 'update-profil/:id', component: UpadateProfil },
+      { path: 'list-demande-participation/:idProjet', component: ListeDemandeParticipation },
       { path: 'search', component: SearchPage },
-             { path: 'badge-recompense', component: RecompenseBadge },
-       { path: 'details/:id', component: DetailsPages },
+      { path: 'badge-recompense', component: RecompenseBadge },
+      { path: 'details/:id', component: DetailsPages },
       { path: 'workspace-project/:id', component: WorkspaceProject },
-       { path: 'projets-recommandes', component: ProjetsRecommandes },
-       { path: 'formulaire-participation/:idProjet', component: FormulaireParticipation },
-        { path: 'voir-participation', component: ListeDemandeParticipation },
-      { path: '', redirectTo: 'home', pathMatch: 'full' },
-       { path: 'hist_contribution', component: PageContribution },
-       { path: '**', component: Error404 } // Doit être la dernière !
+      { path: 'projets-recommandes', component: ProjetsRecommandes },
+      { path: 'formulaire-participation/:idProjet', component: FormulaireParticipation },
+      { path: 'voir-participation', component: ListeDemandeParticipation },
+      { path: 'hist_contribution', component: PageContribution },
+      { path: '', redirectTo: 'home', pathMatch: 'full' }
     ]
   },
-  {
-    path:'',
-    component: AuthLayout,
-     children: [
-      { path: '', redirectTo: 'login', pathMatch: 'full' },
 
-      { path: 'login', loadComponent: () => import('./features/auth/contributors/login/login').then(m => m.Login) },
-      { path: 'logAdmin', component: LoginAdmin },
+  // ==================== AuthLayout pour login / reset / register ====================
+  {
+    path: '',
+    component: AuthLayout,
+    children: [
+      { path: '', redirectTo: 'login', pathMatch: 'full' },
+      { path: 'login', component: Login },
       { path: 'suscribe', component: FormSuscribe },
       { path: 'reset', component: ResetPassword },
-       { path: 'forgot', component: ForgetPassword },
+      { path: 'forgot', component: ForgetPassword },
       { path: 'oauth2-redirect', component: Oauth2RedirectComponent },
-
-
       { path: 'submit-contribution', component: SubmitContribution },
       { path: 'task-details', component: TaskDetails },
-
       { path: 'parametre-coins', component: ParametrageCoins },
+      { path: 'gestion-fonctionnalite', component: GestionFonctionnalite },
       { path: 'badge-recompense', component: RecompenseBadge },
-     
       { path: 'projets-recommandes', component: ProjetsRecommandes },
-     
-
-      { path: 'gestion-fonctionnalite', component : GestionFonctionnalite },
-
+      { path: 'logAdmin', component: LoginAdmin }
     ]
-  }
-,
-  { path: '**', redirectTo: '' } // Redirection pour les routes inconnues
+  },
+
+  // ==================== 404 globale ====================
+  { path: '**', component: Error404 }
 ];

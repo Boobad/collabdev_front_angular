@@ -12,7 +12,7 @@
       <li  routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"><a routerLink="/home" ><i class="fas fa-home"></i> <span *ngIf="!isCollapsed">Home</span></a></li>
       <li routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"><a routerLink="/projects"><i class="fas fa-project-diagram"></i> <span *ngIf="!isCollapsed">Projets</span></a></li>
 
-      <li routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"><a routerLink="/collaborators"><i class="fas fa-users"></i> <span *ngIf="!isCollapsed">Collaborateurs</span></a></li>
+      <!-- <li routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"><a routerLink="/collaborators"><i class="fas fa-users"></i> <span *ngIf="!isCollapsed">Collaborateurs</span></a></li> -->
       <li routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"><a routerLink="/coins"><i class="fas fa-coins"></i> <span *ngIf="!isCollapsed">Mes Coins</span></a></li>
       <li routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"><a routerLink="/badge-recompense"><i class="fas fa-award"></i> <span *ngIf="!isCollapsed">Badges</span></a></li>
       
@@ -20,19 +20,21 @@
   </nav>
 
   <div class="sidebar-footer" >
-    <div class="user-profile">
-      <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="User" routerLink="/profil-user">
-      <div class="user-info" *ngIf="!isCollapsed && user">
-        <span class="user-name" routerLink="/profil-user">{{ user.prenom }} {{ user.nom }}</span>
-        <span class="user-role" routerLink="/profil-user">Porteur de projet</span>
-        <div class="user-level">
-          <div class="level-progress">
-            <div class="progress-bar" style="width: 65%;"></div>
-          </div>
-          <span class="level">Niveau 3</span>
-        </div>
-      </div>
-      <button class="logout-btn" *ngIf="!isCollapsed" (click)="logout()"><i class="fas fa-sign-out-alt"></i></button>
-    </div>
+   <div class="user-profile">
+  <div *ngIf="!user?.avatar" class="avatar-text" [title]="user.prenom + ' ' + user.nom">
+    {{ user.initiales }}
+  </div>
+  <img *ngIf="user?.avatar && !isCollapsed" [src]="user.avatar" alt="User">
+  
+  <div class="user-info" *ngIf="!isCollapsed && user">
+    <span class="user-name" routerLink="/profil-user">{{ user.prenom }} {{ user.nom }}</span>
+    <span class="user-role" routerLink="/profil-user">Porteur de projet</span>
+    
+  </div>
+  <button class="logout-btn" *ngIf="!isCollapsed" (click)="logout()">
+    <i class="fas fa-sign-out-alt"></i>
+  </button>
+</div>
+
   </div>
 </aside>

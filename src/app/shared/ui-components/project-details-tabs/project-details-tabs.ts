@@ -11,7 +11,7 @@ type UserRole = 'ideateur' | 'gestionnaire';
 @Component({
   selector: 'app-project-details-tabs',
   standalone: true,
-  imports: [CommonModule, TachesTab, ApercuTab, EquipesDetailsTab, DiscussionDetailsTab, SettingsTab],
+  imports: [CommonModule, TachesTab, ApercuTab, EquipesDetailsTab, DiscussionDetailsTab],
   templateUrl: './project-details-tabs.html',
   styleUrls: ['./project-details-tabs.css']
 })
@@ -32,7 +32,7 @@ export class ProjectDetailsTabs {
         ...commonTabs,
 
         { id: 'team', label: 'Équipe', icon: 'fa-users' },
-        { id: 'settings', label: 'Paramètres', icon: 'fa-cog' }
+        // { id: 'settings', label: 'Paramètres', icon: 'fa-cog' }
       ];
     } else {
       return [
