@@ -1,12 +1,9 @@
 import { Routes } from '@angular/router';
-import { Login } from './features/auth/contributors/login/login';
 import { Home } from './features/contributors/pages/home/home';
 import { Projects } from './features/contributors/pages/projects/projects';
 import { GestionFonctionnalite } from './features/contributors/pages/gestion-fonctionnalite/gestion-fonctionnalite';
-import { ProjetsRecommandes } from './features/contributors/pages/projets-recommandes/projets-recommandes';
 import { FormulaireParticipation } from './features/contributors/pages/formulaire-participation/formulaire-participation';
 import { DemarrageQuiz } from './features/contributors/pages/demarrage-quiz/demarrage-quiz';
-import { Coins } from './features/contributors/pages/coins/coins';
 import { ParametrageCoins } from './features/admin/pages/parametrage-coins/parametrage-coins';
 import { RecompenseBadge } from './features/contributors/pages/recompense-badge/recompense-badge';
 import { PageContribution } from './features/contributors/pages/page-contribution/page-contribution';
@@ -30,6 +27,7 @@ import { UpadateProfil } from './shared/ui-components/upadate-profil/upadate-pro
 import { ResetPassword } from './features/auth/contributors/reset-password/reset-password';
 import { SearchPage } from './features/contributors/pages/search-page/search-page';
 import { Error404 } from './shared/ui-components/error-404/error-404';
+import { ProjetsRecommandes } from './features/contributors/pages/profil-user/projets-recommandes/projets-recommandes';
 
 
 export const routes: Routes = [
@@ -45,19 +43,19 @@ export const routes: Routes = [
       { path: 'demarrage-quiz', component: DemarrageQuiz },
       { path: 'quiz', component: Quiz },
       { path: 'workspace-projetc-resource', component: WorkspaceProjectResources },
-       { path: 'coins', component: Coinssolde },
-        {path: 'update-profil/:id', component: UpadateProfil },
-         { path: 'list-demande-participation/:idProjet', component: ListeDemandeParticipation },
+      { path: 'coins', component: Coinssolde },
+      { path: 'update-profil/:id', component: UpadateProfil },
+      { path: 'list-demande-participation/:idProjet', component: ListeDemandeParticipation },
       { path: 'search', component: SearchPage },
-             { path: 'badge-recompense', component: RecompenseBadge },
-       { path: 'details/:id', component: DetailsPages },
+      { path: 'badge-recompense', component: RecompenseBadge },
+      { path: 'details/:id', component: DetailsPages },
       { path: 'workspace-project/:id', component: WorkspaceProject },
-       { path: 'projets-recommandes', component: ProjetsRecommandes },
-       { path: 'formulaire-participation/:idProjet', component: FormulaireParticipation },
-        { path: 'voir-participation', component: ListeDemandeParticipation },
+      { path: 'projets-recommandes', component: ProjetsRecommandes },
+      { path: 'formulaire-participation/:idProjet', component: FormulaireParticipation },
+      { path: 'voir-participation', component: ListeDemandeParticipation },
       { path: '', redirectTo: 'home', pathMatch: 'full' },
-       { path: 'hist_contribution', component: PageContribution },
-       { path: '**', component: Error404 } // Doit être la dernière !
+      { path: 'hist_contribution', component: PageContribution },
+      { path: '**', component: Error404 } // Doit être la dernière !
     ]
   },
   {
@@ -70,21 +68,14 @@ export const routes: Routes = [
       { path: 'logAdmin', component: LoginAdmin },
       { path: 'suscribe', component: FormSuscribe },
       { path: 'reset', component: ResetPassword },
-       { path: 'forgot', component: ForgetPassword },
+      { path: 'forgot', component: ForgetPassword },
       { path: 'oauth2-redirect', component: Oauth2RedirectComponent },
-
-
       { path: 'submit-contribution', component: SubmitContribution },
       { path: 'task-details', component: TaskDetails },
-
       { path: 'parametre-coins', component: ParametrageCoins },
       { path: 'badge-recompense', component: RecompenseBadge },
-     
       { path: 'projets-recommandes', component: ProjetsRecommandes },
-     
-
       { path: 'gestion-fonctionnalite', component : GestionFonctionnalite },
-
     ]
   }
 ,

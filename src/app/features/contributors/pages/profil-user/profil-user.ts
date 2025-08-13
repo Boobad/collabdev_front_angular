@@ -1,12 +1,12 @@
 import { Component, ChangeDetectorRef, OnDestroy, OnInit } from '@angular/core';
-import { RouterLink, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
 import { AuthService } from '../../../../core/auth-service';
 
 @Component({
   selector: 'app-profil-user',
   standalone: true,
-  imports: [RouterLink, HttpClientModule],
+  imports: [HttpClientModule],
   templateUrl: './profil-user.html',
   styleUrls: ['./profil-user.css']
 })
