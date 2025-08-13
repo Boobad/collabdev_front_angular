@@ -3,7 +3,7 @@
     <button class="sidebar-toggle" (click)="toggleSidebar()">
       <i class="fas fa-bars"></i>
     </button>
-   
+
     <img *ngIf="!isCollapsed" src="logo 1.png" alt="">
   </div>
 
@@ -15,7 +15,7 @@
       <!-- <li routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"><a routerLink="/collaborators"><i class="fas fa-users"></i> <span *ngIf="!isCollapsed">Collaborateurs</span></a></li> -->
       <li routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"><a routerLink="/coins"><i class="fas fa-coins"></i> <span *ngIf="!isCollapsed">Mes Coins</span></a></li>
       <li routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"><a routerLink="/badge-recompense"><i class="fas fa-award"></i> <span *ngIf="!isCollapsed">Badges</span></a></li>
-      
+
     </ul>
   </nav>
 
@@ -25,11 +25,11 @@
     {{ user.initiales }}
   </div>
   <img *ngIf="user?.avatar && !isCollapsed" [src]="user.avatar" alt="User">
-  
+
   <div class="user-info" *ngIf="!isCollapsed && user">
     <span class="user-name" routerLink="/profil-user">{{ user.prenom }} {{ user.nom }}</span>
     <span class="user-role" routerLink="/profil-user">Porteur de projet</span>
-    
+
   </div>
   <button class="logout-btn" *ngIf="!isCollapsed" (click)="logout()">
     <i class="fas fa-sign-out-alt"></i>

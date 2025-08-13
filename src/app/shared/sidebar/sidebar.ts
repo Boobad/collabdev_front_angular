@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { Router, RouterLink, RouterOutlet } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { RouterModule } from '@angular/router'; // ← nécessaire pour routerLink & routerLinkActive
 import { AuthService } from '../../core/auth-service';
 
