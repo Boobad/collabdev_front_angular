@@ -19,7 +19,7 @@ import { LoginAdmin } from './features/auth/admin/login-admin/login-admin';
 import { MainLayout } from './shared/layouts/main-layout/main-layout';
 import { AuthLayout } from './shared/layouts/auth-layout/auth-layout';
 import { TaskDetails } from './features/contributors/pages/task-details/task-details';
-import { authGuard } from './core/auth-guard';
+import { authGuard } from './core/guard/auth-guard';
 import { Oauth2RedirectComponent } from './core/oauth2-redirect/oauth2-redirect';
 import { ForgetPassword } from './features/auth/contributors/forget-password/forget-password';
 import { Coinssolde } from './features/contributors/pages/coinssolde/coinssolde';

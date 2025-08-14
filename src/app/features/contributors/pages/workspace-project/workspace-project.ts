@@ -21,7 +21,7 @@ export class WorkspaceProject implements OnInit {
   todoTasks: any[] = [];
   inProgressTasks: any[] = [];
   doneTasks: any[] = [];
-  
+
   projectId: number = 1;
   projectDetails: any = {};
   isLoading: boolean = true;
@@ -40,8 +40,8 @@ export class WorkspaceProject implements OnInit {
     contenu: '',
     statusFeatures: 'A_FAIRE',
     dateEcheance: '',
-    exigences: [],
-    criteresAcceptation: [],
+    exigences: [''],
+    criteresAcceptation: [''],
     importance: 'MOYENNE',
     motsCles: [],
     motsClesStr: '',
@@ -88,7 +88,7 @@ export class WorkspaceProject implements OnInit {
 
   toggleNewFeatureForm() {
     this.showNewFeatureForm = !this.showNewFeatureForm;
-    
+
     if (this.showNewFeatureForm) {
       document.body.style.overflow = 'hidden';
     } else {
@@ -103,8 +103,8 @@ export class WorkspaceProject implements OnInit {
       contenu: '',
       statusFeatures: 'A_FAIRE',
       dateEcheance: '',
-      exigences: [],
-      criteresAcceptation: [],
+      exigences: [''],
+      criteresAcceptation: [''],
       importance: 'MOYENNE',
       motsCles: [],
       motsClesStr: '',
@@ -227,7 +227,7 @@ export class WorkspaceProject implements OnInit {
 
       const task = event.container.data[event.currentIndex];
       const newStatus = this.getStatusFromContainerId(event.container.id);
-      
+
       task.status = newStatus;
       task.progress = this.getProgress(newStatus);
 
@@ -283,11 +283,12 @@ export class WorkspaceProject implements OnInit {
     // Préparation du payload avec gestion des champs manquants
     const payload = {
       ...this.newFeature,
-      exigences: this.newFeature.exigences || [],
-      criteresAcceptation: this.newFeature.criteresAcceptation || [],
+      exigences: this.newFeature.exigences.filter((e: string) => e.trim() !== ''),
+      criteresAcceptation: this.newFeature.criteresAcceptation.filter((c: string) => c.trim() !== ''),
       participantId: this.newFeature.participantId || null
     };
 
+    console.log(payload)
     this.fonctService.createFeature(payload).subscribe({
       next: (createdFeature) => {
         const task = this.convertToTask(createdFeature);
@@ -301,7 +302,7 @@ export class WorkspaceProject implements OnInit {
         this.toggleNewFeatureForm();
         this.updateTaskCounters();
         this.cdr.detectChanges();
-        
+
         // Afficher le modal de succès
         this.showFeedback(
           'Fonctionnalité créée !',
@@ -314,7 +315,7 @@ export class WorkspaceProject implements OnInit {
         console.error('Erreur création fonctionnalité:', err);
         this.isCreating = false;
         this.cdr.detectChanges();
-        
+
         // Afficher le modal d'erreur
         this.showFeedback(
           'Erreur de création',
@@ -358,4 +359,36 @@ export class WorkspaceProject implements OnInit {
     }
     this.closeFeedbackModal();
   }
+  addExigence() {
+    this.newFeature.exigences.push('');
+  }
+
+  removeExigence(index: number) {
+      if (this.newFeature.exigences.length > 1) {  // toujours garder au moins une ligne
+        this.newFeature.exigences.splice(index, 1);
+      } else {
+        this.newFeature.exigences[0] = '';
+      }
+    }
+
+  addCritere() {
+    this.newFeature.criteresAcceptation.push('');
+  }
+
+  removeCritere(index: number) {
+    if (this.newFeature.criteresAcceptation.length > 1) {
+      this.newFeature.criteresAcceptation.splice(index, 1);
+    } else {
+      this.newFeature.criteresAcceptation[0] = '';
+    }
+  }
+
+  onInputChange() {
+    this.cdr.detectChanges();
+  }
+
+  trackByIndex(index: number, item: any): number {
+  return index;
+}
+
 }
