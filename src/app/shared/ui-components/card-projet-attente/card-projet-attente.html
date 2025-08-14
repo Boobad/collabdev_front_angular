@@ -1,0 +1,41 @@
+<div class="card" [routerLink]="['/details', projet.id]">
+  <div class="titres">
+    <div class="category">{{ projet.domaine }}</div>
+  </div>
+
+  <div class="info">
+    <h1>{{ projet.titre }}</h1>
+    <p>{{ projet.description }}</p>
+  </div>
+  
+  <div class="details">
+    <div class="langages">
+      <span>{{ projet.secteur }}</span>
+    </div>
+  </div>
+  
+  <div class="details">
+    <div class="collaborateur">
+      <i class="fas fa-user"></i>
+      <span>{{ projet.nombreParticipants }} Collaborateurs</span>
+    </div>
+    <div class="taches">
+      <i class="fas fa-tasks"></i>
+      <span>{{ totalTaches }} Tâches</span>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="progress-container">
+    <div class="progressbar">
+      <div class="bar" 
+           [style.width.%]="getProgress()" 
+           [style.background]="getProgressColor()">
+      </div>
+    </div>
+    <div class="complet">
+      <span>{{ getProgress() }}% Complet</span>
+    </div>
+  </div>
+</div>

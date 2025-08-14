@@ -27,13 +27,13 @@
           <span class="detail-value">{{ project.createurPrenom }} {{ project.createurNom }}</span>
         </div>
       </div>
-      <!-- <div class="detail-item">
+      <div class="detail-item" *ngIf="gestionnaires.length > 0">
         <i class="fas fa-user-cog"></i>
-        <div>
+        <div >
           <span class="detail-label">Gestionnaire</span>
-          <span class="detail-value">Marie Lambert</span>
+          <span *ngFor="let g of gestionnaires" class="detail-value">{{ g.contributeurPrenom }} {{ g.contributeurNom }}</span>
         </div>
-      </div> -->
+      </div>
       <div class="detail-item">
         <i class="fas fa-calendar-check"></i>
         <div>

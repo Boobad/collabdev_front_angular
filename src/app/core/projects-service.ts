@@ -74,10 +74,20 @@ export class ProjectsService {
 
   // Récupérer uniquement les projets "actifs" selon plusieurs statuts
   getProjetsActifs(userId: number): Observable<Projet[]> {
-    const statutsActifs = ['EN_ATTENTE', 'OUVERT', 'EN_COURS','TERMINER'];
+    const statutsActifs = ['OUVERT', 'EN_COURS','TERMINER'];
 
     return this.getProjetsByContributeur(userId).pipe(
       map(projets => projets.filter(projet => statutsActifs.includes(projet.status)))
     );
   }
+   // Récupérer uniquement les projets "actifs" selon plusieurs statuts
+  getProjetsAttente(userId: number): Observable<Projet[]> {
+    const statutsActifs = ['EN_ATTENTE'];
+
+    return this.getProjetsByContributeur(userId).pipe(
+      map(projets => projets.filter(projet => statutsActifs.includes(projet.status)))
+    );
+  }
+
+  
 }

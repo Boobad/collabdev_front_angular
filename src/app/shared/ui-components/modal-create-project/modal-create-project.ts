@@ -1,4 +1,3 @@
-// modal-create-project.ts
 import { Component } from '@angular/core';
 import { ProjectPayload, ProjectsService } from '../../../core/projects-service';
 import { Router } from '@angular/router';
@@ -6,7 +5,7 @@ import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-modal-create-project',
-  imports:[CommonModule],
+  imports: [CommonModule],
   templateUrl: './modal-create-project.html',
   styleUrls: ['./modal-create-project.css']
 })
@@ -42,18 +41,15 @@ export class ModalCreateProject {
     }
   }
 
-  async onSubmit(event: Event): Promise<void> {
+  onSubmit(event: Event): void {
     event.preventDefault();
     this.isSubmitting = true;
-
-    // Simuler un délai de création pour voir l'animation
-    await new Promise(resolve => setTimeout(resolve, 1500));
 
     const form = event.target as HTMLFormElement;
     const formData = new FormData(form);
 
-    const titre = formData.get('projectTitle') as string;
-    const description = formData.get('projectDescription') as string;
+    const titre = (formData.get('projectTitle') as string)?.trim();
+    const description = (formData.get('projectDescription') as string)?.trim();
     const domaine = (formData.get('projectDomain') as string || '').toUpperCase();
     const secteur = (formData.get('projectSector') as string || '').toUpperCase();
     const role = (formData.get('projectRole') as string) || 'ideator';
@@ -71,26 +67,14 @@ export class ModalCreateProject {
       return;
     }
 
-    try {
-      const user = JSON.parse(userStr);
-      const userId = user.id;
+    const user = JSON.parse(userStr);
+    const userId = user.id;
 
-      let fileUrl: string | undefined;
-      if (this.selectedFile) {
-        try {
-          const uploadResponse = await this.projectsService.uploadFile(this.selectedFile).toPromise();
-          fileUrl = uploadResponse?.fileUrl;
-        } catch (uploadError) {
-          console.error('Erreur lors de l\'upload:', uploadError);
-          alert('Erreur lors de l\'upload du fichier');
-          this.isSubmitting = false;
-          return;
-        }
-      }
-
+    // Fonction interne pour créer le projet
+    const createProject = (fileUrl?: string) => {
       const projectPayload: ProjectPayload = {
-        titre: titre.trim(),
-        description: description.trim(),
+        titre,
+        description,
         domaine,
         secteur,
         urlCahierDeCharge: fileUrl,
@@ -111,11 +95,22 @@ export class ModalCreateProject {
           this.isSubmitting = false;
         }
       });
+    };
 
-    } catch (error) {
-      console.error('Error:', error);
-      alert('Une erreur inattendue est survenue');
-      this.isSubmitting = false;
+    // Upload du fichier si présent
+    if (this.selectedFile) {
+      this.projectsService.uploadFile(this.selectedFile).subscribe({
+        next: (uploadResponse) => {
+          createProject(uploadResponse?.fileUrl);
+        },
+        error: (err) => {
+          console.error('Erreur upload fichier:', err);
+          alert('Erreur lors de l\'upload du fichier');
+          this.isSubmitting = false;
+        }
+      });
+    } else {
+      createProject();
     }
   }
 

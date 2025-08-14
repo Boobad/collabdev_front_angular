@@ -5,6 +5,7 @@ import { CardProjectActif } from "../../../../shared/ui-components/card-project-
 import { ProjectsRecommander } from "../../../../shared/ui-components/projects-recommander/projects-recommander";
 import { RouterLink } from "@angular/router";
 import { CommonModule } from "@angular/common";
+import { CardProjetAttente } from "../../../../shared/ui-components/card-projet-attente/card-projet-attente";
 
 @Component({
   selector: 'app-home',
@@ -14,8 +15,9 @@ import { CommonModule } from "@angular/common";
     CardProjectActif,
     ProjectsRecommander,
     RouterLink,
-    CommonModule
-  ],
+    CommonModule,
+    CardProjetAttente
+],
   templateUrl: './home.html',
   styleUrls: ['./home.css'],
 })
@@ -23,6 +25,7 @@ export class Home implements OnInit {
   projetsActifs: Projet[] = [];
   userId: number | undefined; // Déclaré sans valeur initiale
   loading = true;
+  projetsAttente: Projet[] = [];
 
   constructor(
     private projectsService: ProjectsService,
@@ -64,6 +67,24 @@ export class Home implements OnInit {
       next: (projets) => {
         this.zone.run(() => {
           this.projetsActifs = projets || [];
+          this.loading = false;
+          this.cdr.detectChanges();
+        });
+      },
+      error: (err) => {
+        console.error('Erreur chargement projets:', err);
+        this.zone.run(() => {
+          this.projetsActifs = [];
+          this.loading = false;
+          this.cdr.detectChanges();
+        });
+      }
+    });
+
+    this.projectsService.getProjetsAttente(this.userId).subscribe({
+      next: (projets) => {
+        this.zone.run(() => {
+          this.projetsAttente = projets || [];
           this.loading = false;
           this.cdr.detectChanges();
         });

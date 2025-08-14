@@ -38,11 +38,12 @@
     </div>
   </div>
 
-  <div class="header-actions">
-    <button class="btn btn-primary" (click)="toggleNewFeatureForm()">
-      <i class="fas fa-plus"></i> Nouvelle fonctionnalité
-    </button>
-  </div>
+ <div class="header-actions" *ngIf="hasManager">
+  <button class="btn btn-primary" (click)="toggleNewFeatureForm()">
+    <i class="fas fa-plus"></i> Nouvelle fonctionnalité
+  </button>
+</div>
+
 </header>
 
 <!-- Modal pour nouvelle fonctionnalité -->
@@ -52,7 +53,6 @@
       <h3>Créer une nouvelle fonctionnalité</h3>
       <button class="modal-close" (click)="toggleNewFeatureForm()">&times;</button>
     </div>
-
     <div class="modal-body">
       <form (ngSubmit)="createFeature()" #featureForm="ngForm">
         <div class="form-group">

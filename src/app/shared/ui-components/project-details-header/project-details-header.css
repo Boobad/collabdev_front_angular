@@ -1,3 +1,136 @@
+/* Backdrop */
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.45);
+  z-index: 1000;
+  opacity: 0;
+  animation: fadeIn 0.25s forwards;
+}
+
+/* Modal */
+.modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.9);
+  background-color: #ffffff;
+  padding: 2rem 2.5rem;
+  border-radius: 16px;
+  width: 90%;
+  max-width: 500px;
+  z-index: 1001;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
+  opacity: 0;
+  animation: scaleIn 0.25s forwards;
+  transition: transform 0.25s ease, opacity 0.25s ease;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  to { opacity: 1; }
+}
+@keyframes scaleIn {
+  to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+}
+
+/* Modal header */
+.modal-title {
+  margin-bottom: 1rem;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #222;
+  text-align: center;
+}
+
+/* Modal text */
+.modal-text {
+  margin-bottom: 1.5rem;
+  color: #555;
+  line-height: 1.6;
+  text-align: center;
+  font-size: 1rem;
+}
+
+/* Inputs */
+.modal-form input,
+.modal-form textarea,
+.modal-form select {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  margin-bottom: 1rem;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+  font-size: 1rem;
+  transition: all 0.3s;
+  background-color: #f9f9f9;
+}
+
+.modal-form input:focus,
+.modal-form textarea:focus,
+.modal-form select:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 8px rgba(0, 123, 255, 0.2);
+  outline: none;
+  background-color: #fff;
+}
+
+/* Actions */
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+/* Buttons */
+.btn {
+  padding: 0.65rem 1.3rem;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: all 0.2s;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.btn:hover {
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+}
+
+/* Primary */
+.btn-primary {
+  background: linear-gradient(135deg, #0066ff, #3399ff);
+  color: #fff;
+}
+.btn-primary:hover {
+  background: linear-gradient(135deg, #0056d4, #2288ee);
+}
+
+/* Danger */
+.btn-danger {
+  background: linear-gradient(135deg, #ff4d4f, #ff7875);
+  color: #fff;
+}
+.btn-danger:hover {
+  background: linear-gradient(135deg, #d43838, #ff4d4f);
+}
+
+/* Secondary */
+.btn-secondary {
+  background: #6c757d;
+  color: #fff;
+}
+.btn-secondary:hover {
+  background: #5a6268;
+}
+
+
 /* Couleurs secteurs */
 .health { color: #e74c3c; }        /* rouge */
 .education { color: #3498db; }    /* bleu */

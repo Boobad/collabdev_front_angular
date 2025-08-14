@@ -34,6 +34,8 @@ export class WorkspaceProject implements OnInit {
   isCreating: boolean = false;
 
   projectParticipants: any[] = [];
+  hasManager: boolean = false;
+  projectManager: any = null;
 
   newFeature: any = {
     titre: '',
@@ -46,10 +48,9 @@ export class WorkspaceProject implements OnInit {
     motsCles: [],
     motsClesStr: '',
     projetId: 0,
-    participantId: null // Utilisation de null pour "Non assigné"
+    participantId: null
   };
 
-  // Variables pour le modal de feedback
   showFeedbackModal: boolean = false;
   feedbackTitle: string = '';
   feedbackMessage: string = '';
@@ -109,7 +110,7 @@ export class WorkspaceProject implements OnInit {
       motsCles: [],
       motsClesStr: '',
       projetId: this.projectId,
-      participantId: null // Réinitialisation à null
+      participantId: null
     };
   }
 
@@ -126,15 +127,26 @@ export class WorkspaceProject implements OnInit {
   }
 
   loadProjectParticipants() {
-    this.http.get<any[]>(`http://localhost:8080/api/v1/participants/projet/${this.projectId}`).subscribe({
-      next: (participants) => {
-        this.projectParticipants = participants;
-        this.cdr.detectChanges();
-      },
-      error: (err) => {
-        console.error('Erreur chargement participants:', err);
-      }
-    });
+  this.http.get<any[]>(`http://localhost:8080/api/v1/participants/projet/${this.projectId}`)
+  .subscribe({
+    next: (participants) => {
+      this.projectParticipants = participants;
+
+      console.log('Participants récupérés :', participants); // <-- ajoute ça pour debug
+
+      // Cherche le gestionnaire
+     this.projectManager = participants.find(p => p.profil?.toUpperCase() === 'GESTIONNAIRE') || null;
+this.hasManager = !!this.projectManager;
+
+
+      console.log('Has manager :', this.hasManager); // <-- debug ici aussi
+
+      this.cdr.detectChanges();
+    },
+    error: (err) => console.error('Erreur chargement participants:', err)
+  });
+
+
   }
 
   loadProjectData() {
@@ -270,7 +282,6 @@ export class WorkspaceProject implements OnInit {
 
     this.isCreating = true;
 
-    // Traitement des mots-clés
     if (this.newFeature.motsClesStr) {
       this.newFeature.motsCles = this.newFeature.motsClesStr
         .split(',')
@@ -280,7 +291,6 @@ export class WorkspaceProject implements OnInit {
       this.newFeature.motsCles = [];
     }
 
-    // Préparation du payload avec gestion des champs manquants
     const payload = {
       ...this.newFeature,
       exigences: this.newFeature.exigences.filter((e: string) => e.trim() !== ''),
@@ -302,7 +312,6 @@ export class WorkspaceProject implements OnInit {
         this.toggleNewFeatureForm();
         this.updateTaskCounters();
         this.cdr.detectChanges();
-
         // Afficher le modal de succès
         this.showFeedback(
           'Fonctionnalité créée !',
@@ -315,7 +324,6 @@ export class WorkspaceProject implements OnInit {
         console.error('Erreur création fonctionnalité:', err);
         this.isCreating = false;
         this.cdr.detectChanges();
-
         // Afficher le modal d'erreur
         this.showFeedback(
           'Erreur de création',
@@ -331,7 +339,6 @@ export class WorkspaceProject implements OnInit {
     return Math.round((this.tachesTerminees / this.totalTaches) * 100);
   }
 
-  // Afficher le modal de feedback
   showFeedback(title: string, message: string, isSuccess: boolean, featureId: number | null = null) {
     this.feedbackTitle = title;
     this.feedbackMessage = message;
@@ -341,13 +348,11 @@ export class WorkspaceProject implements OnInit {
     document.body.style.overflow = 'hidden';
   }
 
-  // Fermer le modal de feedback
   closeFeedbackModal() {
     this.showFeedbackModal = false;
     document.body.style.overflow = '';
   }
 
-  // Naviguer vers la fonctionnalité créée
   viewCreatedFeature() {
     if (this.createdFeatureId) {
       const element = document.getElementById(`task-${this.createdFeatureId}`);
