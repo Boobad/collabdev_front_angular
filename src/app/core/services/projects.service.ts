@@ -68,4 +68,9 @@ export class ProjectsService {
     if (payload.cahierDesChargesFile) fd.set("cahierDesCharges", payload.cahierDesChargesFile)
     return this.http.post<Project>(apiUrl("/projets/partager"), fd)
   }
+
+  getParticipants(projectId: string) {
+  return this.http.get<any[]>(`http://localhost:8080/api/v1/participants/projet/${projectId}`);
+}
+
 }

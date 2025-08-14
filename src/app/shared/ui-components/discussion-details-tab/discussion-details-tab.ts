@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef, Input } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -33,7 +33,6 @@ interface Discussion {
   styleUrls: ['./discussion-details-tab.css']
 })
 export class DiscussionDetailsTab implements OnInit {
-  // Configuration des icônes
   icons = {
     spinner: faSpinner,
     plus: faPlus,
@@ -44,15 +43,13 @@ export class DiscussionDetailsTab implements OnInit {
     code: faCode
   };
 
-  // Variables d'état
   discussions: Discussion[] = [];
+  participants: any[] = [];
   newDiscussionContent: string = '';
   replyContent: string = '';
   isLoading: boolean = false;
   error: string | null = null;
   isReplying: number | null = null;
-  
-  // Données utilisateur et projet
   user: any = null;
   projectId: number = 0;
 
@@ -67,20 +64,20 @@ export class DiscussionDetailsTab implements OnInit {
     this.loadProjectId();
   }
 
+  // Initiales pour avatar fallback
   getInitials(name: string | null): string {
-  if (!name) return '';
-  const words = name.trim().split(' ');
-  if (words.length === 1) return words[0].charAt(0).toUpperCase();
-  return (words[0].charAt(0) + words[words.length - 1].charAt(0)).toUpperCase();
-}
-
+    if (!name) return '';
+    const words = name.trim().split(' ');
+    return words.length === 1 
+      ? words[0].charAt(0).toUpperCase() 
+      : (words[0].charAt(0) + words[words.length - 1].charAt(0)).toUpperCase();
+  }
 
   private loadUserData(): void {
     const userData = localStorage.getItem('user');
     if (userData) {
       try {
         this.user = JSON.parse(userData);
-        console.error('data:', userData);
       } catch (e) {
         console.error('Error parsing user data:', e);
       }
@@ -91,19 +88,49 @@ export class DiscussionDetailsTab implements OnInit {
     this.route.params.subscribe(params => {
       this.projectId = +params['id'] || 0;
       if (this.projectId) {
-        this.loadDiscussions();
+        this.loadParticipants();
       }
+    });
+  }
+
+  // Récupération des participants
+  private loadParticipants(): void {
+    this.http.get<any[]>(`http://localhost:8080/api/v1/participants/projet/${this.projectId}`)
+      .subscribe({
+        next: (data) => {
+          this.participants = data;
+          this.loadDiscussions(); // On charge les discussions après
+        },
+        error: (err) => {
+          console.error('Erreur chargement participants:', err);
+          this.loadDiscussions(); // Même si erreur, on tente de charger les discussions
+        }
+      });
+  }
+
+  // Remplacer nom de l'auteur par nom/prénom du participant
+  private replaceAuthorNames(discussions: Discussion[]): Discussion[] {
+    return discussions.map(d => {
+      const participant = this.participants.find(p => p.id === d.auteurId);
+      if (participant) {
+        d.auteurNomComplet = `${participant.contributeurPrenom} ${participant.contributeurNom}`;
+      }
+      if (d.reponses && d.reponses.length) {
+        d.reponses = this.replaceAuthorNames(d.reponses);
+      }
+      return d;
     });
   }
 
   loadDiscussions(): void {
     this.isLoading = true;
     this.error = null;
-    
+
     this.http.get<Discussion[]>(`http://localhost:8080/api/v1/commentaires/projet/${this.projectId}`)
       .subscribe({
         next: (data) => {
-          this.discussions = data.filter(d => d.parentId === null);
+          const topLevel = data.filter(d => d.parentId === null);
+          this.discussions = this.replaceAuthorNames(topLevel);
           this.isLoading = false;
           this.cdr.detectChanges();
         },
@@ -196,5 +223,10 @@ export class DiscussionDetailsTab implements OnInit {
     } catch {
       return dateString;
     }
+  }
+
+  getParticipantEmail(auteurId: number): string {
+    const participant = this.participants.find(p => p.id === auteurId);
+    return participant ? participant.contributeurEmail : '';
   }
 }
