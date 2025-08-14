@@ -46,13 +46,23 @@ export class ProjectsService {
     return this.http.post<Project>(apiUrl("/projets"), payload)
   }
 
-  update(id: ID, patch: Partial<Project>): Observable<Project> {
-    return this.http.put<Project>(apiUrl(`/projets/${id}`), patch)
-  }
 
   remove(id: ID): Observable<MessageResponse> {
     return this.http.delete<MessageResponse>(apiUrl(`/projets/${id}`))
   }
+
+private baseUrl = 'http://localhost:8080/api/v1/projets';
+
+deleteProject(id: number): Observable<void> {
+  // Exemple pour la route sécurisée avec idCreateur
+  const userId = localStorage.getItem('userId');
+  return this.http.delete<void>(`${this.baseUrl}/${id}/createur/${userId}`);
+}
+
+update(id: number, project: any): Observable<any> {
+  const userId = localStorage.getItem('userId');
+  return this.http.put<any>(`${this.baseUrl}/${id}/createur/${userId}`, project);
+}
 
   // Share idea endpoint (projects/partager)
   shareIdea(payload: ProjectCreateRequest): Observable<Project> {

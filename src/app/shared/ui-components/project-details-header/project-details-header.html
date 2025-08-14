@@ -26,8 +26,8 @@
             [class.fa-sync-alt]="project.status === 'EN_COURS'"
             [class.fa-check-circle]="project.status === 'TERMINE'"
             [class.fa-clock]="project.status === 'EN_ATTENTE'"
-            [class.fa-spin]="project.status === 'EN_COURS'"
-          ></i>
+            [class.fa-spin]="project.status === 'EN_COURS'">
+          </i>
           {{ project.status | statutDisplay }}
         </span>
 
@@ -38,20 +38,66 @@
       </div>
     </div>
 
-    
+    <!-- Actions selon le statut -->
+   
   </div>
-  <div class="project-actions">
-      <button class="btn btn-tasks" [routerLink]="['/workspace-project', project?.id]">
-        <i class="fas fa-tasks"></i> Tâches
-      </button>
-      <button class="btn btn-share" (click)="openShareModal()">
-        <i class="fas fa-share-alt"></i> Partager
-      </button>
-      
+   <div class="project-actions" *ngIf="!loading && !error && project">
+      <!-- Modifier / Supprimer -->
+      <ng-container *ngIf="project.status === 'EN_ATTENTE'">
+        <button class="btn btn-primary" (click)="openEditModal()">
+          <i class="fas fa-edit"></i> Modifier
+        </button>
+        <button class="btn btn-danger" (click)="openDeleteModal()">
+          <i class="fas fa-trash-alt"></i> Supprimer
+        </button>
+      </ng-container>
+
+      <!-- Tâches / Partager -->
+      <ng-container *ngIf="project.status === 'OUVERT' || project.status === 'EN_COURS' || project.status === 'TERMINE'">
+        <button class="btn btn-tasks" [routerLink]="['/workspace-project', project?.id]">
+          <i class="fas fa-tasks"></i> Tâches
+        </button>
+        <button class="btn btn-share" (click)="openShareModal()">
+          <i class="fas fa-share-alt"></i> Partager
+        </button>
+      </ng-container>
     </div>
 </section>
 
-<!-- Modal -->
+<!-- Modals -->
+
+<!-- Modal Edit -->
+<!-- Modal Edit -->
+ 
+<div class="modal-backdrop" *ngIf="showEditModal" (click)="closeEditModal()"></div>
+<div class="modal" *ngIf="showEditModal" (click)="$event.stopPropagation()">
+  <h3 class="modal-title">Modifier le projet</h3>
+  <form (ngSubmit)="updateProject()" #editForm="ngForm" class="modal-form">
+    <input type="text" [(ngModel)]="project.titre" name="titre" placeholder="Titre" required />
+    <textarea [(ngModel)]="project.description" name="description" placeholder="Description" required></textarea>
+    <select [(ngModel)]="project.secteur" name="secteur" required>
+      <option *ngFor="let s of secteurs" [value]="s">{{ s }}</option>
+    </select>
+    <div class="modal-actions">
+      <button type="button" class="btn btn-secondary" (click)="closeEditModal()">Annuler</button>
+      <button type="submit" class="btn btn-primary">Enregistrer</button>
+    </div>
+  </form>
+</div>
+
+<!-- Modal Delete -->
+<div class="modal-backdrop" *ngIf="showDeleteModal" (click)="closeDeleteModal()"></div>
+<div class="modal" *ngIf="showDeleteModal" (click)="$event.stopPropagation()">
+  <h3 class="modal-title">Supprimer le projet ?</h3>
+  <p class="modal-text">Cette action est irréversible et tous les participants seront notifiés.</p>
+  <div class="modal-actions">
+    <button class="btn btn-secondary" (click)="closeDeleteModal()">Annuler</button>
+    <button class="btn btn-danger" (click)="deleteProject()">Supprimer</button>
+  </div>
+</div>
+
+
+<!-- Modal Partager -->
 <div class="modal-backdrop" *ngIf="showShareModal" (click)="closeShareModal()"></div>
 <div class="modal" *ngIf="showShareModal" (click)="$event.stopPropagation()">
   <h3>Partager le projet</h3>
