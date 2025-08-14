@@ -3,7 +3,6 @@ import { ProjectsService, Projet } from "../../../../core/projects-service";
 import { Banniere } from "../../../../shared/ui-components/banniere/banniere";
 import { CardProjectActif } from "../../../../shared/ui-components/card-project-actif/card-project-actif";
 import { ProjectsRecommander } from "../../../../shared/ui-components/projects-recommander/projects-recommander";
-import { CardBadges } from "../../../../shared/ui-components/card-badges/card-badges";
 import { RouterLink } from "@angular/router";
 import { CommonModule } from "@angular/common";
 
@@ -14,7 +13,6 @@ import { CommonModule } from "@angular/common";
     Banniere,
     CardProjectActif,
     ProjectsRecommander,
-    CardBadges,
     RouterLink,
     CommonModule
   ],

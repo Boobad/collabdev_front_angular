@@ -2,7 +2,6 @@ import { Component, ChangeDetectorRef, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
 import { AuthService } from '../../../../core/auth-service';
-import { Observable } from 'rxjs'; // Import manquant pour Observable
 
 @Component({
   selector: 'app-profil-user',
@@ -29,7 +28,7 @@ export class ProfilUser implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    // Initialisation input file
+    // Créer input file invisible
     this.fileInput = document.createElement('input');
     this.fileInput.type = 'file';
     this.fileInput.accept = 'image/*';
@@ -37,10 +36,10 @@ export class ProfilUser implements OnInit, OnDestroy {
     this.fileInput.addEventListener('change', (event) => this.onFileSelected(event));
     document.body.appendChild(this.fileInput);
 
-    // Récupérer l'ID utilisateur
+    // Récupérer ID utilisateur
     this.getUserIdFromStorage();
-    
-    // Charger le profil
+
+    // Charger profil si ID dispo
     if (this.userId) {
       this.loadUserProfile();
     }
@@ -59,40 +58,40 @@ export class ProfilUser implements OnInit, OnDestroy {
         const user = JSON.parse(userStr);
         this.userId = user.id;
       } catch (e) {
-        console.error('Erreur lors du parsing de user:', e);
+        console.error('Erreur parsing user:', e);
       }
     }
   }
 
   private loadUserProfile(): void {
     if (!this.userId) return;
-    
+
     this.authService.getProfileById(this.userId).subscribe({
       next: (data: any) => {
-        this.username = data.prenom && data.nom 
-          ? `${this.capitalize(data.prenom)} ${this.capitalize(data.nom)}` 
+        this.username = data.prenom && data.nom
+          ? `${this.capitalize(data.prenom)} ${this.capitalize(data.nom)}`
           : 'Utilisateur';
         this.email = data.email || '';
         this.bio = data.biographie || 'Aucune biographie disponible';
         this.membresDepuis = this.formatDate(data.createdAt) || '';
-        
-        // Utiliser l'URL complète de l'image
+
+        // Photo profil (avec fallback)
         if (data.photoProfilUrl) {
           this.profileImage = this.getFullImageUrl(data.photoProfilUrl);
         } else {
           this.profileImage = 'assets/images/profil.png';
         }
-        
+
         this.cdRef.detectChanges();
       },
       error: (err) => {
         console.error('Erreur chargement profil :', err);
+        this.profileImage = 'assets/images/profil.png';
       }
     });
   }
 
   private getFullImageUrl(relativePath: string): string {
-    // Ajouter le domaine de base si nécessaire
     if (relativePath.startsWith('http')) {
       return relativePath;
     }
@@ -109,42 +108,35 @@ export class ProfilUser implements OnInit, OnDestroy {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files[0] && this.userId) {
       const file = input.files[0];
-      
-      // Vérifier la taille du fichier (max 5MB)
+
       if (file.size > 5 * 1024 * 1024) {
         alert('La taille maximale du fichier est de 5MB');
         return;
       }
-      
-      // Vérifier le type MIME
+
       if (!file.type.match(/image\/(jpeg|jpg|png|gif)/)) {
         alert('Format d\'image non supporté (JPEG, JPG, PNG, GIF uniquement)');
         return;
       }
 
       const reader = new FileReader();
-
-      // Preview immédiate
       reader.onload = (e) => {
         this.profileImage = e.target?.result || null;
         this.cdRef.detectChanges();
       };
       reader.readAsDataURL(file);
 
-      // Upload vers le serveur
       this.authService.uploadProfilePhoto(this.userId, file).subscribe({
         next: (response: any) => {
-          console.log('Photo mise à jour avec succès', response);
-          // Mettre à jour avec la nouvelle URL de l'API
+          console.log('Photo mise à jour', response);
           if (response.photoUrl) {
             this.profileImage = this.getFullImageUrl(response.photoUrl);
           }
         },
         error: (err: any) => {
           console.error('Erreur upload photo', err);
-          // Recharger l'ancienne image en cas d'erreur
           this.loadUserProfile();
-          alert('Échec de l\'upload de la photo');
+          alert('Échec upload photo');
         }
       });
 

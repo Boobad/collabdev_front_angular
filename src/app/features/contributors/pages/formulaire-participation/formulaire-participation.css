@@ -1,3 +1,16 @@
+.btn-secondary {
+  padding: 8px 15px;
+  background-color: #0d53ea;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.readonly-field {
+  background-color: #f0f0f0; /* gris clair */
+  color: #6c757d; /* texte gris */
+  cursor: not-allowed;
+}
 
 body {
   background-color: var(--light);
