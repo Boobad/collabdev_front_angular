@@ -1,5 +1,6 @@
 import { CommonModule, DatePipe, DecimalPipe } from '@angular/common';
 import { Component } from '@angular/core';
+import { BadgeService } from '../../../../core/badge-service';
 
 export interface Badge {
   id: number;
@@ -10,13 +11,13 @@ export interface Badge {
   dateObtention: string; // format ISO: "YYYY-MM-DD"
 }
 
-export interface BadgeForm {
-  nom: string;
-  image: string;
-  description: string;
-  nombreUtilisateurs: number;
-  dateObtention: string; // format: 'YYYY-MM-DD'
-}
+// export interface BadgeForm {
+//   nom: string;
+//   image: string;
+//   description: string;
+//   nombreUtilisateurs: number;
+//   dateObtention: string; // format: 'YYYY-MM-DD'
+// }
 
 
 @Component({
@@ -24,36 +25,31 @@ export interface BadgeForm {
   standalone: true,
   imports: [CommonModule, DecimalPipe, DatePipe],
   templateUrl: './admin-badge.html',
-  styleUrls: ['./admin-badge.css'] // ✅ tableau
+  styleUrls: ['./admin-badge.css']
 })
 export class AdminBadge {
 
-  badges: Badge[] = [
-    {
-      id: 1,
-      nom: 'Badge Bronze',
-      image: 'BadgeBronze.png',
-      description: 'Premiers pas sur la plateforme',
-      nombreUtilisateurs: 1021,
-      dateObtention: '2025-05-12'
-    },
-    {
-      id: 2,
-      nom: 'Badge Argent',
-      image: 'BadgeArgent.png',
-      description: 'Participation active',
-      nombreUtilisateurs: 540,
-      dateObtention: '2025-05-12'
-    },
-    {
-      id: 3,
-      nom: 'Badge Or',
-      image: 'BadgeOr.png',
-      description: 'Contribution exceptionnelle',
-      nombreUtilisateurs: 210,
-      dateObtention: '2025-05-12'
-    }
-  ];
+  badges: Badge[] = [];
+
+   constructor(private badgeService: BadgeService) {}
+
+ ngOnInit(): void {
+    this.badgeService.getBadges().subscribe({
+      next: (data) => {
+        this.badges = data.map(b => ({
+          id: b.id,
+          nom: b.type, // on mappe 'type' de l'API vers 'nom' local
+          image: 'assets/badges/' + b.type.toLowerCase() + '.png', // image fictive
+          description: b.description,
+          nombreUtilisateurs: b.nombreContribution,
+          dateObtention: new Date().toISOString().split('T')[0] // valeur temporaire
+        }));
+      },
+      error: (err) => console.error('Erreur de récupération des badges', err)
+    });
+  }
+
+
 
   editBadge(badge: Badge) {
     console.log('Éditer badge', badge);

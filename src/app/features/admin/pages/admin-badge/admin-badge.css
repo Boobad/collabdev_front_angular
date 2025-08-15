@@ -1,7 +1,8 @@
-
 .container {
   max-width: 1200px;
   margin: auto;
+  padding: 20px;
+  font-family: Arial, sans-serif;
 }
 
 h1 {
@@ -25,6 +26,11 @@ h1 {
   cursor: pointer;
   position: relative;
   color: #333;
+  transition: color 0.2s;
+}
+
+.tabs button:hover {
+  color: #2f54eb;
 }
 
 .tabs .active {
@@ -42,6 +48,50 @@ h1 {
   background-color: #2f54eb;
 }
 
+.card {
+  margin-top: 18px;
+  width: 100%;
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+  overflow: hidden;
+}
+
+.card .hd {
+  background-color: #f5f7ff;
+  padding: 12px 16px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.card .hd h3 {
+  margin: 0;
+  color: #2f54eb;
+  font-size: 18px;
+}
+
+.card .bd {
+  padding: 16px;
+}
+
+.card ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.card li {
+  padding: 8px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.card li:last-child {
+  border-bottom: none;
+}
+
+.card small {
+  color: #555;
+}
+
 .badges-grid {
   display: flex;
   gap: 25px;
@@ -57,6 +107,11 @@ h1 {
   width: 280px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
   text-align: center;
+  transition: transform 0.2s;
+}
+
+.badge-card:hover {
+  transform: translateY(-4px);
 }
 
 .badge-card img {
@@ -98,6 +153,11 @@ h1 {
   padding: 8px 12px;
   border-radius: 8px;
   cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.edit:hover {
+  background-color: #d0e4ff;
 }
 
 .delete {
@@ -107,12 +167,18 @@ h1 {
   padding: 8px 12px;
   border-radius: 8px;
   cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.delete:hover {
+  background-color: #ffc2d4;
 }
 
 .pagination {
   display: flex;
   justify-content: center;
   gap: 10px;
+  margin-top: 20px;
 }
 
 .pagination button {
@@ -122,6 +188,11 @@ h1 {
   cursor: pointer;
   background-color: #eaeaea;
   font-weight: 600;
+  transition: background-color 0.2s;
+}
+
+.pagination button:hover:not(.active) {
+  background-color: #d0d0d0;
 }
 
 .pagination button.active {
