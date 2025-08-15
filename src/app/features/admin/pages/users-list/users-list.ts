@@ -1,61 +1,19 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { HttpClientModule } from '@angular/common/http';
+import { UsersService } from '../../../../core/users-service';
 
 @Component({
   selector: 'app-users-list',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, HttpClientModule],
   templateUrl: './users-list.html',
   styleUrls: ['./users-list.css']
 })
 export class UsersList implements OnInit {
-  users = [
-    {
-      id: 1,
-      name: 'Boubou nunu',
-      role: 'Administrateur',
-      status: 'active',
-      avatar: 'BT',
-      contributions: 42,
-      coins: 280,
-      projects: 5,
-      blocked: false
-    },
-    {
-      id: 2,
-      name: 'Moh nunu',
-      role: 'Contributeur',
-      status: 'active',
-      avatar: 'M',
-      contributions: 28,
-      coins: 185,
-      projects: 3,
-      blocked: false
-    },
-    {
-      id: 3,
-      name: 'simpo nunu',
-      role: 'Contributeur',
-      status: 'inactive',
-      avatar: 'SN',
-      contributions: 15,
-      coins: 120,
-      projects: 2,
-      blocked: false
-    },
-    {
-      id: 4,
-      name: 'SD nun',
-      role: 'Contributeur',
-      status: 'active',
-      avatar: 'SD',
-      contributions: 32,
-      coins: 210,
-      projects: 4,
-      blocked: false
-    }
-  ];
+  users: any[] = [];
+  loading = true;
   currentDeletingUser: number | null = null;
   notification: { message: string; type: string; show: boolean } | null = null;
 
@@ -67,14 +25,60 @@ export class UsersList implements OnInit {
     } : {};
   }
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private usersService: UsersService) {}
 
   ngOnInit() {
-    this.renderUsers();
+    this.loadUsersProgressively();
   }
 
-  renderUsers() {
-    // La mise à jour sera gérée par le template Angular
+  loadUsersProgressively() {
+    // Charger les contributeurs en premier
+    this.usersService.getContributeurs().subscribe({
+      next: contributeurs => {
+        this.users.push(...contributeurs.map(c => ({
+          id: c.id,
+          name: `${c.nom} ${c.prenom}`,
+          role: 'Contributeur',
+          status: c.actif ? 'active' : 'inactive',
+          avatar: this.getAvatarInitials(c.nom, c.prenom),
+          contributions: c.pointExp,
+          coins: c.totalCoin,
+          projects: 0,
+          blocked: !c.actif
+        })));
+        this.loading = false; // on a déjà quelque chose à afficher
+      },
+      error: err => {
+        this.showNotification('Erreur chargement contributeurs', 'error');
+        console.error(err);
+      }
+    });
+
+    // Charger les administrateurs ensuite
+    this.usersService.getAdmins().subscribe({
+      next: admins => {
+        this.users.push(...admins.map(a => ({
+          id: a.id,
+          name: a.email,
+          role: 'Administrateur',
+          status: a.actif ? 'active' : 'inactive',
+          avatar: this.getAvatarInitials(a.email),
+          contributions: 0,
+          coins: 0,
+          projects: 0,
+          blocked: !a.actif
+        })));
+      },
+      error: err => {
+        this.showNotification('Erreur chargement administrateurs', 'error');
+        console.error(err);
+      }
+    });
+  }
+
+  getAvatarInitials(nom: string, prenom?: string): string {
+    if (prenom) return `${nom[0]}${prenom[0]}`.toUpperCase();
+    return nom[0]?.toUpperCase() || '?';
   }
 
   deleteUser(userId: number) {
@@ -85,7 +89,6 @@ export class UsersList implements OnInit {
   confirmDelete() {
     if (this.currentDeletingUser !== null) {
       this.users = this.users.filter(u => u.id !== this.currentDeletingUser);
-      this.renderUsers();
       this.closeModal('deleteModal');
       this.showNotification('Utilisateur supprimé avec succès', 'success');
       this.currentDeletingUser = null;
@@ -96,7 +99,6 @@ export class UsersList implements OnInit {
     const user = this.users.find(u => u.id === userId);
     if (user) {
       user.blocked = !user.blocked;
-      this.renderUsers();
       const action = user.blocked ? 'bloqué' : 'débloqué';
       this.showNotification(`Utilisateur ${action} avec succès`, user.blocked ? 'warning' : 'success');
     }
@@ -118,7 +120,7 @@ export class UsersList implements OnInit {
       this.notification!.show = false;
       setTimeout(() => {
         this.notification = null;
-      }, 300); // Temps pour l'animation de disparition
-    }, 3000); // Affichage pendant 3 secondes
+      }, 300);
+    }, 3000);
   }
 }
