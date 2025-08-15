@@ -42,3 +42,6 @@ testem.log
 Thumbs.db
 
 /src/app/core/backend.js
+/src/app/core/server.js
+/src/app/core/googleapi.js
+.env

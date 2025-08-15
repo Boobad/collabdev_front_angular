@@ -34,25 +34,25 @@ export class ModalCreateProject {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length) {
       this.selectedFile = input.files[0];
-      this.fileName = this.selectedFile?.name || 'Fichier sélectionné';
+      this.fileName = this.selectedFile.name;
     } else {
       this.selectedFile = null;
       this.fileName = 'Aucun fichier sélectionné';
     }
   }
 
-  onSubmit(event: Event): void {
+  async onSubmit(event: Event): Promise<void> {
     event.preventDefault();
     this.isSubmitting = true;
 
     const form = event.target as HTMLFormElement;
-    const formData = new FormData(form);
 
-    const titre = (formData.get('projectTitle') as string)?.trim();
-    const description = (formData.get('projectDescription') as string)?.trim();
-    const domaine = (formData.get('projectDomain') as string || '').toUpperCase();
-    const secteur = (formData.get('projectSector') as string || '').toUpperCase();
-    const role = (formData.get('projectRole') as string) || 'ideator';
+    // Récupération des valeurs
+    const titre = (form.querySelector('#projectTitle') as HTMLInputElement).value.trim();
+    const description = (form.querySelector('#projectDescription') as HTMLTextAreaElement).value.trim();
+    const domaine = (form.querySelector('#projectDomain') as HTMLSelectElement).value.toUpperCase();
+    const secteur = (form.querySelector('#projectSector') as HTMLSelectElement).value.toUpperCase();
+    const role = (form.querySelector('input[name="projectRole"]:checked') as HTMLInputElement)?.value || 'PORTEUR_DE_PROJET';
 
     if (!titre || !description || !secteur) {
       alert('Veuillez remplir les champs obligatoires');
@@ -67,50 +67,38 @@ export class ModalCreateProject {
       return;
     }
 
-    const user = JSON.parse(userStr);
-    const userId = user.id;
+    try {
+      const user = JSON.parse(userStr);
+      const userId = user.id;
 
-    // Fonction interne pour créer le projet
-    const createProject = (fileUrl?: string) => {
-      const projectPayload: ProjectPayload = {
-        titre,
-        description,
-        domaine,
-        secteur,
-        urlCahierDeCharge: fileUrl,
-        role
-      };
+      const projectPayload: ProjectPayload = { titre, description, domaine, secteur, role };
 
-      this.projectsService.createProject(userId, projectPayload).subscribe({
-        next: (response) => {
+      // Création du FormData pour l’upload multipart
+      const formData = new FormData();
+      formData.append('projet', new Blob([JSON.stringify(projectPayload)], { type: 'application/json' }));
+      if (this.selectedFile) {
+        formData.append('cahierDesCharges', this.selectedFile, this.selectedFile.name);
+      }
+
+      this.projectsService.createProjectMultipart(userId, formData).subscribe({
+        next: (response: any) => {
           this.lastCreatedProjectId = response.id;
           this.showSuccessModal();
           this.resetForm(form);
           this.closeModal();
           this.isSubmitting = false;
         },
-        error: (err) => {
+        error: (err: any) => {
           console.error('Erreur création projet:', err);
-          alert(`Erreur lors de la création: ${err.error?.message || err.message}`);
+          alert(`Erreur lors de la création du projet: ${err.error?.message || err.message}`);
           this.isSubmitting = false;
         }
       });
-    };
 
-    // Upload du fichier si présent
-    if (this.selectedFile) {
-      this.projectsService.uploadFile(this.selectedFile).subscribe({
-        next: (uploadResponse) => {
-          createProject(uploadResponse?.fileUrl);
-        },
-        error: (err) => {
-          console.error('Erreur upload fichier:', err);
-          alert('Erreur lors de l\'upload du fichier');
-          this.isSubmitting = false;
-        }
-      });
-    } else {
-      createProject();
+    } catch (error: any) {
+      console.error('Erreur inattendue:', error);
+      alert('Une erreur inattendue est survenue');
+      this.isSubmitting = false;
     }
   }
 

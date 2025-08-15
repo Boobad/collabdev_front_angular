@@ -1,7 +1,3 @@
-<!-- New Project Modal -->
-
-
-<!-- modal-create-project.html -->
 <div class="modal-overlay" id="projectModal">
   <div class="modal-container">
     <div class="modal-header">
@@ -9,47 +5,31 @@
       <button class="close-modal" (click)="closeModal()">&times;</button>
     </div>
     <div class="modal-body">
-      <!-- Indicateur de chargement pendant la création -->
+
       <div class="creation-loading" *ngIf="isSubmitting">
-        <div class="loading-animation">
-          <div class="spinner"></div>
-        </div>
+        <div class="loading-animation"><div class="spinner"></div></div>
         <p>Création du projet en cours...</p>
       </div>
 
       <form id="newProjectForm" (submit)="onSubmit($event)" *ngIf="!isSubmitting">
-        <!-- ... (le reste du formulaire reste inchangé) ... -->
-          <div class="form-group">
+
+        <div class="form-group">
           <label for="projectTitle">Titre du projet *</label>
-          <input
-            type="text"
-            id="projectTitle"
-            name="projectTitle"
-            placeholder="Donnez un titre clair à votre projet"
-            required
-          />
+          <input type="text" id="projectTitle" placeholder="Donnez un titre clair à votre projet" required />
         </div>
 
         <div class="form-group">
           <label for="projectDescription">Description *</label>
-          <textarea
-            id="projectDescription"
-            name="projectDescription"
-            rows="4"
-            placeholder="Décrivez en détail votre projet, ses objectifs et sa valeur ajoutée"
-            required
-          ></textarea>
+          <textarea id="projectDescription" rows="4" placeholder="Décrivez votre projet" required></textarea>
         </div>
 
         <div class="form-row">
           <div class="form-group">
             <label for="projectDomain">Domaine</label>
-            <select id="projectDomain" name="projectDomain">
+            <select id="projectDomain">
               <option value="">Sélectionnez un domaine</option>
               <option value="WEB">Web</option>
               <option value="MOBILE">Mobile</option>
-              
-              
               <option value="IA">IA</option>
               <option value="CYBERSECURITE">Cybersécurité</option>
               <option value="DEVOPS">DevOps</option>
@@ -59,7 +39,7 @@
 
           <div class="form-group">
             <label for="projectSector">Secteur *</label>
-            <select id="projectSector" name="projectSector" required>
+            <select id="projectSector" required>
               <option value="">Sélectionnez un secteur</option>
               <option value="SANTE">Santé</option>
               <option value="EDUCATION">Éducation</option>
@@ -76,19 +56,11 @@
           <div class="role-options">
             <label class="role-option">
               <input type="radio" name="projectRole" value="PORTEUR_DE_PROJET" checked />
-              <div class="role-card">
-                <i class="fas fa-lightbulb"></i>
-                <h4>Idéateur</h4>
-                <p>Je partage juste l'idée et cherche un gestionnaire</p>
-              </div>
+              <div class="role-card"><i class="fas fa-lightbulb"></i><h4>Idéateur</h4></div>
             </label>
             <label class="role-option">
               <input type="radio" name="projectRole" value="GESTIONNAIRE" />
-              <div class="role-card">
-                <i class="fas fa-tasks"></i>
-                <h4>Gestionnaire</h4>
-                <p>Je veux gérer le projet moi-même</p>
-              </div>
+              <div class="role-card"><i class="fas fa-tasks"></i><h4>Gestionnaire</h4></div>
             </label>
           </div>
         </div>
@@ -96,52 +68,29 @@
         <div class="form-group">
           <label for="projectFile">Cahier des charges (optionnel)</label>
           <div class="file-upload">
-            <input
-              type="file"
-              name="url_cahier_de_charge"
-              id="projectFile"
-              (change)="onFileSelected($event)"
-              accept=".pdf,.doc,.docx,.ppt,.pptx"
-            />
-            <label for="projectFile" class="upload-btn">
-              <i class="fas fa-cloud-upload-alt"></i>
-              <span>Choisir un fichier</span>
-            </label>
+            <input type="file" id="projectFile" (change)="onFileSelected($event)" accept=".pdf,.doc,.docx,.ppt,.pptx" />
             <span class="file-name">{{ fileName }}</span>
           </div>
         </div>
 
         <div class="form-actions">
-          <button type="button" class="cancel-btn" (click)="closeModal()">
-            Annuler
-          </button>
-          <button type="submit" class="submit-btn" [disabled]="isSubmitting">
-            Partager le projet
-          </button>
+          <button type="button" class="cancel-btn" (click)="closeModal()">Annuler</button>
+          <button type="submit" class="submit-btn" [disabled]="isSubmitting">Partager le projet</button>
         </div>
       </form>
     </div>
   </div>
 </div>
 
-<!-- Success Modal -->
 <div class="success-modal-overlay" id="successModal">
   <div class="success-modal-container">
-    <!-- Animation de succès -->
     <div class="success-animation">
-      <div class="success-icon">
-        <i class="fas fa-check-circle"></i>
-      </div>
-      <div class="confetti"></div>
-      <div class="confetti"></div>
-      <div class="confetti"></div>
+      <div class="success-icon"><i class="fas fa-check-circle"></i></div>
+      <div class="confetti"></div><div class="confetti"></div><div class="confetti"></div>
     </div>
-
     <h2>Projet créé avec succès !</h2>
-    <p>Votre projet a été publié et est maintenant en cours de verifications.</p>
-
+    <p>Votre projet a été publié et est en cours de vérification.</p>
     <div class="success-actions">
-     
       <button class="close-success-btn" (click)="closeSuccessModal()">Fermer</button>
     </div>
   </div>

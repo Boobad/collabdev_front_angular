@@ -105,9 +105,11 @@ export class MesCardProject implements OnInit {
           return { ...project, coinsRequired: coins };
         });
 
-        this.filteredProjects = this.projects.filter(
-          project => project.status?.trim().toUpperCase() === 'OUVERT'
-        );
+        this.filteredProjects = this.projects.filter(project => {
+  const status = project.status?.trim()?.toUpperCase();
+  return status === 'OUVERT' || status === 'EN_COURS';
+});
+
 
         this.filteredProjects.forEach(project => this.fetchParticipants(project.id));
 

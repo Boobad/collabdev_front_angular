@@ -81,7 +81,6 @@ export class ProjectDetailsHeader implements OnInit {
 
   toastMessage: string | null = null;
 toastType: 'success' | 'error' = 'success';
-
   updateProject() {
     if (!this.project) return;
     this.projectsService.update(this.project.id, this.project).subscribe({

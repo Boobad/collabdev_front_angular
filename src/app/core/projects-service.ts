@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
@@ -46,22 +46,37 @@ export class ProjectsService {
     return this.http.post<{ fileUrl: string }>(`${this.apiUrl}/upload`, formData);
   }
 
-  createProject(userId: number, project: ProjectPayload): Observable<any> {
-    if (!userId) {
-      return throwError(() => new Error('ID utilisateur manquant'));
-    }
+createProject(userId: number, projet: ProjectPayload, file?: File): Observable<any> {
+  const formData = new FormData();
+  
+  // Création de l'objet projet sans la propriété urlCahierDeCharge
+  const { urlCahierDeCharge, ...projetData } = projet;
+  
+  // Ajout de l'objet projet en tant que blob JSON
+  formData.append('projet', new Blob([JSON.stringify(projetData)], {
+    type: 'application/json'
+  }));
 
-    if (!project.titre || !project.description || !project.domaine || !project.secteur) {
-      return throwError(() => new Error('Tous les champs obligatoires doivent être remplis'));
-    }
-
-    return this.http.post(`${this.apiUrl}/${userId}`, project).pipe(
-      catchError(error => {
-        console.error('Erreur création projet:', error);
-        return throwError(() => error);
-      })
-    );
+  // Ajout du fichier s'il existe
+  if (file) {
+    formData.append('cahierDesCharges', file, file.name);
   }
+
+  return this.http.post(`${this.apiUrl}/${userId}`, formData, {
+    headers: new HttpHeaders({
+      'enctype': 'multipart/form-data'
+    })
+  }).pipe(
+    catchError(error => {
+      console.error('Erreur création projet:', error);
+      return throwError(() => error);
+    })
+  );
+}
+  // projects-service.ts
+createProjectMultipart(userId: number, formData: FormData) {
+  return this.http.post<any>(`http://localhost:8080/api/v1/projets/contributeur/${userId}`, formData);
+}
 
   getProjetsByContributeur(userId: number): Observable<Projet[]> {
     return this.http.get<Projet[]>(`${this.apiUrl}/${userId}`).pipe(
