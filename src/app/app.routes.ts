@@ -4,7 +4,6 @@ import { Projects } from './features/contributors/pages/projects/projects';
 import { GestionFonctionnalite } from './features/contributors/pages/gestion-fonctionnalite/gestion-fonctionnalite';
 import { FormulaireParticipation } from './features/contributors/pages/formulaire-participation/formulaire-participation';
 import { DemarrageQuiz } from './features/contributors/pages/demarrage-quiz/demarrage-quiz';
-import { ParametrageCoins } from './features/admin/pages/parametrage-coins/parametrage-coins';
 import { RecompenseBadge } from './features/contributors/pages/recompense-badge/recompense-badge';
 import { PageContribution } from './features/contributors/pages/page-contribution/page-contribution';
 import { ProfilUser } from './features/contributors/pages/profil-user/profil-user';
@@ -29,13 +28,21 @@ import { SearchPage } from './features/contributors/pages/search-page/search-pag
 import { Error404 } from './shared/ui-components/error-404/error-404';
 import { ProjetsRecommandes } from './features/contributors/pages/profil-user/projets-recommandes/projets-recommandes';
 import { Login } from './features/auth/contributors/login/login';
+import { MainAdminLayout } from './shared/layouts/main-admin-layout/main-admin-layout';
+import { AdminBadge } from './features/admin/pages/admin-badge/admin-badge';
+import { AdminDetailProjet } from './features/admin/pages/admin-detail-projet/admin-detail-projet';
+import { CeuilBadge } from './features/admin/pages/ceuil-badge/ceuil-badge';
+import { ProjetAdmin } from './features/admin/pages/projet-admin/projet-admin';
+import { UsersList } from './features/admin/pages/users-list/users-list';
+import { ParametrageCoins } from './features/admin/pages/component_admin_param/parametrage-coins/parametrage-coins';
+import { AdminDash } from './features/admin/pages/admin-dash/admin-dash';
 
 export const routes: Routes = [
   // ==================== MainLayout avec authGuard ====================
   {
     path: '',
     component: MainLayout,
-    canActivate: [authGuard],
+    // canActivate: [authGuard],
     children: [
       { path: 'home', component: Home },
       { path: 'projects', component: Projects },
@@ -55,6 +62,21 @@ export const routes: Routes = [
       { path: 'voir-participation', component: ListeDemandeParticipation },
       { path: 'hist_contribution', component: PageContribution },
       { path: '', redirectTo: 'home', pathMatch: 'full' }
+    ]
+  },
+  {
+    path: '',
+    component: MainAdminLayout,
+    // canActivate: [authGuard],
+    children: [
+      { path: 'admin-dash', component: AdminDash },
+      { path: 'admin-badges', component: AdminBadge },
+      { path: 'admin-project-details', component: AdminDetailProjet },
+      { path: 'admin-seuil-badge', component: CeuilBadge },
+      { path: 'admin-param-coin', component: ParametrageCoins },
+      { path: 'admin-list-projet', component: ProjetAdmin },
+      { path: 'admin-list-users', component: UsersList },
+      { path: '', redirectTo: 'admin-dash', pathMatch: 'full' }
     ]
   },
 

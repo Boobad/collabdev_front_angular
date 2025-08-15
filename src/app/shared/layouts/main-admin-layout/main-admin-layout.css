@@ -1,0 +1,14 @@
+/* App Layout */
+.app-container {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* Main Content Styles */
+.main-content {
+    flex: 1;
+    overflow-y: auto;
+    width: 100%;
+    height: 100vh;
+    padding-bottom: 40px;
+}
