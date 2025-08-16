@@ -1,13 +1,16 @@
-<div class="container"> 
+<div class="container">
   <h1>Gestion des Badges</h1>
 
   <nav class="tabs">
-    <button class="active">Liste des badges</button>
-    <button>Configuration des seuils</button>
+    <button routerLink="/admin-badges" routerLinkActive="active">Liste des badges</button>
+    <button routerLink="/admin-seuil-badge" routerLinkActive="active">Configuration des seuils</button>
   </nav>
 
-  <section class="badges-grid">
-    <!-- Badge Card dynamique -->
+  <router-outlet></router-outlet>
+</div>
+<div>
+  <!-- Onglet : Liste des badges -->
+  <section *ngIf="activeTab === 'badges'" class="badges-grid">
     <div class="badge-card" *ngFor="let badge of badges">
       <img [src]="badge.image" [alt]="badge.nom" />
       <h2>{{ badge.nom }}</h2>
@@ -21,14 +24,50 @@
         <button class="delete" (click)="deleteBadge(badge)">🗑️ Supprimer</button>
       </div>
     </div>
-  </section>   
+    
+    <!-- Pagination -->
+    <div class="pagination">
+      <button disabled>&laquo;</button>
+      <button class="active">1</button>
+      <button>2</button>
+      <button>3</button>
+      <button>&raquo;</button>
+    </div>
+  </section>
 
-  <!-- Pagination -->
-  <div class="pagination">
-    <button disabled>&laquo;</button>
-    <button class="active">1</button>
-    <button>2</button>
-    <button>3</button>
-    <button>&raquo;</button>
-  </div>
+  <!-- Onglet : Configuration des seuils -->
+  <section *ngIf="activeTab === 'seuils'">
+    <h2 class="section-title">Badges basés sur l'activité</h2>
+
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Badge</th>
+            <th>Type d'activité</th>
+            <th>Seuil</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let s of seuils">
+            <td><img [src]="s.image" [alt]="s.nom"/> {{ s.nom }}</td>
+            <td>{{ s.typeActivite }}</td>
+            <td><img [src]="s.iconeSeuil"/> {{ s.seuil }} X</td>
+            <td><button class="edit-btn" (click)="editSeuil(s)">✏️ Éditer</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="save-btn-wrapper">
+      <button class="save-btn" (click)="saveSeuils()">Enregistrer</button>
+    </div>
+  </section>
+
+  <!-- Onglet : Statistiques -->
+  <section *ngIf="activeTab === 'stats'">
+    <h2>📊 Statistiques des badges</h2>
+    <!-- Ici tu ajoutes tes graphiques ou stats -->
+  </section>
 </div>
