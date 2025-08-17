@@ -40,3 +40,8 @@ testem.log
 # System files
 .DS_Store
 Thumbs.db
+
+/src/app/core/backend.js
+/src/app/core/server.js
+/src/app/core/googleapi.js
+.env

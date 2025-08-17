@@ -16,6 +16,7 @@ import { HttpClient } from '@angular/common/http';
 import { Chart, registerables } from 'chart.js';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { apiUrl } from '../../../core/services/api.config';
 
 Chart.register(...registerables);
 
@@ -113,7 +114,7 @@ export class ProgressionTab implements OnInit, AfterViewInit, OnDestroy, OnChang
     this.error = null;
     this.cdRef.detectChanges();
 
-    this.http.get<ProjectFeature[]>(`http://localhost:8080/api/v1/fonctionnalites/projet/${this.projectId}`)
+    this.http.get<ProjectFeature[]>(apiUrl(`/fonctionnalites/projet/${this.projectId}`))
       .subscribe({
         next: (data) => {
           this.features = data;

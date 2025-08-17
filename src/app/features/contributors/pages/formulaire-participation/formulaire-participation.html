@@ -1,4 +1,8 @@
 <div class="container">
+  <button type="button" class="btn btn-secondary" (click)="goBack()">
+    Retour
+</button>
+
   <form
     id="participationForm"
     (ngSubmit)="onSubmit()"
@@ -11,45 +15,39 @@
     </div>
 
     <!-- Nom complet -->
-    <div class="form-group">
-      <label for="fullname" class="form-label required-field">Nom complet</label>
-      <input
-        type="text"
-        id="fullname"
-        class="form-control"
-        [(ngModel)]="formData.fullname"
-        name="fullname"
-        required
-        #fullname="ngModel"
-      />
-      <div
-        *ngIf="fullname.invalid && (fullname.dirty || fullname.touched)"
-        class="error"
-      >
-        Le nom complet est requis.
-      </div>
-    </div>
+  <!-- Nom complet -->
+<div class="form-group">
+  <label for="fullname" class="form-label required-field">Nom complet</label>
+  <input
+    type="text"
+    id="fullname"
+    class="form-control readonly-field"
+    [(ngModel)]="formData.fullname"
+    name="fullname"
+    required
+    #fullname="ngModel"
+    readonly
+  />
+</div>
 
-    <!-- Email -->
-    <div class="form-group">
-      <label for="email" class="form-label required-field">Email</label>
-      <input
-        type="email"
-        id="email"
-        class="form-control"
-        [(ngModel)]="formData.email"
-        name="email"
-        required
-        email
-        #email="ngModel"
-      />
-      <div *ngIf="email.invalid && (email.dirty || email.touched)" class="error">
-        Veuillez entrer un email valide.
-      </div>
-    </div>
+<!-- Email -->
+<div class="form-group">
+  <label for="email" class="form-label required-field">Email</label>
+  <input
+    type="email"
+    id="email"
+    class="form-control readonly-field"
+    [(ngModel)]="formData.email"
+    name="email"
+    required
+    email
+    #email="ngModel"
+    readonly
+  />
+</div>
 
     <!-- Portfolio -->
-    <div class="form-group">
+    <!-- <div class="form-group">
       <label for="portfolio" class="form-label">
         Lien vers portfolio/profil (GitHub, Behance, etc.)
       </label>
@@ -60,7 +58,7 @@
         [(ngModel)]="formData.portfolio"
         name="portfolio"
       />
-    </div>
+    </div> -->
 
     <!-- Rôle souhaité -->
     <div class="form-group">
@@ -128,26 +126,28 @@
     </div>
 
     <!-- Motivations -->
-    <div class="form-group">
-      <label for="motivation" class="form-label required-field">Vos motivations</label>
-      <textarea
-        id="motivation"
-        class="form-control"
-        [(ngModel)]="formData.motivation"
-        name="motivation"
-        required
-        minlength="200"
-        #motivation="ngModel"
-        (input)="updateMotivationCount()"
-      ></textarea>
-      <small>{{ motivationMessage }}</small>
-      <div
-        *ngIf="motivation.invalid && (motivation.dirty || motivation.touched)"
-        class="error"
-      >
-        Veuillez décrire vos motivations en au moins 200 caractères.
-      </div>
-    </div>
+   <div class="form-group">
+  <label for="motivation" class="form-label required-field">Vos motivations</label>
+  <textarea
+    id="motivation"
+    class="form-control"
+    [(ngModel)]="formData.motivation"
+    name="motivation"
+    required
+    minlength="200"
+    maxlength="500" 
+    #motivation="ngModel"
+    (input)="updateMotivationCount()"
+  ></textarea>
+  <small>{{ motivationMessage }}</small>
+  <!-- <div
+    *ngIf="motivation.invalid && (motivation.dirty || motivation.touched)"
+    class="error"
+  >
+    Veuillez décrire vos motivations en au moins 500 caractères.
+  </div> -->
+</div>
+
 
     <!-- Expérience -->
     <div class="form-group">

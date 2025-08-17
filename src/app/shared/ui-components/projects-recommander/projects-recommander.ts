@@ -9,6 +9,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { CommonModule } from '@angular/common';
 import { CoinsService } from '../../../core/coins-service';
 import { AppInsufficientCoinsDialog } from '../app-insufficient-coins-dialog/app-insufficient-coins-dialog';
+import { apiUrl } from '../../../core/services/api.config';
 
 interface Project {
   id: number;
@@ -72,7 +73,11 @@ export class ProjectsRecommander implements OnInit {
     this.loadUserCoins();
   }
 
-  // 🔹 Charger les coins de l'utilisateur
+  private getUserEmail(): string | null {
+    const userStr = localStorage.getItem('user');
+    return userStr ? JSON.parse(userStr).email : null;
+  }
+
   loadUserCoins(): void {
     const userStr = localStorage.getItem('user');
     if (!userStr) {
@@ -111,13 +116,12 @@ export class ProjectsRecommander implements OnInit {
     }
   }
 
-  // 🔹 Charger tous les projets ouverts
   fetchProjects(): void {
     this.isLoading = true;
     this.error = null;
     this.cdRef.detectChanges();
 
-    this.http.get<Project[]>('http://localhost:8080/api/v1/projets')
+    this.http.get<Project[]>(apiUrl(`/projets`))
       .subscribe({
         next: (data) => {
           this.projects = data.map(project => {
@@ -133,11 +137,11 @@ export class ProjectsRecommander implements OnInit {
             return { ...project, coinsRequired: coins };
           });
 
-          this.filteredProjects = this.projects.filter(
-            project => project.status?.trim()?.toUpperCase() === 'OUVERT'
-          );
+          this.filteredProjects = this.projects.filter(project => {
+  const status = project.status?.trim()?.toUpperCase();
+  return status === 'OUVERT' || status === 'EN_COURS';
+});
 
-          // 🔹 Charger les participants pour chaque projet
           this.filteredProjects.forEach(project => {
             this.fetchParticipants(project.id);
           });
@@ -158,9 +162,8 @@ export class ProjectsRecommander implements OnInit {
       });
   }
 
-  // 🔹 Charger les participants d'un projet
   fetchParticipants(projectId: number): void {
-    this.http.get<Participant[]>(`http://localhost:8080/api/v1/participants/projet/${projectId}`)
+    this.http.get<Participant[]>(apiUrl(`/participants/projet/${projectId}`))
       .subscribe({
         next: (data) => {
           this.participants[projectId] = data;
@@ -172,41 +175,93 @@ export class ProjectsRecommander implements OnInit {
       });
   }
 
-  // 🔹 Vérifier si l'utilisateur est participant
-  isUserParticipant(projectId: number): boolean {
-    const userStr = localStorage.getItem('user');
-    if (!userStr) return false;
+  isUserAcceptedParticipant(projectId: number): boolean {
+    const email = this.getUserEmail();
+    if (!email) return false;
 
-    const userEmail = JSON.parse(userStr).email;
-    const participants: Participant[] = this.participants[projectId] || [];
-    return participants.some(p => p.contributeurEmail === userEmail);
+    return (this.participants[projectId] || []).some(
+      p => p.contributeurEmail === email && p.statut?.trim()?.toUpperCase() === 'ACCEPTE'
+    );
   }
 
-  // 🔹 Rejoindre le projet ou accéder aux détails
-  onJoinProject(projectId: number, requiredCoins: number): void {
-    if (!this.isUserParticipant(projectId)) {
-      if (this.userCoins >= requiredCoins) {
-        this.router.navigate(['/formulaire-participation', projectId]);
-      } else {
-        this.openInsufficientCoinsModal(requiredCoins);
-      }
+  isUserPendingParticipant(projectId: number): boolean {
+    const email = this.getUserEmail();
+    if (!email) return false;
+
+    return (this.participants[projectId] || []).some(
+      p => p.contributeurEmail === email && p.statut?.trim()?.toUpperCase() !== 'ACCEPTE'
+    );
+  }
+
+onProjectButtonClick(projectId: number, requiredCoins: number): void {
+  const participant = (this.participants[projectId] || []).find(
+    p => p.contributeurEmail === this.getUserEmail()
+  );
+
+  if (participant) {
+    if (participant.statut?.trim().toUpperCase() !== 'ACCEPTE') {
+      alert('Votre demande est en attente de validation.');
+      return;
+    }
+
+    if (!participant.estDebloque) {
+      this.unlockProject(projectId);
     } else {
       this.router.navigate(['/details', projectId]);
     }
+  } else {
+    // Utilisateur pas encore participant → vérifier les coins
+    if (this.userCoins >= requiredCoins) {
+      this.router.navigate(['/formulaire-participation', projectId]);
+    } else {
+      this.openInsufficientCoinsModal(requiredCoins);
+    }
+  }
+}
+
+getProjectButtonLabel(projectId: number, requiredCoins: number): string {
+  const participant = (this.participants[projectId] || []).find(
+    p => p.contributeurEmail === this.getUserEmail()
+  );
+
+  if (!participant) return this.userCoins >= requiredCoins ? 'Rejoindre le projet' : 'Coins insuffisants';
+  if (participant.statut?.trim().toUpperCase() !== 'ACCEPTE') return 'Demande en attente';
+  return participant.estDebloque ? 'Accéder au projet' : 'Débloquer le projet';
+}
+
+
+
+
+  unlockProject(projectId: number): void {
+    const participant = (this.participants[projectId] || []).find(
+      p => p.contributeurEmail === this.getUserEmail()
+    );
+    if (!participant) return;
+
+    const participantId = participant.id;
+    console.log('ID du participant à débloquer:', participantId);
+
+    this.http.patch(apiUrl(`/participants/${participantId}/projet/${projectId}/unlock`), {})
+      .subscribe({
+        next: () => {
+          console.log(`Projet ${projectId} débloqué pour le participant ${participantId}`);
+          participant.estDebloque = true;  // Met à jour localement
+          this.loadUserCoins();            // Recharge les coins
+        },
+        error: (err) => {
+          console.error('Erreur déblocage projet:', err);
+          alert('Impossible de débloquer le projet. Vérifiez vos coins.');
+        }
+      });
   }
 
-  // 🔹 Modal d'insuffisance de coins
   openInsufficientCoinsModal(requiredCoins: number): void {
     this.dialog.open(AppInsufficientCoinsDialog, {
       width: '300px',
-      data: {
-        requiredCoins: requiredCoins,
-        userCoins: this.userCoins
-      }
+      data: { requiredCoins, userCoins: this.userCoins }
     });
   }
 
-  // 🔹 Définir la classe CSS selon le domaine
   getDomainClass(domaine: string): string {
     const domainMap: {[key: string]: string} = {
       'WEB': 'web',

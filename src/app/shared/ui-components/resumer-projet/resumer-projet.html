@@ -27,13 +27,13 @@
           <span class="detail-value">{{ project.createurPrenom }} {{ project.createurNom }}</span>
         </div>
       </div>
-      <!-- <div class="detail-item">
+      <div class="detail-item" *ngIf="gestionnaires.length > 0">
         <i class="fas fa-user-cog"></i>
-        <div>
+        <div >
           <span class="detail-label">Gestionnaire</span>
-          <span class="detail-value">Marie Lambert</span>
+          <span *ngFor="let g of gestionnaires" class="detail-value">{{ g.contributeurPrenom }} {{ g.contributeurNom }}</span>
         </div>
-      </div> -->
+      </div>
       <div class="detail-item">
         <i class="fas fa-calendar-check"></i>
         <div>
@@ -42,12 +42,22 @@
         </div>
       </div>
       <div class="detail-item">
-        <i class="fas fa-tasks"></i>
-        <div>
-          <span class="detail-label">Cahier de charges</span>
-          <a href="http://localhost:8080{{ project.urlCahierDeCharge }}" class="detail-value"> http://localhost:8080{{ project.urlCahierDeCharge }}</a>
-        </div>
-      </div>
+  <i class="fas fa-tasks"></i>
+  <div>
+    <span class="detail-label">Cahier des charges</span>
+    <a 
+      *ngIf="project.urlCahierDeCharge"
+      [href]="'http://localhost:8080/api/v1' + project.urlCahierDeCharge" 
+      class="detail-value"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      Ouvrir le document
+    </a>
+    <span *ngIf="!project.urlCahierDeCharge">Aucun fichier</span>
+  </div>
+</div>
+
     </div>
   </div>
 </div>

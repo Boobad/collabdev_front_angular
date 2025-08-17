@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { apiUrl } from './services/api.config';
 
 export interface ParticipationRequest {
   id: number;
@@ -17,7 +18,7 @@ export interface ParticipationRequest {
 
 @Injectable({ providedIn: 'root' })
 export class ParticipationService {
-  private baseUrl = 'http://localhost:8080/api/v1/participants';
+  private baseUrl = apiUrl(`/participants`);
 
   constructor(private http: HttpClient) {}
 

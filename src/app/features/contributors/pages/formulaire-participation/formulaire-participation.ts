@@ -2,6 +2,7 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { Location } from '@angular/common';
 import { ParticipationRequest, ParticipationService } from '../../../../core/participation.service';
 
 @Component({
@@ -21,10 +22,9 @@ export class FormulaireParticipation implements OnInit {
     experience: '',
   };
 
-   duplicateError: boolean = false;  // flag pour message erreur "déjà envoyé"
-  errorMessage: string = ''; 
-
-  motivationMessage = '200 caractères restants (min. 200)';
+  duplicateError: boolean = false;
+  errorMessage: string = '';
+  motivationMessage = '500 caractères restants';
   idProjet!: number;
   idContributeur!: number;
 
@@ -32,18 +32,26 @@ export class FormulaireParticipation implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private participationService: ParticipationService,
+     private location: Location, // ajout
     private cdRef: ChangeDetectorRef
   ) {}
 
+
+  goBack() {
+  this.location.back();
+}
+
+
   ngOnInit() {
+    // Récupération ID projet
     const projetIdStr = this.route.snapshot.paramMap.get('idProjet');
     if (!projetIdStr) {
       alert('Aucun ID de projet reçu. Retour à la liste des projets.');
-
       return;
     }
     this.idProjet = +projetIdStr;
 
+    // Récupération utilisateur
     const userStr = localStorage.getItem('user');
     if (!userStr) {
       alert('Utilisateur non connecté');
@@ -59,6 +67,12 @@ export class FormulaireParticipation implements OnInit {
         return;
       }
       this.idContributeur = user.id;
+
+      // Pré-remplir nom et email + champs en lecture seule
+      this.formData.fullname = `${user.nom || ''} ${user.prenom || ''}`.trim();
+      this.formData.email = user.email || '';
+
+      this.cdRef.detectChanges();
     } catch {
       alert('Erreur lors de la récupération des données utilisateur');
       this.router.navigate(['/login']);
@@ -71,16 +85,24 @@ export class FormulaireParticipation implements OnInit {
     this.cdRef.detectChanges();
   }
 
-  updateMotivationCount() {
-    const count = this.formData.motivation.length;
-    const min = 200;
-    if (count < min) {
-      this.motivationMessage = `${min - count} caractères restants (min. ${min})`;
-    } else {
-      this.motivationMessage = 'Motivation suffisante';
-    }
-    this.cdRef.detectChanges();
+ updateMotivationCount() {
+  const count = this.formData.motivation.length;
+  const min = 200;
+  const max = 500;
+
+  if (count < max) {
+     this.motivationMessage = `${max - count} caractères restants`;
   }
+  //  else if (count > max) {
+  //   this.formData.motivation = this.formData.motivation.substring(0, max);
+  //   this.motivationMessage = `Nombre maximal atteint (${max} caractères)`;
+  // } else {
+  //   this.motivationMessage = `${max - count} caractères restants`;
+  // }
+
+this.cdRef.detectChanges();
+}
+
 
   mapRoleToProfil(role: string): string {
     switch (role.toLowerCase()) {
@@ -91,55 +113,47 @@ export class FormulaireParticipation implements OnInit {
     }
   }
 
-onSubmit() {
-  // validations existantes
-  if (!this.formData.role) {
-    alert('Veuillez sélectionner un rôle');
-    return;
+  onSubmit() {
+    if (!this.formData.role) {
+      alert('Veuillez sélectionner un rôle');
+      return;
+    }
+    if (this.formData.motivation.length < 200) {
+      alert('Veuillez décrire vos motivations en au moins 200 caractères');
+      return;
+    }
+
+    const participation: ParticipationRequest = {
+      id: 0,
+      profil: this.mapRoleToProfil(this.formData.role),
+      statut: 'EN_ATTENTE',
+      scoreQuiz: '',
+      estDebloque: true,
+      datePostulation: new Date().toISOString().split('T')[0],
+      commentaireMotivation: this.formData.motivation,
+      commentaireExperience: this.formData.experience,
+      projetId: this.idProjet,
+      contributeurId: this.idContributeur,
+    };
+
+    this.participationService
+      .envoyerParticipation(this.idProjet, this.idContributeur, participation)
+      .subscribe({
+        next: () => {
+          this.router.navigate(['/demarrage-quiz'], {
+            queryParams: { role: this.formData.role, email: this.formData.email },
+          });
+        },
+        error: (err) => {
+          console.error('Erreur lors de l’envoi', err);
+          if (err.error?.message?.includes('Le contributeur a déjà envoyé une demande pour ce projet')) {
+            this.errorMessage = 'Vous avez déjà postulé à ce projet.';
+            this.duplicateError = true;
+            this.cdRef.detectChanges();
+          } else {
+            alert('Une erreur est survenue. Veuillez réessayer.');
+          }
+        },
+      });
   }
-
-  if (this.formData.motivation.length < 200) {
-    alert('Veuillez décrire vos motivations en au moins 200 caractères');
-    return;
-  }
-
-  const participation: ParticipationRequest = {
-    id: 0,
-    profil: this.mapRoleToProfil(this.formData.role),
-    statut: 'EN_ATTENTE',
-    scoreQuiz: '',
-    estDebloque: true,
-    datePostulation: new Date().toISOString().split('T')[0],
-    commentaireMotivation: this.formData.motivation,
-    commentaireExperience: this.formData.experience,
-    projetId: this.idProjet,
-    contributeurId: this.idContributeur,
-  };
-
-  this.participationService
-    .envoyerParticipation(this.idProjet, this.idContributeur, participation)
-    .subscribe({
-      next: () => {
-        this.router.navigate(['/demarrage-quiz'], {
-          queryParams: { role: this.formData.role, email: this.formData.email },
-        });
-      },
-      error: (err) => {
-        console.error('Erreur lors de l’envoi', err);
-        // Si le message d’erreur correspond à "déjà envoyé"
-        if (
-          err.error?.message?.includes(
-            'Le contributeur a déjà envoyé une demande pour ce projet'
-          )
-        ) {
-          this.errorMessage = 'Vous avez déjà postulé à ce projet.';
-          this.duplicateError = true;  // affiche modal
-          this.cdRef.detectChanges();
-        } else {
-          alert('Une erreur est survenue. Veuillez réessayer.');
-        }
-      },
-    });
-}
-
 }

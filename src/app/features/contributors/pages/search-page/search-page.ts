@@ -5,6 +5,7 @@ import { HttpClient, HttpClientModule, HttpParams } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject, timer, of } from 'rxjs';
 import { debounceTime, takeUntil, switchMap, catchError, distinctUntilChanged, filter } from 'rxjs/operators';
+import { apiUrl } from '../../../../core/services/api.config';
 
 @Pipe({ name: 'truncate' })
 export class TruncatePipe implements PipeTransform {
@@ -150,7 +151,7 @@ export class SearchPage implements OnInit, OnDestroy {
     // Simulation de délai minimum pour éviter les scintillements
     const fetchTimer = timer(300);
 
-    this.http.get<Projet[]>('http://localhost:8080/api/v1/projets/ouverts', { params }).pipe(
+    this.http.get<Projet[]>(apiUrl(`/projets/ouverts`), { params }).pipe(
       switchMap(data => fetchTimer.pipe(switchMap(() => of(data)))),
       catchError(error => {
         this.handleError(error);

@@ -61,25 +61,31 @@ export class EquipeProjetTab implements OnInit {
     }
   }
 
-  loadParticipants(): void {
-    this.isLoading = true;
-    this.errorMessage = null;
-    
-    this.participantsService.getParticipantsByProject(this.projectId).subscribe({
-      next: (data) => {
-        this.participants = Array.isArray(data) ? data : [];
-        this.filteredParticipants = [...this.participants];
-        this.isLoading = false;
-        this.cdr.detectChanges();  // <-- mise à jour forcée après réception des données
-      },
-      error: (err) => {
-        this.errorMessage = 'Erreur lors du chargement des participants';
-        this.isLoading = false;
-        console.error(err);
-        this.cdr.detectChanges();  // <-- mise à jour forcée en cas d'erreur aussi
-      }
-    });
-  }
+ loadParticipants(): void {
+  this.isLoading = true;
+  this.errorMessage = null;
+  
+  this.participantsService.getParticipantsByProject(this.projectId).subscribe({
+    next: (data) => {
+      // Filtrer uniquement les participants acceptés
+      const acceptedParticipants = Array.isArray(data) 
+        ? data.filter(p => p.statut?.toLowerCase() === 'accepte' || p.statut?.toLowerCase() === 'actif') 
+        : [];
+
+      this.participants = acceptedParticipants;
+      this.filteredParticipants = [...this.participants];
+      this.isLoading = false;
+      this.cdr.detectChanges();  // mise à jour forcée après réception des données
+    },
+    error: (err) => {
+      this.errorMessage = 'Erreur lors du chargement des participants';
+      this.isLoading = false;
+      console.error(err);
+      this.cdr.detectChanges();  // mise à jour forcée en cas d'erreur
+    }
+  });
+}
+
 
   filterParticipants(): void {
     if (!this.searchTerm.trim()) {

@@ -12,6 +12,10 @@ import { ProjectsService } from '../../../core/services/projects.service';
 })
 export class ResumerProjet implements OnInit {
   project: any = null;
+  participants: any[] = [];
+  gestionnaires: any[] = [];
+  developpeurs: any[] = [];
+  designers: any[] = [];
   loading = true;
   error = false;
 
@@ -20,13 +24,14 @@ export class ResumerProjet implements OnInit {
     private projectsService: ProjectsService,
     private cd: ChangeDetectorRef
   ) {}
+  
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
       const projectId = params['id'];
-      console.log('Param id:', projectId);
       if (projectId) {
         this.loadProject(projectId);
+        this.loadParticipants(projectId);
       } else {
         this.error = true;
         this.loading = false;
@@ -38,24 +43,32 @@ export class ResumerProjet implements OnInit {
   loadProject(id: string): void {
     this.loading = true;
     this.error = false;
-    this.project = null;
-    this.cd.detectChanges();
-
-    console.log('Chargement projet id:', id);
 
     this.projectsService.get(id).subscribe({
       next: (project) => {
-        console.log('Projet reçu:', project);
         this.project = project;
         this.loading = false;
-        this.cd.detectChanges();  // forcer la détection
+        this.cd.detectChanges();
       },
       error: (err) => {
         console.error('Erreur chargement projet:', err);
         this.error = true;
         this.loading = false;
-        this.cd.detectChanges();  // forcer la détection
+        this.cd.detectChanges();
       }
+    });
+  }
+
+  loadParticipants(id: string): void {
+    this.projectsService.getParticipants(id).subscribe({
+      next: (participants: any[]) => {
+        this.participants = participants;
+        this.gestionnaires = participants.filter(p => p.profil === 'GESTIONNAIRE');
+        this.developpeurs = participants.filter(p => p.profil === 'DEVELOPPEUR');
+        this.designers = participants.filter(p => p.profil === 'DESIGNER');
+        this.cd.detectChanges();
+      },
+      error: (err) => console.error('Erreur chargement participants:', err)
     });
   }
 }

@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { Location } from '@angular/common';  
+import { apiUrl } from '../../../../core/services/api.config';
 
 interface Badge {
   type: string;
@@ -37,7 +38,7 @@ export class RecompenseBadge implements OnInit {
   }
   loadBadges(): void {
     console.log('[loadBadges] Chargement des badges...');
-    this.http.get<Badge[]>('http://localhost:8080/api/v1/participants/1/badges/progression').subscribe({
+    this.http.get<Badge[]>(apiUrl(`/participants/1/badges/progression`)).subscribe({
       next: (data) => {
         console.log('[loadBadges] Réponse API reçue :', data);
         

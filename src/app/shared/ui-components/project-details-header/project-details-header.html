@@ -26,8 +26,8 @@
             [class.fa-sync-alt]="project.status === 'EN_COURS'"
             [class.fa-check-circle]="project.status === 'TERMINE'"
             [class.fa-clock]="project.status === 'EN_ATTENTE'"
-            [class.fa-spin]="project.status === 'EN_COURS'"
-          ></i>
+            [class.fa-spin]="project.status === 'EN_COURS'">
+          </i>
           {{ project.status | statutDisplay }}
         </span>
 
@@ -37,21 +37,59 @@
         </span>
       </div>
     </div>
-
-    
   </div>
-  <div class="project-actions">
+
+  <!-- Actions -->
+  <div class="project-actions" *ngIf="!loading && !error && project">
+
+    <!-- Modifier / Supprimer -->
+    <ng-container *ngIf="project.status === 'EN_ATTENTE'">
+      <button class="btn btn-primary" (click)="openEditModal()">
+        <i class="fas fa-edit"></i> Modifier
+      </button>
+      <button class="btn btn-danger" (click)="openDeleteModal()">
+        <i class="fas fa-trash-alt"></i> Supprimer
+      </button>
+    </ng-container>
+
+    <!-- ✅ Terminer projet -->
+    <ng-container *ngIf="(isPorteur() || isGestionnaire()) && project.status === 'EN_COURS'">
+    
+      <button class="btn btn-success" (click)="openCompleteModal()">
+        <i class="fas fa-check"></i> Terminer
+      </button>
+    </ng-container>
+    <!-- Tâches / Partager -->
+    <ng-container *ngIf="project.status === 'OUVERT' || project.status === 'EN_COURS' || project.status === 'TERMINE'">
+     <button class="btn btn-meet" [routerLink]="'/call'">
+  <i class="fas fa-video"></i> Lancer Meet
+</button>
+
       <button class="btn btn-tasks" [routerLink]="['/workspace-project', project?.id]">
         <i class="fas fa-tasks"></i> Tâches
       </button>
       <button class="btn btn-share" (click)="openShareModal()">
         <i class="fas fa-share-alt"></i> Partager
       </button>
-      
-    </div>
+    </ng-container>
+
+    
+  </div>
 </section>
 
-<!-- Modal -->
+<!-- ✅ Modal Terminer -->
+<div class="modal-backdrop" *ngIf="showCompleteModal" (click)="closeCompleteModal()"></div>
+<div class="modal" *ngIf="showCompleteModal" (click)="$event.stopPropagation()">
+  <h3 class="modal-title">Terminer le projet ?</h3>
+  <p class="modal-text">Voulez-vous vraiment marquer ce projet comme <b>terminé</b> ?</p>
+  <div class="modal-actions">
+    <button class="btn btn-secondary" (click)="closeCompleteModal()">Annuler</button>
+    <button class="btn btn-success" (click)="completeProject()">Terminer</button>
+  </div>
+</div>
+
+
+<!-- Modal Partager -->
 <div class="modal-backdrop" *ngIf="showShareModal" (click)="closeShareModal()"></div>
 <div class="modal" *ngIf="showShareModal" (click)="$event.stopPropagation()">
   <h3>Partager le projet</h3>

@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { CommonModule, DatePipe } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { animate, style, transition, trigger } from '@angular/animations';
+import { apiUrl } from '../../../core/services/api.config';
 
 export interface Project {
   id: number;
@@ -91,7 +92,7 @@ export class MesCardProject implements OnInit {
     this.isLoading = true;
     this.error = null;
 
-    this.http.get<Project[]>('http://localhost:8080/api/v1/projets').subscribe({
+    this.http.get<Project[]>(apiUrl(`/projets`)).subscribe({
       next: (data: Project[]) => {
         this.projects = data.map(project => {
           let coins = 100;
@@ -105,9 +106,11 @@ export class MesCardProject implements OnInit {
           return { ...project, coinsRequired: coins };
         });
 
-        this.filteredProjects = this.projects.filter(
-          project => project.status?.trim().toUpperCase() === 'OUVERT'
-        );
+        this.filteredProjects = this.projects.filter(project => {
+  const status = project.status?.trim()?.toUpperCase();
+  return status === 'OUVERT' || status === 'EN_COURS';
+});
+
 
         this.filteredProjects.forEach(project => this.fetchParticipants(project.id));
 
@@ -128,7 +131,7 @@ export class MesCardProject implements OnInit {
   }
 
   fetchParticipants(projectId: number): void {
-    this.http.get<Participant[]>(`http://localhost:8080/api/v1/participants/projet/${projectId}`)
+    this.http.get<Participant[]>(apiUrl(`/participants/projet/${projectId}`))
       .subscribe({
         next: data => {
           this.participants[projectId] = data;

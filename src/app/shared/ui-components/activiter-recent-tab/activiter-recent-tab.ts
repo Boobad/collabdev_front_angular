@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 
 import { CommonModule, DatePipe } from '@angular/common';
+import { apiUrl } from '../../../core/services/api.config';
 
 interface Commentaire {
   id: number;
@@ -53,7 +54,7 @@ export class ActiviterRecentTab implements OnInit {
     this.isLoading = true;
     this.error = null;
 
-    this.http.get<Commentaire[]>(`http://localhost:8080/api/v1/commentaires/projet/${this.projectId}`)
+    this.http.get<Commentaire[]>(apiUrl(`/commentaires/projet/${this.projectId}`))
       .subscribe({
         next: (data) => {
           this.commentaires = data;

@@ -1,12 +1,12 @@
 import { Component, ChangeDetectorRef, OnDestroy, OnInit } from '@angular/core';
-import { RouterLink, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
 import { AuthService } from '../../../../core/auth-service';
 
 @Component({
   selector: 'app-profil-user',
   standalone: true,
-  imports: [RouterLink, HttpClientModule],
+  imports: [HttpClientModule],
   templateUrl: './profil-user.html',
   styleUrls: ['./profil-user.css']
 })
@@ -28,7 +28,7 @@ export class ProfilUser implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    // Initialisation input file
+    // Créer input file invisible
     this.fileInput = document.createElement('input');
     this.fileInput.type = 'file';
     this.fileInput.accept = 'image/*';
@@ -36,42 +36,12 @@ export class ProfilUser implements OnInit, OnDestroy {
     this.fileInput.addEventListener('change', (event) => this.onFileSelected(event));
     document.body.appendChild(this.fileInput);
 
-    // Récupérer l'objet utilisateur depuis localStorage et extraire l'id
-    const userStr = localStorage.getItem('user');
-    let userId: number = NaN;
+    // Récupérer ID utilisateur
+    this.getUserIdFromStorage();
 
-    if (userStr) {
-      try {
-        const user = JSON.parse(userStr);
-        userId = user.id;
-        this.userId = userId;
-      } catch (e) {
-        console.error('Erreur lors du parsing de user:', e);
-      }
-    }
-
-    if (!isNaN(userId)) {
-      this.authService.getProfileById(userId).subscribe({
-  next: (data: any) => {
-    this.username = data.prenom && data.nom
-      ? `${this.capitalize(data.prenom)} ${this.capitalize(data.nom)}`
-      : 'Utilisateur';
-    this.email = data.email || '';
-
-    // Nouvelle ligne : assigner la biographie si disponible
-    this.bio = data.biographie || 'Aucune biographie disponible';
-
-    this.membresDepuis = ''; // Tu peux formater la date si l'API renvoie une info
-    this.profileImage = data.photoProfilUrl || 'profil.png';
-    this.cdRef.detectChanges();
-  },
-  error: (err) => {
-    console.error('Erreur chargement profil :', err);
-  }
-});
-
-    } else {
-      console.error('User ID invalide:', userStr);
+    // Charger profil si ID dispo
+    if (this.userId) {
+      this.loadUserProfile();
     }
   }
 
@@ -81,20 +51,98 @@ export class ProfilUser implements OnInit, OnDestroy {
     }
   }
 
+  private getUserIdFromStorage(): void {
+    const userStr = localStorage.getItem('user');
+    if (userStr) {
+      try {
+        const user = JSON.parse(userStr);
+        this.userId = user.id;
+      } catch (e) {
+        console.error('Erreur parsing user:', e);
+      }
+    }
+  }
+
+  private loadUserProfile(): void {
+    if (!this.userId) return;
+
+    this.authService.getProfileById(this.userId).subscribe({
+      next: (data: any) => {
+        this.username = data.prenom && data.nom
+          ? `${this.capitalize(data.prenom)} ${this.capitalize(data.nom)}`
+          : 'Utilisateur';
+        this.email = data.email || '';
+        this.bio = data.biographie || 'Aucune biographie disponible';
+        this.membresDepuis = this.formatDate(data.createdAt) || '';
+
+        // Photo profil (avec fallback)
+        if (data.photoProfilUrl) {
+          this.profileImage = this.getFullImageUrl(data.photoProfilUrl);
+        } else {
+          this.profileImage = 'profil.png';
+        }
+
+        this.cdRef.detectChanges();
+      },
+      error: (err) => {
+        console.error('Erreur chargement profil :', err);
+        this.profileImage = 'profil.png';
+      }
+    });
+  }
+
+  private getFullImageUrl(relativePath: string): string {
+    if (relativePath.startsWith('http')) {
+      return relativePath;
+    }
+    return `http://localhost:8080${relativePath}`;
+  }
+
+  private formatDate(dateString: string): string {
+    if (!dateString) return '';
+    const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' };
+    return new Date(dateString).toLocaleDateString('fr-FR', options);
+  }
+
   onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
-    if (input.files && input.files[0]) {
-      const reader = new FileReader();
+    if (input.files && input.files[0] && this.userId) {
+      const file = input.files[0];
 
+      if (file.size > 5 * 1024 * 1024) {
+        alert('La taille maximale du fichier est de 5MB');
+        return;
+      }
+
+      if (!file.type.match(/image\/(jpeg|jpg|png|gif)/)) {
+        alert('Format d\'image non supporté (JPEG, JPG, PNG, GIF uniquement)');
+        return;
+      }
+
+      const reader = new FileReader();
       reader.onload = (e) => {
         this.profileImage = e.target?.result || null;
         this.cdRef.detectChanges();
-        if (this.fileInput) {
-          this.fileInput.value = '';
-        }
       };
+      reader.readAsDataURL(file);
 
-      reader.readAsDataURL(input.files[0]);
+      this.authService.uploadProfilePhoto(this.userId, file).subscribe({
+        next: (response: any) => {
+          console.log('Photo mise à jour', response);
+          if (response.photoUrl) {
+            this.profileImage = this.getFullImageUrl(response.photoUrl);
+          }
+        },
+        error: (err: any) => {
+          console.error('Erreur upload photo', err);
+          this.loadUserProfile();
+          alert('Échec upload photo');
+        }
+      });
+
+      if (this.fileInput) {
+        this.fileInput.value = '';
+      }
     }
   }
 
@@ -114,7 +162,7 @@ export class ProfilUser implements OnInit, OnDestroy {
       this.router.navigate(['/update-profil', this.userId]);
     } else {
       console.error('User ID non disponible');
-      // Option: afficher un message d'erreur à l'utilisateur
+      alert('Impossible de modifier le profil: ID utilisateur manquant');
     }
   }
 }

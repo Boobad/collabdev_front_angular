@@ -6,6 +6,7 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { catchError, tap } from 'rxjs/operators';
 import { of } from 'rxjs';
+import { apiUrl } from '../../../core/services/api.config';
 
 @Component({
   selector: 'app-upadate-profil',
@@ -60,7 +61,7 @@ export class UpadateProfil implements OnInit {
 
   loadProfileData(): void {
     this.isLoading = true;
-    this.http.get<any>(`http://localhost:8080/api/v1/contributeurs/${this.userId}`)
+    this.http.get<any>(apiUrl(`/contributeurs/${this.userId}`))
       .pipe(
         tap(response => {
           this.profileData = {
@@ -159,7 +160,7 @@ export class UpadateProfil implements OnInit {
     }
     delete dataToSend.confirmPassword;
 
-    this.http.put(`http://localhost:8080/api/v1/contributeurs/${this.userId}`, dataToSend)
+    this.http.put(apiUrl(`/contributeurs/${this.userId}`), dataToSend)
       .pipe(
         tap(() => {
           this.isSaving = false;

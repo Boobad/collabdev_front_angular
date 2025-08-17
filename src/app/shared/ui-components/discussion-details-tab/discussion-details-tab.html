@@ -1,157 +1,135 @@
 <div id="discussions" class="tab-content">
-    <!-- Messages d'état -->
-    <div *ngIf="isLoading" class="loading-message">
-        <fa-icon [icon]="icons.spinner" [animation]="'spin'"></fa-icon> Chargement des discussions...
-    </div>
-    
-    <div *ngIf="error" class="error-message">
-        {{ error }}
+
+  <!-- Message de chargement -->
+  <div *ngIf="isLoading" class="loading-message">
+    <fa-icon [icon]="icons.spinner" [animation]="'spin'"></fa-icon> Chargement des discussions...
+  </div>
+
+  <!-- Message d'erreur -->
+  <div *ngIf="error" class="error-message">
+    {{ error }}
+  </div>
+
+  <!-- En-tête -->
+  <div class="discussions-header">
+    <h2><fa-icon [icon]="icons.comment"></fa-icon> Discussions du Projet</h2>
+    <button class="btn btn-primary"
+            (click)="createDiscussion()" 
+            [disabled]="!newDiscussionContent.trim()">
+      <fa-icon [icon]="icons.plus"></fa-icon> Nouvelle Discussion
+    </button>
+  </div>
+
+  <!-- Liste des discussions -->
+  <div class="discussion-list">
+
+    <div *ngIf="!isLoading && discussions.length === 0" class="no-discussions">
+      Aucune discussion pour le moment. Soyez le premier à commenter !
     </div>
 
-    <!-- En-tête -->
-    <div class="discussions-header">
-        <h2><fa-icon [icon]="icons.comment"></fa-icon> Discussions du Projet</h2>
-        <button class="btn btn-primary" 
-                (click)="createDiscussion()" 
-                [disabled]="!newDiscussionContent.trim()">
-            <fa-icon [icon]="icons.plus"></fa-icon> Nouvelle Discussion
+    <!-- Boucle sur les discussions -->
+    <div *ngFor="let discussion of discussions" class="discussion-card">
+      <div class="discussion-content">
+
+        <div class="discussion-meta">
+          <span class="author">
+            <ng-container *ngIf="discussion.auteurPhotoProfilUrl; else initialsAvatar">
+              <img [src]="discussion.auteurPhotoProfilUrl"
+                   [alt]="discussion.auteurNomComplet"
+                   (error)="handleImageError($event)">
+            </ng-container>
+            <ng-template #initialsAvatar>
+              <div class="avatar-initials">
+                {{ getInitials(discussion.auteurNomComplet) }}
+              </div>
+            </ng-template>
+
+            <div class="author-info">
+              <strong>{{ discussion.auteurNomComplet }}</strong>
+              <div class="author-email">{{ getParticipantEmail(discussion.auteurId) }}</div>
+            </div>
+          </span>
+
+          <span class="date">
+            <fa-icon [icon]="icons.clock"></fa-icon> 
+            {{ formatDate(discussion.creationDate) }}
+          </span>
+
+          <span class="comments">
+            <fa-icon [icon]="icons.comment"></fa-icon> 
+            {{ discussion.reponses.length || 0 }} réponses
+          </span>
+        </div>
+
+        <p class="excerpt">{{ discussion.contenu }}</p>
+
+        <!-- Bouton répondre -->
+        <button class="btn-reply" (click)="toggleReply(discussion.id)">
+          Répondre
         </button>
-    </div>
-    
-    <!-- Liste des discussions -->
-    <div class="discussion-list">
-        <!-- Message si pas de discussions -->
-        <div *ngIf="!isLoading && discussions.length === 0" class="no-discussions">
-            Aucune discussion pour le moment. Soyez le premier à commenter !
+
+        <!-- Zone réponse -->
+        <div *ngIf="isReplying === discussion.id" class="reply-editor">
+          <textarea [(ngModel)]="replyContent" placeholder="Écrire votre réponse..."></textarea>
+          <div class="editor-actions">
+            <button class="btn btn-secondary" (click)="toggleReply(discussion.id)">Annuler</button>
+            <button class="btn btn-primary"
+                    (click)="postReply(discussion.id)"
+                    [disabled]="!replyContent.trim()">
+              Publier
+            </button>
+          </div>
         </div>
 
-        <!-- Boucle sur les discussions -->
-        <div *ngFor="let discussion of discussions" class="discussion-card">
-            <div class="discussion-content">
-                <div class="discussion-header">
-                    <h3>{{ discussion.contenu | slice:0:50 }}{{ discussion.contenu.length > 50 ? '...' : '' }}</h3>
-                    <button class="btn-reply" (click)="toggleReply(discussion.id)">
-                        Répondre
-                    </button>
-                </div>
-                
-                <div class="discussion-meta">
-                    <span class="author">
-  <ng-container *ngIf="discussion.auteurPhotoProfilUrl; else initialsAvatar">
-    <img [src]="discussion.auteurPhotoProfilUrl" 
-         [alt]="discussion.auteurNomComplet"
-         (error)="handleImageError($event)">
-  </ng-container>
-  <ng-template #initialsAvatar>
-    <div class="avatar-initials">
-      {{ getInitials(discussion.auteurNomComplet) }}
-    </div>
-  </ng-template>
-  {{ discussion.auteurNomComplet }}
-</span>
+        <!-- Réponses imbriquées -->
+        <div *ngIf="discussion.reponses.length" class="replies-container">
+          <div *ngFor="let reply of discussion.reponses" class="reply">
+            <div class="discussion-meta">
+              <span class="author">
+                <ng-container *ngIf="reply.auteurPhotoProfilUrl; else initialsAvatarReply">
+                  <img [src]="reply.auteurPhotoProfilUrl"
+                       [alt]="reply.auteurNomComplet"
+                       (error)="handleImageError($event)">
+                </ng-container>
+                <ng-template #initialsAvatarReply>
+                  <div class="avatar-initials">
+                    {{ getInitials(reply.auteurNomComplet) }}
+                  </div>
+                </ng-template>
 
-                   
-                    <span class="date">
-                        <fa-icon [icon]="icons.clock"></fa-icon> 
-                        {{ formatDate(discussion.creationDate) }}
-                    </span>
-                    <span class="comments">
-                        <fa-icon [icon]="icons.comment"></fa-icon> 
-                        {{ discussion.reponses.length || 0 }} réponses
-                    </span>
+                <div class="author-info">
+                  <strong>{{ reply.auteurNomComplet }}</strong>
+                  <div class="author-email">{{ getParticipantEmail(reply.auteurId) }}</div>
                 </div>
-                
-                <p class="excerpt">{{ discussion.contenu }}</p>
-                
-                <!-- Zone de réponse -->
-                <div *ngIf="isReplying === discussion.id" class="reply-editor">
-                    <textarea [(ngModel)]="replyContent" 
-                              placeholder="Écrire votre réponse..."></textarea>
-                    <div class="editor-actions">
-                        <div class="attachment-options">
-                            <button class="btn btn-icon"><fa-icon [icon]="icons.paperclip"></fa-icon></button>
-                            <button class="btn btn-icon"><fa-icon [icon]="icons.image"></fa-icon></button>
-                            <button class="btn btn-icon"><fa-icon [icon]="icons.code"></fa-icon></button>
-                        </div>
-                        <div>
-                            <button class="btn btn-secondary" (click)="toggleReply(discussion.id)">
-                                Annuler
-                            </button>
-                            <button class="btn btn-primary" 
-                                    (click)="postReply(discussion.id)" 
-                                    [disabled]="!replyContent.trim()">
-                                Publier
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Réponses imbriquées -->
-                <div *ngIf="discussion.reponses.length" class="replies-container">
-                    <div *ngFor="let reply of discussion.reponses" class="reply">
-                        <div class="discussion-meta">
-                            <span class="author">
-  <ng-container *ngIf="discussion.auteurPhotoProfilUrl; else initialsAvatar">
-    <img [src]="discussion.auteurPhotoProfilUrl" 
-         [alt]="discussion.auteurNomComplet"
-         (error)="handleImageError($event)">
-  </ng-container>
-  <ng-template #initialsAvatar>
-    <div class="avatar-initials">
-      {{ getInitials(discussion.auteurNomComplet) }}
-    </div>
-  </ng-template>
-  {{ discussion.auteurNomComplet }}
-</span>
+              </span>
 
-                            <span class="date">
-                                <fa-icon [icon]="icons.clock"></fa-icon> 
-                                {{ formatDate(reply.creationDate) }}
-                            </span>
-                        </div>
-                        <p class="reply-content">{{ reply.contenu }}</p>
-
-                        <!-- Sous-réponses -->
-                        <div *ngIf="reply.reponses.length" class="sub-replies">
-                            <div *ngFor="let subReply of reply.reponses" class="sub-reply">
-                                <div class="discussion-meta">
-                                    <span class="author">
-                                        <img [src]="subReply.auteurPhotoProfilUrl || 'assets/images/default-profile.png'" 
-                                             [alt]="subReply.auteurNomComplet"
-                                             (error)="handleImageError($event)">
-                                        {{ subReply.auteurNomComplet }}
-                                    </span>
-                                    <span class="date">
-                                        <fa-icon [icon]="icons.clock"></fa-icon> 
-                                        {{ formatDate(subReply.creationDate) }}
-                                    </span>
-                                </div>
-                                <p class="reply-content">{{ subReply.contenu }}</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+              <span class="date">
+                <fa-icon [icon]="icons.clock"></fa-icon> 
+                {{ formatDate(reply.creationDate) }}
+              </span>
             </div>
+
+            <p class="reply-content">{{ reply.contenu }}</p>
+          </div>
         </div>
+
+      </div>
     </div>
-    
-    <!-- Nouvelle discussion -->
-    <div class="new-discussion">
-        <div class="discussion-editor">
-            <textarea [(ngModel)]="newDiscussionContent" 
-                      placeholder="Commencer une nouvelle discussion..."></textarea>
-            <div class="editor-actions">
-                <div class="attachment-options">
-                    <!-- <button class="btn btn-icon"><fa-icon [icon]="icons.paperclip"></fa-icon></button>
-                    <button class="btn btn-icon"><fa-icon [icon]="icons.image"></fa-icon></button>
-                    <button class="btn btn-icon"><fa-icon [icon]="icons.code"></fa-icon></button> -->
-                </div>
-                <button class="btn btn-primary" 
-                        (click)="createDiscussion()" 
-                        [disabled]="!newDiscussionContent.trim()">
-                    Publier
-                </button>
-            </div>
-        </div>
+  </div>
+
+  <!-- Nouvelle discussion -->
+  <div class="new-discussion">
+    <div class="discussion-editor">
+      <textarea [(ngModel)]="newDiscussionContent"
+                placeholder="Commencer une nouvelle discussion..."></textarea>
+      <div class="editor-actions">
+        <button class="btn btn-primary"
+                (click)="createDiscussion()"
+                [disabled]="!newDiscussionContent.trim()">
+          Publier
+        </button>
+      </div>
     </div>
+  </div>
+
 </div>

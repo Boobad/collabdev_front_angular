@@ -23,12 +23,42 @@
 <ng-template #noProjects>
   <div class="no-project-container">
     <i class="fas fa-folder-open no-project-icon"></i>
-    <p class="no-project-title">Aucun projet actif</p>
+    <p class="no-project-title">Aucun projet disponible</p>
     <p class="no-project-subtitle">Commencez dès maintenant et ajoutez votre premier projet</p>
   </div>
 </ng-template>
 
 
+
+
+<!--projet en attente -->
+ <div class="title">
+      <h1>Mes Projets En Attente</h1>
+
+  </div>
+<!-- Message de chargement -->
+<div *ngIf="loading" class="loading-container">
+  <div class="loader"></div>
+  <p>Chargement des projets...</p>
+</div>
+
+<!-- Liste des projets -->
+<div *ngIf="!loading && projetsAttente.length > 0; else noProjects" class="project_active">
+  <app-card-projet-attente
+    *ngFor="let projet of projetsAttente"
+    [projet]="projet">
+  </app-card-projet-attente>
+</div>
+
+<!-- Message si aucun projet -->
+<!-- Message si aucun projet -->
+<ng-template #noProjects>
+  <div class="no-project-container">
+    <i class="fas fa-folder-open no-project-icon"></i>
+    <p class="no-project-title">Aucun projet disponible</p>
+    <p class="no-project-subtitle">Commencez dès maintenant et ajoutez votre premier projet</p>
+  </div>
+</ng-template>
 
 
 

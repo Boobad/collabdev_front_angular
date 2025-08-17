@@ -1,9 +1,11 @@
+
 import { Component, ChangeDetectorRef, OnInit } from '@angular/core';
 import { CoinsTab } from '../../../../shared/ui-components/coins-tab/coins-tab';
 import { CoinsService } from '../../../../core/coins-service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { OrangeMoneyService } from '../../../../core/orange-money.service';
+import { OrangeMoneyService } from '../../../../core/OrangeMoneyService';
+
 
 
 
@@ -97,4 +99,4 @@ async submitPayment() {
   }
 }
 
-}
+} 
