@@ -11,13 +11,23 @@
 
         <!-- Section des badges -->
         <div class="badges-grid">
-          <div *ngFor="let badge of badges" class="badge-card" [class.atteint]="badge.atteint" [class.platinum]="badge.type === 'PLATINE'">
+          <div *ngFor="let badge of badges" class="badge-card"
+               [class.atteint]="badge.dejaObtenu"
+               [class.platinum]="badge.typeBadge === 'PLATINE'">
+            
             <div class="badge-image-container">
-              <img [src]="getBadgeImage(badge.type)" [alt]="'Badge ' + badge.type">
-              <i *ngIf="!badge.atteint && badge.type === 'PLATINE'" class="material-icons-outlined download-icon">lock</i>
+              <!-- Image du badge -->
+              <img [src]="getBadgeImage(badge.typeBadge)" [alt]="'Badge ' + badge.typeBadge">
+              
+              <!-- Cadenas si NON obtenu -->
+              <i *ngIf="!badge.dejaObtenu" 
+                 class="material-icons-outlined lock-icon">
+                lock
+              </i>
             </div>
-            <span class="badge-title">Badge {{ getBadgeName(badge.type) }}</span>
-            <span *ngIf="badge.atteint" class="badge-date">Obtenu</span>
+
+            <span class="badge-title">Badge {{ getBadgeName(badge.typeBadge) }}</span>
+            <span *ngIf="badge.dejaObtenu" class="badge-date">Obtenu</span>
           </div>
         </div>
 
@@ -25,31 +35,11 @@
         <div class="progression-section">
           <h3>Progression vers les prochains badges</h3>
           <div *ngFor="let badge of nextBadges" class="badge-progression">
-            <p>Badge "{{ getBadgeName(badge.type) }}" - {{ getProgressPercentage(badge) }}%</p>
+            <p>Badge "{{ getBadgeName(badge.typeBadge) }}" - {{ getProgressPercentage(badge) }}%</p>
             <div class="progress-bar-container">
               <div class="progress-bar" [style.width.%]="getProgressPercentage(badge)"></div>
             </div>
             <small>{{ getContributionText(badge) }}</small>
-          </div>
-        </div>
-
-        <!-- Section détails des récompenses -->
-        <div class="reward-details-section">
-          <div class="reward-header">
-            <h3>Détails des récompenses</h3>
-          </div>
-          
-          <div class="reward-cards">
-            <div *ngFor="let badge of earnedBadges" class="reward-card" [class]="badge.type.toLowerCase()">
-              <div class="reward-badge-icon">
-                <img [src]="getBadgeImage(badge.type)" [alt]="'Badge ' + badge.type">
-              </div>
-              <div class="reward-info">
-                <span class="reward-title">Badge {{ getBadgeName(badge.type) }}</span>
-                <span class="reward-description">{{ badge.description }}</span>
-                <span class="reward-coin">+{{ badge.coinRecompense }} coins</span>
-              </div>
-            </div>
           </div>
         </div>
       </div>

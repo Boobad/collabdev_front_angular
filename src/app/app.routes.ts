@@ -30,6 +30,7 @@ import { Error404 } from './shared/ui-components/error-404/error-404';
 import { ProjetsRecommandes } from './features/contributors/pages/profil-user/projets-recommandes/projets-recommandes';
 import { Login } from './features/auth/contributors/login/login';
 import { VideoCall } from './features/contributors/pages/video-call/video-call';
+import { Bienvenue } from './features/contributors/pages/bienvenue/bienvenue';
 
 export const routes: Routes = [
   // ==================== MainLayout avec authGuard ====================
@@ -55,8 +56,8 @@ export const routes: Routes = [
       { path: 'projets-recommandes', component: ProjetsRecommandes },
       { path: 'formulaire-participation/:idProjet', component: FormulaireParticipation },
       { path: 'voir-participation', component: ListeDemandeParticipation },
-      { path: 'hist_contribution', component: PageContribution },
-      { path: '', redirectTo: 'home', pathMatch: 'full' }
+      { path: 'hist_contribution', component: PageContribution }
+      // ❌ supprime le redirectTo ici
     ]
   },
 
@@ -65,8 +66,9 @@ export const routes: Routes = [
     path: '',
     component: AuthLayout,
     children: [
-      { path: '', redirectTo: 'login', pathMatch: 'full' },
+      { path: '', redirectTo: 'bienvenue', pathMatch: 'full' }, // ✅ garde seulement celui-ci
       { path: 'login', component: Login },
+      { path: 'bienvenue', component: Bienvenue },
       { path: 'suscribe', component: FormSuscribe },
       { path: 'reset', component: ResetPassword },
       { path: 'forgot', component: ForgetPassword },
@@ -77,7 +79,6 @@ export const routes: Routes = [
       { path: 'gestion-fonctionnalite', component: GestionFonctionnalite },
       { path: 'badge-recompense', component: RecompenseBadge },
       { path: 'projets-recommandes', component: ProjetsRecommandes },
-      { path: 'gestion-fonctionnalite', component : GestionFonctionnalite },
       { path: 'logAdmin', component: LoginAdmin }
     ]
   },
@@ -85,3 +86,4 @@ export const routes: Routes = [
   // ==================== 404 globale ====================
   { path: '**', component: Error404 }
 ];
+
