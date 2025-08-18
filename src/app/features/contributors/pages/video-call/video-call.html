@@ -1,4 +1,5 @@
 <div #videoContainer class="video-container" [class.active-call]="isCallActive">
+  <!-- Header -->
   <div class="header">
     <div class="logo">MeetGroupe</div>
     <div class="meeting-info" *ngIf="isCallActive">
@@ -16,25 +17,17 @@
     </div>
   </div>
 
+  <!-- Main Content -->
   <div class="main-content">
-    <div class="video-content">
-      <!-- Remote Video -->
-      <div class="remote-video-wrapper" [class.connected]="isRemoteConnected">
-        <video #remoteVideo autoplay playsinline class="video-element"></video>
-        <div class="connection-status" *ngIf="!isRemoteConnected">
-          <div class="status-message">
-            <mat-spinner diameter="24"></mat-spinner>
-            <span>En attente de participants...</span>
-          </div>
-        </div>
-        <div class="remote-user-info" *ngIf="isCallActive">
-          <div class="user-avatar">JD</div>
-          <div class="user-name">Jean Dupont</div>
+    <div #videosContainer class="video-grid">
+      <!-- Remote Videos -->
+      <div *ngFor="let user of remoteUsers" class="remote-video-wrapper" [class.connected]="user.videoEnabled">
+        <div [id]="'remote-' + user.uid" class="video-element-container"></div>
+        <div class="remote-user-info">
+          <div class="user-avatar">{{ user.username?.charAt(0) }}</div>
+          <div class="user-name">{{ user.username }}</div>
         </div>
       </div>
-
-      <!-- Screen Share -->
-      <video #screenVideo autoplay playsinline class="screen-share" *ngIf="isSharingScreen"></video>
 
       <!-- Local Video -->
       <div class="local-video-wrapper">
@@ -73,7 +66,7 @@
       <fa-icon [icon]="isMuted ? icons.micMute : icons.mic" size="lg"></fa-icon>
       <span>{{ isMuted ? 'Micro off' : 'Micro on' }}</span>
     </button>
-    
+
     <button class="control-btn" (click)="toggleVideo()" [class.active]="isVideoOff">
       <fa-icon [icon]="isVideoOff ? icons.videoMute : icons.video" size="lg"></fa-icon>
       <span>{{ isVideoOff ? 'Caméra off' : 'Caméra on' }}</span>
@@ -83,12 +76,12 @@
       <fa-icon [icon]="icons.screen" size="lg"></fa-icon>
       <span>{{ isSharingScreen ? 'Arrêter partage' : 'Partager écran' }}</span>
     </button>
-    
+
     <button class="control-btn" (click)="showChat = !showChat">
       <span class="material-icons">chat</span>
       <span>Chat</span>
     </button>
-    
+
     <button class="control-btn end-call" (click)="endCall()">
       <fa-icon [icon]="icons.endCall" size="lg"></fa-icon>
       <span>Quitter</span>
@@ -100,18 +93,16 @@
     <div class="welcome-card">
       <h1>MeetGroupe Pro</h1>
       <p>Vidéoconférence professionnelle en haute qualité</p>
-      
+
       <div class="action-buttons">
         <button class="start-btn" (click)="createMeeting()" [disabled]="isCreatingMeeting">
           <span class="material-icons">video_call</span>
           <span *ngIf="!isCreatingMeeting">Nouvelle réunion</span>
           <mat-spinner *ngIf="isCreatingMeeting" diameter="20"></mat-spinner>
         </button>
-        
-        <div class="or-divider">
-          <span>OU</span>
-        </div>
-        
+
+        <div class="or-divider"><span>OU</span></div>
+
         <div class="join-section">
           <input [(ngModel)]="meetingCode" placeholder="Entrez le code de réunion" class="meeting-code-input">
           <button class="join-btn" (click)="joinMeeting()" [disabled]="!meetingCode || isJoiningMeeting">
