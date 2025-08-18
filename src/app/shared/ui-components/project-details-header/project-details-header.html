@@ -37,65 +37,54 @@
         </span>
       </div>
     </div>
-
-    <!-- Actions selon le statut -->
-   
   </div>
-   <div class="project-actions" *ngIf="!loading && !error && project">
+
+  <!-- Actions -->
+  <div class="project-actions" *ngIf="!loading && !error && project">
+
+    <!-- Modifier / Supprimer -->
+    <ng-container *ngIf="project.status === 'EN_ATTENTE'">
+      <button class="btn btn-primary" (click)="openEditModal()">
+        <i class="fas fa-edit"></i> Modifier
+      </button>
+      <button class="btn btn-danger" (click)="openDeleteModal()">
+        <i class="fas fa-trash-alt"></i> Supprimer
+      </button>
+    </ng-container>
+
+    <!-- ✅ Terminer projet -->
+    <ng-container *ngIf="(isPorteur() || isGestionnaire()) && project.status === 'EN_COURS'">
     
-      <!-- Modifier / Supprimer -->
-      <ng-container *ngIf="project.status === 'EN_ATTENTE'">
-        <button class="btn btn-primary" (click)="openEditModal()">
-          <i class="fas fa-edit"></i> Modifier
-        </button>
-        <button class="btn btn-danger" (click)="openDeleteModal()">
-          <i class="fas fa-trash-alt"></i> Supprimer
-        </button>
-      </ng-container>
+      <button class="btn btn-success" (click)="openCompleteModal()">
+        <i class="fas fa-check"></i> Terminer
+      </button>
+    </ng-container>
+    <!-- Tâches / Partager -->
+    <ng-container *ngIf="project.status === 'OUVERT' || project.status === 'EN_COURS' || project.status === 'TERMINE'">
+     <button class="btn btn-meet" [routerLink]="'/call'">
+  <i class="fas fa-video"></i> Lancer Meet
+</button>
 
-      <!-- Tâches / Partager -->
-      <ng-container *ngIf="project.status === 'OUVERT' || project.status === 'EN_COURS' || project.status === 'TERMINE'">
+      <button class="btn btn-tasks" [routerLink]="['/workspace-project', project?.id]">
+        <i class="fas fa-tasks"></i> Tâches
+      </button>
+      <button class="btn btn-share" (click)="openShareModal()">
+        <i class="fas fa-share-alt"></i> Partager
+      </button>
+    </ng-container>
 
-
-        <button class="btn btn-tasks" [routerLink]="['/workspace-project', project?.id]">
-          <i class="fas fa-tasks"></i> Tâches
-        </button>
-        <button class="btn btn-share" (click)="openShareModal()">
-          <i class="fas fa-share-alt"></i> Partager
-        </button>
-      </ng-container>
-    </div>
+    
+  </div>
 </section>
 
-<!-- Modals -->
-
-<!-- Modal Edit -->
-<!-- Modal Edit -->
- 
-<div class="modal-backdrop" *ngIf="showEditModal" (click)="closeEditModal()"></div>
-<div class="modal" *ngIf="showEditModal" (click)="$event.stopPropagation()">
-  <h3 class="modal-title">Modifier le projet</h3>
-  <form (ngSubmit)="updateProject()" #editForm="ngForm" class="modal-form">
-    <input type="text" [(ngModel)]="project.titre" name="titre" placeholder="Titre" required />
-    <textarea [(ngModel)]="project.description" name="description" placeholder="Description" required></textarea>
-    <select [(ngModel)]="project.secteur" name="secteur" required>
-      <option *ngFor="let s of secteurs" [value]="s">{{ s }}</option>
-    </select>
-    <div class="modal-actions">
-      <button type="button" class="btn btn-secondary" (click)="closeEditModal()">Annuler</button>
-      <button type="submit" class="btn btn-primary">Enregistrer</button>
-    </div>
-  </form>
-</div>
-
-<!-- Modal Delete -->
-<div class="modal-backdrop" *ngIf="showDeleteModal" (click)="closeDeleteModal()"></div>
-<div class="modal" *ngIf="showDeleteModal" (click)="$event.stopPropagation()">
-  <h3 class="modal-title">Supprimer le projet ?</h3>
-  <p class="modal-text">Cette action est irréversible et tous les participants seront notifiés.</p>
+<!-- ✅ Modal Terminer -->
+<div class="modal-backdrop" *ngIf="showCompleteModal" (click)="closeCompleteModal()"></div>
+<div class="modal" *ngIf="showCompleteModal" (click)="$event.stopPropagation()">
+  <h3 class="modal-title">Terminer le projet ?</h3>
+  <p class="modal-text">Voulez-vous vraiment marquer ce projet comme <b>terminé</b> ?</p>
   <div class="modal-actions">
-    <button class="btn btn-secondary" (click)="closeDeleteModal()">Annuler</button>
-    <button class="btn btn-danger" (click)="deleteProject()">Supprimer</button>
+    <button class="btn btn-secondary" (click)="closeCompleteModal()">Annuler</button>
+    <button class="btn btn-success" (click)="completeProject()">Terminer</button>
   </div>
 </div>
 

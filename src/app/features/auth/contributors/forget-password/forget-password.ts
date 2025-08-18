@@ -3,6 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { apiUrl } from '../../../../core/services/api.config';
 
 @Component({
   selector: 'app-forget-password',
@@ -35,7 +36,7 @@ export class ForgetPassword {
     this.successMessage = '';
     this.cdRef.detectChanges();
 
-    this.http.get<{ id: number; email: string }[]>('http://localhost:8080/api/v1/auth/users')
+    this.http.get<{ id: number; email: string }[]>(apiUrl(`/auth/users`))
       .subscribe({
         next: (users) => {
           const user = users.find(u => u.email.toLowerCase() === this.email.toLowerCase());

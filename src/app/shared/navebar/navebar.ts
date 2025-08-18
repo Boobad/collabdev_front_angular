@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterLink, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CoinsService, ContributorResponse } from '../../core/coins-service';
-import { BadgeexpTotal, HistoriqueResponse } from '../../core/badgeexp-total';
+import { BadgeexpTotal} from '../../core/badgeexp-total';
 import { debounceTime, Subject } from 'rxjs';
 import { NotificationModal } from '../ui-components/notification-modal/notification-modal';
 import { ModalCreateProject } from '../ui-components/modal-create-project/modal-create-project';
@@ -84,16 +84,19 @@ export class Navebar implements OnInit {
     });
   }
 
-  loadBadgesCount(): void {
-    if (!this.userId) return;
-    this.participantService.getHistoriqueByParticipantId(this.userId).subscribe({
-      next: (data: HistoriqueResponse) => {
-        this.badgesCount = data.badgesAcquis.length;
-        this.cdr.detectChanges();
-      },
-      error: (error) => console.error('Erreur récupération historique badges :', error)
-    });
-  }
+loadBadgesCount(): void {
+  if (!this.userId) return;
+
+  this.participantService.getBadgeCountByUserId(this.userId).subscribe({
+    next: (count: number) => {
+      this.badgesCount = count;
+      this.cdr.detectChanges();
+    },
+    error: (err) => console.error('Erreur récupération badges :', err)
+  });
+}
+
+
 
   /** 🔹 Charger le compteur de notifications non lues */
   loadNotificationCount(): void {

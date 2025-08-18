@@ -3,6 +3,7 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Router, RouterLink, RouterModule } from '@angular/router';
 import { AuthService } from '../../core/auth-service';
 import { HttpClient } from '@angular/common/http';
+import { apiUrl } from '../../core/services/api.config';
 
 @Component({
   selector: 'app-sidebar',
@@ -14,7 +15,7 @@ import { HttpClient } from '@angular/common/http';
 export class Sidebar implements OnInit {
   user: any = null;
   isCollapsed = false;
-  private apiUrl = 'http://localhost:8080/api/v1/contributeurs';
+  private apiUrl = apiUrl(`/contributeurs`);
 
   constructor(
     private authService: AuthService,

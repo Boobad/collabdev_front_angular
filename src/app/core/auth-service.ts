@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
+import { apiUrl } from './services/api.config';
 
 @Injectable({
   providedIn: 'root'
@@ -9,7 +10,7 @@ export class AuthService {
   private authState = new BehaviorSubject<boolean>(false);
   authState$ = this.authState.asObservable();
   
-  private apiUrl = 'http://localhost:8080/api/v1/auth';
+  private apiUrl = apiUrl(`/auth`);
 
   constructor(private http: HttpClient) {}
 
@@ -18,7 +19,7 @@ export class AuthService {
     formData.append('file', file);
     
     return this.http.post(
-      `http://localhost:8080/api/v1/uploads/contributeurs/${userId}/photo`, 
+      apiUrl(`/uploads/contributeurs/${userId}/photo`), 
       formData,
       {
         reportProgress: true,
@@ -28,7 +29,7 @@ export class AuthService {
   }
 
 loginWithGoogle(userData: any) {
-  return this.http.post<any>('http://localhost:8080/api/v1/auth/login', userData);
+  return this.http.post<any>(apiUrl(`/auth/login`), userData);
 }
 
   // Récupère le profil par ID
@@ -38,26 +39,35 @@ loginWithGoogle(userData: any) {
 
   // Connexion utilisateur (sans token, avec vérification actif)
   loginUser(credentials: { email: string, password: string }): Observable<any> {
-    this.authState.next(true);
-    return this.http.post<any>(`${this.apiUrl}/login`, credentials).pipe(
-      tap(response => {
-        console.log('Réponse API login:', response);
- this.authState.next(true);
-        // Vérifier si l'utilisateur est actif
-        if (response && response.id && response.actif === true) {
-          // Stocker l'objet utilisateur complet
-          localStorage.setItem('user', JSON.stringify(response));
+  this.authState.next(true);
+  return this.http.post<any>(`${this.apiUrl}/login`, credentials).pipe(
+    tap(response => {
+      console.log('Réponse API login:', response);
+      this.authState.next(true);
 
-          // Stocker uniquement l'ID utilisateur
-          localStorage.setItem('userId', response.id.toString());
+      // Vérifier si l'utilisateur est actif
+      if (response && response.id && response.actif === true) {
+        // Stocker l'objet utilisateur complet
+        localStorage.setItem('user', JSON.stringify(response));
 
-          console.log('Utilisateur actif, stocké dans localStorage.');
-        } else {
-          console.warn('Utilisateur inactif ou réponse invalide, connexion refusée.');
+        // Stocker uniquement l'ID utilisateur
+        localStorage.setItem('userId', response.id.toString());
+
+        // ✅ Corrigé : stocker aussi l'email
+        if (response.email) {
+          localStorage.setItem('userEmail', response.email);
         }
-      })
-    );
-  }
+
+        console.log('✅ Utilisateur actif stocké dans localStorage :', {
+          id: response.id,
+          email: response.email
+        });
+      } else {
+        console.warn('⚠️ Utilisateur inactif ou réponse invalide, connexion refusée.');
+      }
+    })
+  );
+}
 
   // Enregistrer un nouvel utilisateur
   registerUser(userData: {
@@ -73,7 +83,7 @@ loginWithGoogle(userData: any) {
   // Connexion avec Google
   loginWithGoogleToken(idToken: string) {
     return this.http.post<{ token: string }>(
-      'http://localhost:8080/login/oauth2/code/google',
+      `${this.apiUrl}/oauth2/code/google`,
       { idToken }
     );
   }

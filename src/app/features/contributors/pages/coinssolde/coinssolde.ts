@@ -1,3 +1,4 @@
+
 import { Component, ChangeDetectorRef, OnInit } from '@angular/core';
 import { CoinsTab } from '../../../../shared/ui-components/coins-tab/coins-tab';
 import { CoinsService } from '../../../../core/coins-service';

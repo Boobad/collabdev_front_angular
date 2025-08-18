@@ -3,6 +3,7 @@ import { Projet } from '../../../core/projects-service';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { RouterLink } from '@angular/router';
+import { apiUrl } from '../../../core/services/api.config';
 
 export interface Feature {
   id: number;
@@ -24,7 +25,7 @@ export class CardProjetAttente {
   totalTaches = 0;
   tachesTerminees = 0;
 
-  private baseUrl = 'http://localhost:8080/api/v1/fonctionnalites';
+  private baseUrl = apiUrl(`/fonctionnalites`);
 
   constructor(private http: HttpClient, private cdr: ChangeDetectorRef) {}
 

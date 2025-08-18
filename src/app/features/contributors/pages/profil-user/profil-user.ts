@@ -11,7 +11,7 @@ import { AuthService } from '../../../../core/auth-service';
   styleUrls: ['./profil-user.css']
 })
 export class ProfilUser implements OnInit, OnDestroy {
-  profileImage: string | ArrayBuffer | null = 'assets/images/profil.png';
+  profileImage: string | ArrayBuffer | null = 'profil.png';
   fileInput: HTMLInputElement | null = null;
   userId: number | null = null;
 
@@ -79,14 +79,14 @@ export class ProfilUser implements OnInit, OnDestroy {
         if (data.photoProfilUrl) {
           this.profileImage = this.getFullImageUrl(data.photoProfilUrl);
         } else {
-          this.profileImage = 'assets/images/profil.png';
+          this.profileImage = 'profil.png';
         }
 
         this.cdRef.detectChanges();
       },
       error: (err) => {
         console.error('Erreur chargement profil :', err);
-        this.profileImage = 'assets/images/profil.png';
+        this.profileImage = 'profil.png';
       }
     });
   }

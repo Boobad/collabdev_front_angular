@@ -9,6 +9,7 @@ import { ProjectsService } from '../../../../core/projects-service';
 import { ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
+import { apiUrl } from '../../../../core/services/api.config';
 
 @Component({
   selector: 'app-workspace-project',
@@ -127,7 +128,7 @@ export class WorkspaceProject implements OnInit {
   }
 
   loadProjectParticipants() {
-  this.http.get<any[]>(`http://localhost:8080/api/v1/participants/projet/${this.projectId}`)
+  this.http.get<any[]>(apiUrl(`/participants/projet/${this.projectId}`))
   .subscribe({
     next: (participants) => {
       this.projectParticipants = participants;

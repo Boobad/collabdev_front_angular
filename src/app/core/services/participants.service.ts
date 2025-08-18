@@ -35,6 +35,13 @@ export class ParticipantsService {
   constructor(private http: HttpClient) {}
 
   
+   acceptParticipant(id: number): Observable<any> {
+    return this.http.patch(apiUrl(`/participants/${id}/accept`), {});
+  }
+
+  rejectParticipant(id: number): Observable<any> {
+    return this.http.patch(apiUrl(`/participants/${id}/reject`), {});
+  }
   // demande de participation (candidat)
   requestParticipation(projetId: ID, motivation?: string): Observable<ParticipationRequest> {
     return this.http.post<ParticipationRequest>(apiUrl(`/participants/projet/${projetId}/demande`), { motivation })

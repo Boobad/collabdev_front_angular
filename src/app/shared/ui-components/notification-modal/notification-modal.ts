@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Output, OnInit, ChangeDetectorRef } from '@angular/core';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { apiUrl } from '../../../core/services/api.config';
 
 @Component({
   selector: 'app-notification-modal',
@@ -50,7 +51,7 @@ export class NotificationModal implements OnInit {
   this.isLoading = true;
   this.errorMessage = '';
 
-  this.http.get<any[]>(`http://localhost:8080/api/v1/notifications/utilisateur/${this.userId}/unread`)
+  this.http.get<any[]>(apiUrl(`/notifications/utilisateur/${this.userId}/unread`))
     .subscribe({
       next: (data) => {
         // Assurez-vous que chaque notification a un type valide
@@ -72,7 +73,7 @@ export class NotificationModal implements OnInit {
 
   /** 🔹 Marquer une notification comme lue */
   markAsRead(notificationId: number): void {
-    this.http.put(`http://localhost:8080/api/v1/notifications/${notificationId}/read`, {})
+    this.http.put(apiUrl(`/notifications/${notificationId}/read`), {})
       .subscribe({
         next: () => {
           this.notifications = this.notifications.filter(n => n.id !== notificationId);
@@ -86,7 +87,7 @@ export class NotificationModal implements OnInit {
 
   /** 🔹 Marquer toutes les notifications comme lues */
   markAllAsRead(): void {
-    this.http.put(`http://localhost:8080/api/v1/notifications/utilisateur/${this.userId}/read-all`, {})
+    this.http.put(apiUrl(`/notifications/utilisateur/${this.userId}/read-all`), {})
       .subscribe({
         next: () => {
           this.notifications = [];

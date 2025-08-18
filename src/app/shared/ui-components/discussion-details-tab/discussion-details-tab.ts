@@ -13,6 +13,7 @@ import {
   faCode 
 } from '@fortawesome/free-solid-svg-icons';
 import { ActivatedRoute } from '@angular/router';
+import { apiUrl } from '../../../core/services/api.config';
 
 interface Discussion {
   id: number;
@@ -95,7 +96,7 @@ export class DiscussionDetailsTab implements OnInit {
 
   // Récupération des participants
   private loadParticipants(): void {
-    this.http.get<any[]>(`http://localhost:8080/api/v1/participants/projet/${this.projectId}`)
+    this.http.get<any[]>(apiUrl(`/participants/projet/${this.projectId}`))
       .subscribe({
         next: (data) => {
           this.participants = data;
@@ -126,7 +127,7 @@ export class DiscussionDetailsTab implements OnInit {
     this.isLoading = true;
     this.error = null;
 
-    this.http.get<Discussion[]>(`http://localhost:8080/api/v1/commentaires/projet/${this.projectId}`)
+    this.http.get<Discussion[]>(apiUrl(`/commentaires/projet/${this.projectId}`))
       .subscribe({
         next: (data) => {
           const topLevel = data.filter(d => d.parentId === null);
@@ -162,7 +163,7 @@ export class DiscussionDetailsTab implements OnInit {
     };
 
     this.http.post(
-      `http://localhost:8080/api/v1/commentaires/participant/${this.user.id}/projet/${this.projectId}`,
+      apiUrl(`/commentaires/participant/${this.user.id}/projet/${this.projectId}`),
       newDiscussion
     ).subscribe({
       next: () => {
@@ -190,7 +191,7 @@ export class DiscussionDetailsTab implements OnInit {
     };
 
     this.http.post(
-      `http://localhost:8080/api/v1/commentaires/participant/${this.user.id}/projet/${this.projectId}`,
+      apiUrl(`/commentaires/participant/${this.user.id}/projet/${this.projectId}`),
       reply
     ).subscribe({
       next: () => {
@@ -207,7 +208,7 @@ export class DiscussionDetailsTab implements OnInit {
 
   handleImageError(event: Event): void {
     const imgElement = event.target as HTMLImageElement;
-    imgElement.src = 'assets/images/default-profile.png';
+    imgElement.src = 'default-profile.png';
   }
 
   formatDate(dateString: string): string {

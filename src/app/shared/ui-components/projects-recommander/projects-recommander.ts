@@ -9,6 +9,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { CommonModule } from '@angular/common';
 import { CoinsService } from '../../../core/coins-service';
 import { AppInsufficientCoinsDialog } from '../app-insufficient-coins-dialog/app-insufficient-coins-dialog';
+import { apiUrl } from '../../../core/services/api.config';
 
 interface Project {
   id: number;
@@ -120,7 +121,7 @@ export class ProjectsRecommander implements OnInit {
     this.error = null;
     this.cdRef.detectChanges();
 
-    this.http.get<Project[]>('http://localhost:8080/api/v1/projets')
+    this.http.get<Project[]>(apiUrl(`/projets`))
       .subscribe({
         next: (data) => {
           this.projects = data.map(project => {
@@ -162,7 +163,7 @@ export class ProjectsRecommander implements OnInit {
   }
 
   fetchParticipants(projectId: number): void {
-    this.http.get<Participant[]>(`http://localhost:8080/api/v1/participants/projet/${projectId}`)
+    this.http.get<Participant[]>(apiUrl(`/participants/projet/${projectId}`))
       .subscribe({
         next: (data) => {
           this.participants[projectId] = data;
@@ -240,7 +241,7 @@ getProjectButtonLabel(projectId: number, requiredCoins: number): string {
     const participantId = participant.id;
     console.log('ID du participant à débloquer:', participantId);
 
-    this.http.patch(`http://localhost:8080/api/v1/participants/${participantId}/projet/${projectId}/unlock`, {})
+    this.http.patch(apiUrl(`/participants/${participantId}/projet/${projectId}/unlock`), {})
       .subscribe({
         next: () => {
           console.log(`Projet ${projectId} débloqué pour le participant ${participantId}`);

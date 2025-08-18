@@ -2,6 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
+import { apiUrl } from './services/api.config';
 
 export interface Projet {
   id: number;
@@ -29,10 +30,10 @@ export interface ProjectPayload {
   providedIn: 'root',
 })
 export class ProjectsService {
-  private apiUrl = 'http://localhost:8080/api/v1/projets/contributeur';
+  private apiUrl = apiUrl(`/projets/contributeur`);
 
   constructor(private http: HttpClient) {}
-    private apiUrll = 'http://localhost:8080/api/v1/projets';
+    private apiUrll = apiUrl(`/projets`);
 
 
 
@@ -46,8 +47,8 @@ export class ProjectsService {
     return this.http.post<{ fileUrl: string }>(`${this.apiUrl}/upload`, formData);
   }
 
-  createProject(userId: number, projet: ProjectPayload, file?: File): Observable<any> {
-    const formData = new FormData();
+createProject(userId: number, projet: ProjectPayload, file?: File): Observable<any> {
+  const formData = new FormData();
 
     // Création de l'objet projet sans la propriété urlCahierDeCharge
     const { urlCahierDeCharge, ...projetData } = projet;
@@ -74,9 +75,9 @@ export class ProjectsService {
     );
   }
   // projects-service.ts
-  createProjectMultipart(userId: number, formData: FormData) {
-    return this.http.post<any>(`http://localhost:8080/api/v1/projets/contributeur/${userId}`, formData);
-  }
+createProjectMultipart(userId: number, formData: FormData) {
+  return this.http.post<any>(`${this.apiUrl}/${userId}`, formData);
+}
 
   getProjetsByContributeur(userId: number): Observable<Projet[]> {
     return this.http.get<Projet[]>(`${this.apiUrl}/${userId}`).pipe(

@@ -29,6 +29,10 @@ export class ProjectsService {
     return this.http.get<Project>(apiUrl(`/projets/${id}`))
   }
 
+    completeProject(id: string) {
+  return this.http.patch<any>(`http://localhost:8080/api/v1/projets/${id}/complete`, {});
+}
+
   create(payload: ProjectCreateRequest): Observable<Project> {
     if (payload.cahierDesChargesFile) {
       const fd = new FormData()
@@ -51,7 +55,7 @@ export class ProjectsService {
     return this.http.delete<MessageResponse>(apiUrl(`/projets/${id}`))
   }
 
-private baseUrl = 'http://localhost:8080/api/v1/projets';
+private baseUrl = apiUrl(`/projets`);
 
 deleteProject(id: number): Observable<void> {
   // Exemple pour la route sécurisée avec idCreateur
@@ -80,7 +84,7 @@ update(id: number, project: any): Observable<any> {
   }
 
   getParticipants(projectId: string) {
-  return this.http.get<any[]>(`http://localhost:8080/api/v1/participants/projet/${projectId}`);
+  return this.http.get<any[]>(apiUrl(`/participants/projet/${projectId}`));
 }
 
 }

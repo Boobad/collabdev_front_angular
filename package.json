@@ -34,14 +34,10 @@
     "angular-oauth2-oidc": "^20.0.2",
     "body-parser": "^2.2.0",
     "chart.js": "^4.5.0",
-    "cors": "^2.8.5",
-    "dotenv": "^17.2.1",
-    "express": "^5.1.0",
-    "googleapis": "^156.0.0",
-    "mysql2": "^3.14.3",
+    "intl-tel-input": "^25.3.2",
     "ngx-intl-tel-input": "^17.0.0",
     "node-fetch": "^2.7.0",
-    "nodemailer": "^7.0.5",
+    "or": "^0.2.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0"
   },
@@ -57,18 +53,5 @@
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
     "typescript": "~5.8.2"
-  },
-  "description": "This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.1.4.",
-  "main": "index.js",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Boobad/collabdev_front_angular.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/Boobad/collabdev_front_angular/issues"
-  },
-  "homepage": "https://github.com/Boobad/collabdev_front_angular#readme"
+  }
 }

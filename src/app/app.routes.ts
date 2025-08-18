@@ -29,6 +29,7 @@ import { SearchPage } from './features/contributors/pages/search-page/search-pag
 import { Error404 } from './shared/ui-components/error-404/error-404';
 import { ProjetsRecommandes } from './features/contributors/pages/profil-user/projets-recommandes/projets-recommandes';
 import { Login } from './features/auth/contributors/login/login';
+import { VideoCall } from './features/contributors/pages/video-call/video-call';
 
 export const routes: Routes = [
   // ==================== MainLayout avec authGuard ====================
@@ -39,6 +40,7 @@ export const routes: Routes = [
     children: [
       { path: 'home', component: Home },
       { path: 'projects', component: Projects },
+      { path: 'call', component: VideoCall },
       { path: 'profil-user', component: ProfilUser },
       { path: 'demarrage-quiz', component: DemarrageQuiz },
       { path: 'quiz', component: Quiz },

@@ -6,6 +6,24 @@
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
 }
 
+
+.btn-accept{
+  width: 100px;
+    height: 30px;
+    border: none;
+    background: green;
+    border-radius: 50px;
+    color: white;
+}
+.btn-reject{
+  width: 100px;
+    height: 30px;
+    border: none;
+    background: red;
+    border-radius: 50px;
+    color: white;
+}
+
 .team-header {
   display: flex;
   justify-content: space-between;
