@@ -15,6 +15,7 @@
   font-weight: 600;
   color: #3b82f6;
   margin-bottom: 32px;
+  margin-left: 2rem;
 }
 
 .users-grid {
@@ -307,4 +308,19 @@
 
 .notification.warning {
   background: #f59e0b;
+}
+
+.loading-message {
+  text-align: center;
+  font-size: 16px;
+  font-weight: 500;
+  color: #64748b;
+  padding: 40px 0;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0% { opacity: 0.5; }
+  50% { opacity: 1; }
+  100% { opacity: 0.5; }
 }

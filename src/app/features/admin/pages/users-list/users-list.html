@@ -1,7 +1,11 @@
 <div class="container">
   <h1 class="page-title">Gestion des Utilisateurs</h1>
-  
-  <div class="users-grid">
+
+  <div *ngIf="loading" class="loading-message">
+    Chargement des utilisateurs...
+  </div>
+
+  <div *ngIf="!loading && users.length > 0" class="users-grid">
     <div class="user-card" *ngFor="let user of users" [ngClass]="{'blocked': user.blocked}">
       <div class="user-header">
         <div class="user-avatar" [ngClass]="{'blue': user.avatar.length <= 2, 'purple': user.avatar.length > 2}">
@@ -12,11 +16,11 @@
           <div class="user-role">{{ user.role }}</div>
         </div>
       </div>
-      
+
       <div class="status-badge" [ngClass]="{'active': !user.blocked && user.status === 'active', 'inactive': !user.blocked && user.status === 'inactive', 'blocked': user.blocked}">
         {{ user.blocked ? 'Bloqué' : (user.status === 'active' ? 'Actif' : 'Inactif') }}
       </div>
-      
+
       <div class="user-stats">
         <div class="stat-item">
           <div class="stat-value">{{ user.contributions }}</div>
@@ -31,7 +35,7 @@
           <div class="stat-label">Projets</div>
         </div>
       </div>
-      
+
       <div class="user-actions">
         <button class="action-btn delete" (click)="deleteUser(user.id)">
           <svg class="action-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -55,6 +59,10 @@
         </button>
       </div>
     </div>
+  </div>
+
+  <div *ngIf="!loading && users.length === 0" class="empty-message">
+    Aucun utilisateur trouvé.
   </div>
 </div>
 

@@ -1,105 +1,79 @@
 <div class="container">
-  <div class="filter-bar">
-    <div class="filter-item">
-      <label for="secteur">Secteur</label>
-      <select id="secteur">
-        <option value="">Tous</option>
-        <option value="energie">Énergie</option>
-        <option value="education">Éducation</option>
-        <option value="sante">Santé</option>
-        <option value="technologie">Technologie</option>
-        <option value="finance">Finance</option>
-      </select>
-    </div>
-    <div class="filter-item">
-      <label for="date">Date</label>
-      <select id="date">
-        <option value="">Toutes</option>
-        <option value="2025">2025</option>
-        <option value="2024">2024</option>
-      </select>
-    </div>
-    <div class="filter-item">
-      <label for="etat">État</label>
-      <select id="etat">
-        <option value="">Tous</option>
-        <option value="en_attente">En attente</option>
-        <option value="en_cours">En cours</option>
-        <option value="terminer">Terminer</option>
-      </select>
-    </div>
-    <button class="filter-btn">Filtrer</button>
-  </div>
-  <table class="project-table">
-    <thead>
-      <tr>
-        <th></th>
-        <th>Nom du projet</th>
-        <th>Secteur</th>
-        <th>Date</th>
-        <th>État</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><input type="checkbox"></td>
-        <td>Projet 1</td>
-        <td>Énergie</td>
-        <td>20/04/2025</td>
-        <td>En attente</td>
-        <td><button class="detail-btn">Voir détail</button></td>
-      </tr>
-      <tr>
-        <td><input type="checkbox"></td>
-        <td>Projet 2</td>
-        <td>Éducation</td>
-        <td>22/06/2025</td>
-        <td>En cours</td>
-        <td><button class="detail-btn">Voir détail</button></td>
-      </tr>
-      <tr>
-        <td><input type="checkbox"></td>
-        <td>Projet 3</td>
-        <td>Santé</td>
-        <td>15/03/2025</td>
-        <td>Terminer</td>
-        <td><button class="detail-btn">Voir détail</button></td>
-      </tr>
-      <tr>
-        <td><input type="checkbox"></td>
-        <td>Projet 4</td>
-        <td>Technologie</td>
-        <td>10/09/2025</td>
-        <td>En attente</td>
-        <td><button class="detail-btn">Voir détail</button></td>
-      </tr>
-      <tr>
-        <td><input type="checkbox"></td>
-        <td>Projet 5</td>
-        <td>Finance</td>
-        <td>05/12/2025</td>
-        <td>En cours</td>
-        <td><button class="detail-btn">Voir détail</button></td>
-      </tr>
-    </tbody>
-  </table>
-  <!-- les modals pour valider ou rejeter un projet -->
-<div *ngIf="showMessage" class="overlay">
-  <div class="success-message" *ngIf="isSuccess">
-    <p>Le projet a été approuvé avec succès</p>
-    <span class="checkmark">✓</span>
-    <button (click)="hideMessage()">OK</button>
-  </div>
-  <div class="error-message" *ngIf="!isSuccess">
-    <p>Le projet a été rejeté</p>
-    <span class="cross">✗</span>
-    <button (click)="hideMessage()">OK</button>
-  </div>
-</div>
-<!-- les boutons valider et rejeter -->
-  <div class="action-buttons">
-    <button class="validate-btn" (click)="onValidateClick()">Valider</button>
-    <button class="reject-btn"(click)="onRejectClick()">Rejeter</button>
-  </div>
+ <div class="filter-bar">
+   <div class="filter-item">
+     <label for="secteur">Secteur</label>
+     <select id="secteur" [(ngModel)]="secteurFilter" (change)="onFilterChange()">
+       <option value="">Tous</option>
+       <option *ngFor="let secteur of uniqueSecteurs" [value]="secteur">{{ secteur }}</option>
+     </select>
+   </div>
+   <div class="filter-item">
+     <label for="date">Date</label>
+     <select id="date" [(ngModel)]="dateFilter" (change)="onFilterChange()">
+       <option value="">Toutes</option>
+       <option value="2025">2025</option>
+       <option value="2024">2024</option>
+     </select>
+   </div>
+   <div class="filter-item">
+     <label for="etat">État</label>
+     <select id="etat" [(ngModel)]="etatFilter" (change)="onFilterChange()">
+       <option value="">Tous</option>
+       <option value="En attente">En attente</option>
+       <option value="En cours">En cours</option>
+       <option value="Terminer">Terminer</option>
+     </select>
+   </div>
+   <button class="filter-btn" (click)="onFilterChange()">Filtrer</button>
+ </div>
+ <table class="project-table">
+   <thead>
+     <tr>
+       <th></th>
+       <th>Nom du projet</th>
+       <th>Secteur</th>
+       <th>Date</th>
+       <th>État</th>
+       <th>Actions</th>
+     </tr>
+   </thead>
+   <tbody>
+     <tr *ngFor="let project of filteredProjects">
+       <td><input type="checkbox" (change)="toggleSelection(project.id)" [checked]="selectedProjects.includes(project.id)"></td>
+       <td>{{ project.name }}</td>
+       <td>{{ project.secteur }}</td>
+       <td>{{ project.date | date:'dd/MM/yyyy' }}</td>
+       <td>{{ project.etat }}</td>
+       <td><button class="detail-btn" (click)="showDetails(project)">Voir détail</button></td>
+     </tr>
+   </tbody>
+ </table>
+ <!-- Modal pour détails (optionnel) -->
+ <div *ngIf="selectedProject" class="overlay">
+   <div class="details-modal">
+     <h2>{{ selectedProject.name }}</h2>
+     <p>Secteur : {{ selectedProject.secteur }}</p>
+     <p>Date : {{ selectedProject.date | date:'dd/MM/yyyy' }}</p>
+     <p>État : {{ selectedProject.etat }}</p>
+     <button (click)="selectedProject = null">Fermer</button>
+   </div>
+ </div>
+ <!-- Modals pour validation ou rejet -->
+ <div *ngIf="showMessage" class="overlay">
+   <div class="success-message" *ngIf="isSuccess">
+     <p>Le projet a été approuvé avec succès</p>
+     <span class="checkmark">✓</span>
+     <button (click)="hideMessage()">OK</button>
+   </div>
+   <div class="error-message" *ngIf="!isSuccess">
+     <p>Le projet a été rejeté</p>
+     <span class="cross">✗</span>
+     <button (click)="hideMessage()">OK</button>
+   </div>
+ </div>
+ <!-- Boutons valider et rejeter -->
+ <div class="action-buttons">
+   <button class="validate-btn" (click)="onValidateClick()">Valider</button>
+   <button class="reject-btn" (click)="onRejectClick()">Rejeter</button>
+ </div>
 </div>
