@@ -6,12 +6,29 @@ import { Location } from '@angular/common';
 import { apiUrl } from '../../../../core/services/api.config';
 
 interface Badge {
-  type: string;
-  nombreContribution: number;
-  coinRecompense: number;
+  badgeId: number;
+  typeBadge: string;
   description: string;
-  atteint: boolean;
+  seuilRequis: number;
+  contributionsValidees: number;
+  contributionsRestantes: number;
+  pourcentageProgression: number;
+  coinRecompense: number;
+  dejaObtenu: boolean;
+  prochainBadge: boolean;
 }
+
+interface ProgressionResponse {
+  contributeurId: number;
+  contributeurNom: string;
+  contributeurPrenom: string;
+  totalContributionsValidees: number;
+  totalBadgesObtenus: number;
+  totalCoinsGagnes: number;
+  prochainBadge: Badge;
+  tousLesBadges: Badge[];
+}
+
 
 @Component({
   selector: 'app-recompense-badge',
@@ -24,48 +41,60 @@ export class RecompenseBadge implements OnInit {
   badges: Badge[] = [];
   earnedBadges: Badge[] = [];
   nextBadges: Badge[] = [];
-  totalContributions: number = 1; // À remplacer par la valeur réelle de l'API
+  totalContributions: number = 0;
 
-  constructor(private location: Location, private http: HttpClient, private cdr: ChangeDetectorRef) {}
 
+  constructor(
+    private location: Location,
+    private http: HttpClient,
+    private cdr: ChangeDetectorRef
+  ) {}
+
+  /**
+   * Initialisation du composant.
+   * Charge les badges pour le contributeur avec l'ID 2.
+   */
   ngOnInit(): void {
-    console.log('[ngOnInit] Initialisation du composant...');
-    this.loadBadges();
+    this.loadBadges(2); // 🔹 Charger les badges pour le contributeur 2
   }
 
+  /**
+   * Retourne à la page précédente.
+   */
   goBack(): void {
-    this.location.back(); // 🔹 Retour à la page précédente
-  }
-  
-  loadBadges(): void {
-    console.log('[loadBadges] Chargement des badges...');
-    this.http.get<Badge[]>(apiUrl(`/participants/1/badges/progression`)).subscribe({
-      next: (data) => {
-        console.log('[loadBadges] Réponse API reçue :', data);
-
-        this.badges = data;
-        this.earnedBadges = data.filter(badge => badge.atteint);
-        this.nextBadges = data.filter(badge => !badge.atteint);
-
-        console.log('[loadBadges] Badges obtenus :', this.earnedBadges);
-        console.log('[loadBadges] Badges suivants :', this.nextBadges);
-
-        // Trouver le nombre total de contributions (pour la progression)
-        const lastEarned = this.earnedBadges[this.earnedBadges.length - 1];
-        this.totalContributions = lastEarned ? lastEarned.nombreContribution : 0;
-
-        console.log('[loadBadges] Total contributions détecté :', this.totalContributions);
-
-        // Forcer Angular à détecter le changement après la mise à jour des données
-        this.cdr.detectChanges();
-        console.log('[loadBadges] Changement détecté.');
-      },
-      error: (err) => {
-        console.error('[loadBadges] Erreur lors du chargement des badges', err);
-      }
-    });
+    this.location.back();
   }
 
+  /**
+   * Charge les badges pour un contributeur spécifique.
+   * @param contributeurId L'ID du contributeur pour lequel charger les badges.
+   */
+  loadBadges(contributeurId: number): void {
+    this.http.get<ProgressionResponse>(`http://localhost:8080/api/v1/progression/contributeur/${contributeurId}`)
+      .subscribe({
+        next: (data) => {
+          console.log('[API Response]', data);
+
+          this.totalContributions = data.totalContributionsValidees;
+          this.badges = data.tousLesBadges;
+
+          // Séparer obtenus et prochains
+          this.earnedBadges = this.badges.filter(b => b.dejaObtenu || b.pourcentageProgression === 100);
+          this.nextBadges = this.badges.filter(b => !b.dejaObtenu);
+
+          this.cdr.detectChanges();
+        },
+        error: (err) => {
+          console.error('[Erreur API]', err);
+        }
+      });
+  }
+
+  /**
+   * Obtient le badge précédent pour un badge donné.
+   * @param badge Le badge actuel.
+   * @returns Le badge précédent ou undefined si aucun n'existe.
+   */
   getBadgeName(type: string): string {
     const nameMap: Record<string, string> = {
       'DEBUTANT': 'Débutant',
@@ -74,11 +103,15 @@ export class RecompenseBadge implements OnInit {
       'OR': 'Or',
       'PLATINE': 'Platine'
     };
-    const result = nameMap[type] ?? type;
-    console.log(`[getBadgeName] Type: ${type} => Nom: ${result}`);
-    return result;
+    return nameMap[type] ?? type;
   }
 
+  /**
+   * Obtient l'image associée à un type de badge.
+   * Les images doivent être placées dans le dossier src/assets/images/badges.
+   * @param type Le type de badge.
+   * @returns
+   */
   getBadgeImage(type: string): string {
     const imageMap: Record<string, string> = {
       'DEBUTANT': 'debutant.jpg',
@@ -87,36 +120,16 @@ export class RecompenseBadge implements OnInit {
       'OR': 'BadgeOr.png',
       'PLATINE': 'platine.png'
     };
-    const result = imageMap[type] ?? 'default.png';
-    console.log(`[getBadgeImage] Type: ${type} => Image: ${result}`);
-    return result;
+    return imageMap[type] ?? 'default.png';
   }
 
   getProgressPercentage(badge: Badge): number {
-    if (this.totalContributions >= badge.nombreContribution) return 100;
-
-    const previousBadge = this.getPreviousBadge(badge);
-    const min = previousBadge ? previousBadge.nombreContribution : 0;
-    const max = badge.nombreContribution;
-    const progress = Math.round(((this.totalContributions - min) / (max - min)) * 100);
-
-    console.log(`[getProgressPercentage] Badge: ${badge.type}, Progression: ${progress}%`);
-    return progress;
+    return badge.pourcentageProgression;
   }
 
   getContributionText(badge: Badge): string {
-    const remaining = badge.nombreContribution - this.totalContributions;
-    const result = remaining > 0
-      ? `${remaining} contribution${remaining > 1 ? 's' : ''} restante${remaining > 1 ? 's' : ''}`
+    return badge.contributionsRestantes > 0
+      ? `${badge.contributionsRestantes} contribution(s) restante(s)`
       : 'Completé';
-    console.log(`[getContributionText] Badge: ${badge.type}, Texte: ${result}`);
-    return result;
-  }
-
-  private getPreviousBadge(badge: Badge): Badge | null {
-    const index = this.badges.findIndex(b => b.type === badge.type);
-    const result = index > 0 ? this.badges[index - 1] : null;
-    console.log(`[getPreviousBadge] Badge: ${badge.type}, Précédent:`, result);
-    return result;
   }
 }
