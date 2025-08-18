@@ -2,7 +2,7 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { Location } from '@angular/common';  
+import { Location } from '@angular/common';
 import { apiUrl } from '../../../../core/services/api.config';
 
 interface Badge {
@@ -36,16 +36,17 @@ export class RecompenseBadge implements OnInit {
   goBack(): void {
     this.location.back(); // 🔹 Retour à la page précédente
   }
+  
   loadBadges(): void {
     console.log('[loadBadges] Chargement des badges...');
     this.http.get<Badge[]>(apiUrl(`/participants/1/badges/progression`)).subscribe({
       next: (data) => {
         console.log('[loadBadges] Réponse API reçue :', data);
-        
+
         this.badges = data;
         this.earnedBadges = data.filter(badge => badge.atteint);
         this.nextBadges = data.filter(badge => !badge.atteint);
-        
+
         console.log('[loadBadges] Badges obtenus :', this.earnedBadges);
         console.log('[loadBadges] Badges suivants :', this.nextBadges);
 
@@ -93,7 +94,7 @@ export class RecompenseBadge implements OnInit {
 
   getProgressPercentage(badge: Badge): number {
     if (this.totalContributions >= badge.nombreContribution) return 100;
-    
+
     const previousBadge = this.getPreviousBadge(badge);
     const min = previousBadge ? previousBadge.nombreContribution : 0;
     const max = badge.nombreContribution;
@@ -105,7 +106,7 @@ export class RecompenseBadge implements OnInit {
 
   getContributionText(badge: Badge): string {
     const remaining = badge.nombreContribution - this.totalContributions;
-    const result = remaining > 0 
+    const result = remaining > 0
       ? `${remaining} contribution${remaining > 1 ? 's' : ''} restante${remaining > 1 ? 's' : ''}`
       : 'Completé';
     console.log(`[getContributionText] Badge: ${badge.type}, Texte: ${result}`);
