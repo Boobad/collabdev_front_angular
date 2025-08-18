@@ -125,32 +125,43 @@
       </div>
     </div>
 
-    <!-- Motivations -->
-   <div class="form-group">
+<!-- Motivations -->
+<div class="form-group">
   <label for="motivation" class="form-label required-field">Vos motivations</label>
   <textarea
     id="motivation"
     class="form-control"
+    [ngClass]="{ 'valid-input': formData.motivation.length >= 200 }"
     [(ngModel)]="formData.motivation"
     name="motivation"
     required
     minlength="200"
-    maxlength="500" 
+    maxlength="500"
     #motivation="ngModel"
     (input)="updateMotivationCount()"
   ></textarea>
   <small>{{ motivationMessage }}</small>
-  <!-- <div
-    *ngIf="motivation.invalid && (motivation.dirty || motivation.touched)"
-    class="error"
-  >
-    Veuillez décrire vos motivations en au moins 500 caractères.
-  </div> -->
 </div>
 
 
     <!-- Expérience -->
     <div class="form-group">
+      <label for="experience" class="form-label required-field">Votre expérience pertinente</label>
+      <textarea
+        id="experience"
+        class="form-control"
+        [ngClass]="{ 'valid-input': formData.experience.length >= 200 }"
+        [(ngModel)]="formData.experience"
+        name="experience"
+        required
+        minlength="200"
+        maxlength="500"
+        #experience="ngModel"
+        (input)="updateExperienceCount()"
+      ></textarea>
+      <small>{{ experienceMessage }}</small>
+    </div>
+    <!-- <div class="form-group">
       <label for="experience" class="form-label required-field">
         Votre expérience pertinente
       </label>
@@ -169,7 +180,7 @@
       >
         L'expérience est requise.
       </div>
-    </div>
+    </div> -->
 
     <!-- Soumission -->
     <button

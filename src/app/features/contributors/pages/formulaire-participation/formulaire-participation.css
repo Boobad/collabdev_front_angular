@@ -177,6 +177,11 @@ input[type="radio"] {
   margin-top: 0.5rem;
 }
 
+.valid-input {
+  border: 2px solid #28a745 !important; /* vert succès */
+}
+
+
 @media (max-width: 768px) {
   .container {
     margin: 1rem;

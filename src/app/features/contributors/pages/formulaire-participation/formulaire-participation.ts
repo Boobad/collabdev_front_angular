@@ -25,8 +25,10 @@ export class FormulaireParticipation implements OnInit {
   duplicateError: boolean = false;
   errorMessage: string = '';
   motivationMessage = '500 caractères restants';
+  experienceMessage = '500 caractères restants';
   idProjet!: number;
   idContributeur!: number;
+
 
   constructor(
     private router: Router,
@@ -85,23 +87,33 @@ export class FormulaireParticipation implements OnInit {
     this.cdRef.detectChanges();
   }
 
- updateMotivationCount() {
-  const count = this.formData.motivation.length;
-  const min = 200;
-  const max = 500;
+  updateMotivationCount() {
+    const count = this.formData.motivation.length;
+    const min = 200;
+    const max = 500;
 
-  if (count < max) {
-     this.motivationMessage = `${max - count} caractères restants`;
+    if (count < max) {
+      this.motivationMessage = `${max - count} caractères restants`;
+    } else {
+      this.motivationMessage = `Nombre maximal atteint (${max} caractères)`;
+    }
+
+    this.cdRef.detectChanges();
   }
-  //  else if (count > max) {
-  //   this.formData.motivation = this.formData.motivation.substring(0, max);
-  //   this.motivationMessage = `Nombre maximal atteint (${max} caractères)`;
-  // } else {
-  //   this.motivationMessage = `${max - count} caractères restants`;
-  // }
 
-this.cdRef.detectChanges();
-}
+  updateExperienceCount() {
+    const count = this.formData.experience.length;
+    const min = 200;
+    const max = 500;
+
+    if (count < max) {
+      this.experienceMessage = `${max - count} caractères restants`;
+    } else {
+      this.experienceMessage = `Nombre maximal atteint (${max} caractères)`;
+    }
+
+    this.cdRef.detectChanges();
+  }
 
 
   mapRoleToProfil(role: string): string {

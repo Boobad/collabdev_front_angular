@@ -34,7 +34,7 @@ export class ProjectsService {
   constructor(private http: HttpClient) {}
     private apiUrll = 'http://localhost:8080/api/v1/projets';
 
-  
+
 
   getProjetById(id: number): Observable<any> {
     return this.http.get(`${this.apiUrll}/${id}`);
@@ -46,37 +46,37 @@ export class ProjectsService {
     return this.http.post<{ fileUrl: string }>(`${this.apiUrl}/upload`, formData);
   }
 
-createProject(userId: number, projet: ProjectPayload, file?: File): Observable<any> {
-  const formData = new FormData();
-  
-  // Création de l'objet projet sans la propriété urlCahierDeCharge
-  const { urlCahierDeCharge, ...projetData } = projet;
-  
-  // Ajout de l'objet projet en tant que blob JSON
-  formData.append('projet', new Blob([JSON.stringify(projetData)], {
-    type: 'application/json'
-  }));
+  createProject(userId: number, projet: ProjectPayload, file?: File): Observable<any> {
+    const formData = new FormData();
 
-  // Ajout du fichier s'il existe
-  if (file) {
-    formData.append('cahierDesCharges', file, file.name);
+    // Création de l'objet projet sans la propriété urlCahierDeCharge
+    const { urlCahierDeCharge, ...projetData } = projet;
+
+    // Ajout de l'objet projet en tant que blob JSON
+    formData.append('projet', new Blob([JSON.stringify(projetData)], {
+      type: 'application/json'
+    }));
+
+    // Ajout du fichier s'il existe
+    if (file) {
+      formData.append('cahierDesCharges', file, file.name);
+    }
+
+    return this.http.post(`${this.apiUrl}/${userId}`, formData, {
+      headers: new HttpHeaders({
+        'enctype': 'multipart/form-data'
+      })
+    }).pipe(
+      catchError(error => {
+        console.error('Erreur création projet:', error);
+        return throwError(() => error);
+      })
+    );
   }
-
-  return this.http.post(`${this.apiUrl}/${userId}`, formData, {
-    headers: new HttpHeaders({
-      'enctype': 'multipart/form-data'
-    })
-  }).pipe(
-    catchError(error => {
-      console.error('Erreur création projet:', error);
-      return throwError(() => error);
-    })
-  );
-}
   // projects-service.ts
-createProjectMultipart(userId: number, formData: FormData) {
-  return this.http.post<any>(`http://localhost:8080/api/v1/projets/contributeur/${userId}`, formData);
-}
+  createProjectMultipart(userId: number, formData: FormData) {
+    return this.http.post<any>(`http://localhost:8080/api/v1/projets/contributeur/${userId}`, formData);
+  }
 
   getProjetsByContributeur(userId: number): Observable<Projet[]> {
     return this.http.get<Projet[]>(`${this.apiUrl}/${userId}`).pipe(
@@ -104,5 +104,5 @@ createProjectMultipart(userId: number, formData: FormData) {
     );
   }
 
-  
+
 }
