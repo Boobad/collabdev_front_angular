@@ -44,11 +44,11 @@
       </div>
 
       <!-- Si photo dispo -->
-      <img 
-        *ngIf="user?.avatar && !isCollapsed" 
+      <img  routerLink="/profil-user"
+        *ngIf="user?.avatar " 
         [src]="user.avatar" 
         alt="User"
-        (error)="user.avatar = 'assets/images/profil.png'">
+        (error)="user.avatar = 'profil.png'">
 
       <!-- Infos -->
       <div class="user-info" *ngIf="!isCollapsed && user">

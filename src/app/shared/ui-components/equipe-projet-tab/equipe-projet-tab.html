@@ -68,12 +68,12 @@
           <img [src]="getAvatarUrl(p)" 
                alt="{{ p.contributeurPrenom }} {{ p.contributeurNom }}"
                onerror="this.src='assets/images/default-avatar.png'">
-          <span class="member-role" *ngIf="p.contributeurEmail === user?.email">
+          <!-- <span class="member-role" *ngIf="p.contributeurEmail === user?.email">
             <i class="fas fa-crown"></i> Gestionnaire
           </span>
           <span class="member-role" *ngIf="p.contributeurEmail !== user?.email">
             {{ p.profil || 'Membre' }}
-          </span>
+          </span> -->
         </div>
         <div class="member-info">
           <h3>{{ p.contributeurPrenom }} {{ p.contributeurNom }}</h3>

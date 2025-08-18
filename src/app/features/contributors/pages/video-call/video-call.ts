@@ -1,241 +1,283 @@
-import { Component, ViewChild, ElementRef, OnDestroy, AfterViewInit } from '@angular/core';
+import { Component, ElementRef, ViewChild, AfterViewInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faMicrophone, faMicrophoneSlash, faVideo, faVideoSlash, faDesktop, faPhone, faPhoneSlash, faCopy, faUserPlus } from '@fortawesome/free-solid-svg-icons';
+import { AgoraService } from '../../../../core/services/agora.service';
+import { IAgoraRTCRemoteUser, ILocalVideoTrack, ILocalAudioTrack, IRemoteVideoTrack, IRemoteAudioTrack, UID } from 'agora-rtc-sdk-ng';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+
+interface RemoteUser {
+  uid: string | number;
+  username?: string;
+  videoEnabled: boolean;
+  audioEnabled: boolean;
+  videoTrack?: IRemoteVideoTrack;
+  audioTrack?: IRemoteAudioTrack;
+}
 
 @Component({
   selector: 'app-video-call',
   standalone: true,
-  imports: [CommonModule, FormsModule, MatProgressSpinnerModule],
+  imports: [CommonModule, FormsModule, FontAwesomeModule, MatProgressSpinnerModule, MatSnackBarModule],
   templateUrl: './video-call.html',
   styleUrls: ['./video-call.css']
 })
-export class VideoCall implements OnDestroy, AfterViewInit {
+export class VideoCall implements AfterViewInit, OnDestroy {
   @ViewChild('localVideo') localVideo!: ElementRef<HTMLVideoElement>;
-  @ViewChild('remoteVideo') remoteVideo!: ElementRef<HTMLVideoElement>;
-  @ViewChild('videoContainer') videoContainer!: ElementRef<HTMLDivElement>;
-  @ViewChild('screenVideo') screenVideo!: ElementRef<HTMLVideoElement>;
+  @ViewChild('videosContainer') videosContainer!: ElementRef<HTMLDivElement>;
 
-  public localStream: MediaStream | null = null;
-  public remoteStream: MediaStream | null = null;
-  public screenStream: MediaStream | null = null;
-  public peerConnection: RTCPeerConnection | null = null;
-
-  public isFullscreen = false;
-  public isSharingScreen = false;
-  public isMuted = false;
-  public isVideoOff = false;
-  public isCallActive = false;
-  public isRemoteConnected = false;
-  public showChat = false;
-  public callDuration = '00:00';
-  public newMessage = '';
-  public messages: { text: string, isMe: boolean }[] = [];
-
-  private callTimer: any;
-  private iceCandidates: RTCIceCandidate[] = [];
-
-  private readonly config: RTCConfiguration = {
-    iceServers: [
-      { urls: 'stun:stun.l.google.com:19302' },
-      { urls: 'stun:stun1.l.google.com:19302' },
-      { urls: 'stun:stun2.l.google.com:19302' }
-    ]
+  icons = {
+    mic: faMicrophone,
+    micMute: faMicrophoneSlash,
+    video: faVideo,
+    videoMute: faVideoSlash,
+    screen: faDesktop,
+    call: faPhone,
+    endCall: faPhoneSlash,
+    copy: faCopy,
+    addUser: faUserPlus
   };
 
+  // États principaux
+  isSharingScreen: boolean = false;
+  isCallActive = false;
+  isScreenSharing = false;
+  localVideoEnabled = true;
+  localAudioEnabled = true;
+  isMuted = false;
+  isVideoOff = false;
+  showChat = false;
+  callDuration = '00:00';
+  isRemoteConnected = false;
+  showMeetingForm = false;
+  meetingCode = '';
+  meetingLink = '';
+  isCreatingMeeting = false;
+  isJoiningMeeting = false;
+
+  // Chat
+  messages: { text: string; isMe?: boolean }[] = [];
+  newMessage: string = '';
+
+  remoteUsers: RemoteUser[] = [];
+  buttonClasses = "w-14 h-14 rounded-full text-white flex items-center justify-center text-xl transition-all";
+
+  private localVideoTrack?: ILocalVideoTrack;
+  private localAudioTrack?: ILocalAudioTrack;
+  private intervalId: any;
+
+  constructor(
+    private agoraService: AgoraService,
+    private snackBar: MatSnackBar
+  ) {}
+
   ngAfterViewInit() {
-    this.setupVideoElements();
+    this.arrangeVideos();
   }
 
-  private setupVideoElements() {
-    if (this.remoteVideo) {
-      this.remoteVideo.nativeElement.onloadedmetadata = () => {
-        this.isRemoteConnected = true;
-      };
-      this.remoteVideo.nativeElement.onerror = (err) => {
-        console.error('Erreur vidéo distante:', err);
-        this.isRemoteConnected = false;
-      };
+  toggleFullscreen() {
+    const elem = document.documentElement;
+    if (!document.fullscreenElement) {
+      elem.requestFullscreen().catch(err => console.error('Erreur fullscreen:', err));
+    } else {
+      document.exitFullscreen().catch(err => console.error('Erreur exit fullscreen:', err));
     }
   }
 
-  async startCall() {
+  generateMeetingCode(): string {
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let result = '';
+    for (let i = 0; i < 8; i++) {
+      result += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    return result;
+  }
+
+  async createMeeting() {
+    if (!this.meetingCode) {
+      this.meetingCode = this.generateMeetingCode();
+    }
+    this.isCreatingMeeting = true;
+    this.meetingLink = `${window.location.origin}/join/${this.meetingCode}`;
+    await this.startCall(this.meetingCode);
+    this.isCreatingMeeting = false;
+  }
+
+  async joinMeeting() {
+    if (!this.meetingCode.trim()) {
+      this.snackBar.open('Veuillez entrer un code de réunion', 'OK', { duration: 3000 });
+      return;
+    }
+    
+    this.isJoiningMeeting = true;
+    await this.startCall(this.meetingCode);
+    this.isJoiningMeeting = false;
+  }
+
+  copyMeetingLink() {
+    navigator.clipboard.writeText(this.meetingLink)
+      .then(() => {
+        this.snackBar.open('Lien copié dans le presse-papiers', 'OK', { duration: 3000 });
+      })
+      .catch(err => {
+        console.error('Erreur lors de la copie:', err);
+        this.snackBar.open('Échec de la copie du lien', 'OK', { duration: 3000 });
+      });
+  }
+
+  async startCall(channel: string) {
     try {
-      // Initialiser les flux média locaux
-      this.localStream = await navigator.mediaDevices.getUserMedia({
-        video: { width: { ideal: 1280 }, height: { ideal: 720 }, frameRate: { ideal: 30 } },
-        audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true }
-      });
+      const uid = Math.floor(Math.random() * 10000);
+      const localTracks = await this.agoraService.join('9e4dd65eea304ef0a878526bc8fa8ae6', channel, null, uid);
 
-      this.updateVideoStream(this.localStream);
+      this.localVideoTrack = localTracks.videoTrack!;
+      this.localAudioTrack = localTracks.audioTrack!;
+
+      if (this.localVideoEnabled) this.agoraService.playLocalVideo(this.localVideo.nativeElement);
+
+      this.setupEventListeners();
       this.isCallActive = true;
-      this.isRemoteConnected = false;
-      this.startCallTimer();
-      this.setupPeerConnection();
-
-      // Simuler une connexion distante après 2 secondes
-      setTimeout(() => {
-        if (!this.isRemoteConnected) {
-          this.simulateRemoteConnection();
-        }
-      }, 2000);
-
-    } catch (error) {
-      console.error('Erreur démarrage appel:', error);
-      this.handleCallError(error);
+      this.startTimer();
+    } catch (err) {
+      console.error('Erreur démarrage appel:', err);
+      this.snackBar.open('Échec de connexion à la réunion', 'OK', { duration: 3000 });
+      this.isCreatingMeeting = false;
+      this.isJoiningMeeting = false;
     }
   }
 
-  private simulateRemoteConnection() {
-    if (!this.localStream) return;
-
-    // Affichage distant identique à local (simulation)
-    this.remoteStream = this.localStream;
-
-    if (this.remoteVideo?.nativeElement) {
-      this.remoteVideo.nativeElement.srcObject = this.remoteStream;
-      this.remoteVideo.nativeElement.play().catch(e => console.error(e));
-    }
-
-    this.isRemoteConnected = true;
+  private startTimer() {
+    let seconds = 0;
+    this.intervalId = setInterval(() => {
+      seconds++;
+      const minutes = Math.floor(seconds / 60);
+      const remainingSeconds = seconds % 60;
+      this.callDuration = `${this.padZero(minutes)}:${this.padZero(remainingSeconds)}`;
+    }, 1000);
   }
 
-  private updateVideoStream(stream: MediaStream) {
-    if (this.localVideo?.nativeElement) {
-      this.localVideo.nativeElement.srcObject = stream;
-      this.localVideo.nativeElement.play().catch(e => console.error('Erreur lecture vidéo locale:', e));
-    }
+  private padZero(num: number): string {
+    return num < 10 ? `0${num}` : `${num}`;
   }
 
-  private setupPeerConnection() {
-    this.peerConnection = new RTCPeerConnection(this.config);
+  private setupEventListeners() {
+    const client = this.agoraService.getClient();
 
-    if (this.localStream) {
-      this.localStream.getTracks().forEach(track => {
-        this.peerConnection?.addTrack(track, this.localStream as MediaStream);
-      });
-    }
-
-    this.remoteStream = new MediaStream();
-    if (this.remoteVideo?.nativeElement) {
-      this.remoteVideo.nativeElement.srcObject = this.remoteStream;
-    }
-
-    this.peerConnection.ontrack = (event) => {
-      if (event.streams && event.streams[0]) {
-        event.streams[0].getTracks().forEach(track => {
-          this.remoteStream?.addTrack(track);
-        });
-        this.remoteVideo?.nativeElement.play().catch(e => console.error('Erreur lecture vidéo distante:', e));
+    client.on('user-published', async (user, mediaType) => {
+      if (mediaType === 'audio' || mediaType === 'video') {
+        await client.subscribe(user, mediaType);
+        this.handleRemoteUser(user, mediaType, true);
         this.isRemoteConnected = true;
       }
-    };
+    });
 
-    this.peerConnection.onicecandidate = (event) => {
-      if (event.candidate) this.iceCandidates.push(event.candidate);
-    };
+    client.on('user-unpublished', (user, mediaType) => {
+      if (mediaType === 'audio' || mediaType === 'video') {
+        this.handleRemoteUser(user, mediaType, false);
+      }
+    });
 
-    this.peerConnection.oniceconnectionstatechange = () => {
-      if (this.peerConnection?.iceConnectionState === 'connected') this.isRemoteConnected = true;
-      else if (this.peerConnection?.iceConnectionState === 'disconnected') this.isRemoteConnected = false;
-    };
+    client.on('user-left', (user) => {
+      this.remoteUsers = this.remoteUsers.filter(u => u.uid !== user.uid);
+      this.arrangeVideos();
+      if (this.remoteUsers.length === 0) this.isRemoteConnected = false;
+    });
+  }
+
+  private handleRemoteUser(user: IAgoraRTCRemoteUser, mediaType: 'audio' | 'video', isPublished: boolean) {
+    const remoteUser = this.getOrCreateRemoteUser(user.uid);
+
+    if (mediaType === 'video') {
+      remoteUser.videoEnabled = isPublished;
+      remoteUser.videoTrack = isPublished ? user.videoTrack as IRemoteVideoTrack : undefined;
+
+      if (isPublished && user.videoTrack) {
+        setTimeout(() => {
+          const container = document.getElementById(`remote-${user.uid}`);
+          if (container) user.videoTrack?.play(container);
+        }, 100);
+      }
+    }
+
+    if (mediaType === 'audio') {
+      remoteUser.audioEnabled = isPublished;
+      remoteUser.audioTrack = isPublished ? user.audioTrack as IRemoteAudioTrack : undefined;
+      if (isPublished && user.audioTrack) user.audioTrack.play();
+    }
+
+    this.arrangeVideos();
+  }
+
+  private getOrCreateRemoteUser(uid: UID): RemoteUser {
+    let user = this.remoteUsers.find(u => u.uid === uid);
+    if (!user) {
+      user = { uid, videoEnabled: false, audioEnabled: false, username: `User${Math.floor(Math.random() * 1000)}` };
+      this.remoteUsers.push(user);
+    }
+    return user;
+  }
+
+  async toggleAudio() {
+    this.localAudioEnabled = !this.localAudioEnabled;
+    if (this.localAudioTrack) this.localAudioTrack.setEnabled(this.localAudioEnabled);
+    this.isMuted = !this.localAudioEnabled;
+  }
+
+  async toggleVideo() {
+    this.localVideoEnabled = !this.localVideoEnabled;
+    if (this.localVideoTrack) this.localVideoTrack.setEnabled(this.localVideoEnabled);
+    this.isVideoOff = !this.localVideoEnabled;
+    if (this.localVideoEnabled && !this.isScreenSharing) {
+      this.agoraService.playLocalVideo(this.localVideo.nativeElement);
+    }
   }
 
   async toggleScreenShare() {
-    if (this.isSharingScreen) this.stopScreenShare();
-    else await this.startScreenShare();
-  }
-
-  async startScreenShare() {
-    try {
-      this.screenStream = await navigator.mediaDevices.getDisplayMedia({ video: { frameRate: { ideal: 30 } }, audio: false });
-
-      // Affichage uniquement local
-      if (this.screenVideo?.nativeElement) {
-        this.screenVideo.nativeElement.srcObject = this.screenStream;
-        await this.screenVideo.nativeElement.play().catch(err => console.error("Erreur lecture écran:", err));
-      }
-
-      this.isSharingScreen = true;
-
-      // Fin du partage
-      this.screenStream.getVideoTracks()[0].onended = () => this.stopScreenShare();
-
-    } catch (error) {
-      console.error('Erreur partage écran:', error);
-      this.isSharingScreen = false;
+    this.isSharingScreen = !this.isSharingScreen;
+    if (this.isSharingScreen) {
+      await this.agoraService.startScreenShare();
+      if (this.localVideoTrack) await this.localVideoTrack.setEnabled(false);
+    } else {
+      await this.agoraService.stopScreenShare();
+      if (this.localVideoTrack) await this.localVideoTrack.setEnabled(true);
     }
-  }
-
-  stopScreenShare() {
-    if (this.screenStream) {
-      this.screenStream.getTracks().forEach(track => track.stop());
-      if (this.screenVideo?.nativeElement) this.screenVideo.nativeElement.srcObject = null;
-    }
-    this.isSharingScreen = false;
-    this.screenStream = null;
   }
 
   toggleMute() {
     this.isMuted = !this.isMuted;
-    this.localStream?.getAudioTracks().forEach(track => track.enabled = !this.isMuted);
-  }
-
-  toggleVideo() {
-    this.isVideoOff = !this.isVideoOff;
-    this.localStream?.getVideoTracks().forEach(track => track.enabled = !this.isVideoOff);
-  }
-
-  toggleFullscreen() {
-    if (!this.isFullscreen) this.videoContainer.nativeElement.requestFullscreen().catch(err => console.error('Erreur fullscreen:', err));
-    else document.exitFullscreen();
-    this.isFullscreen = !this.isFullscreen;
+    if (this.localAudioTrack) this.localAudioTrack.setEnabled(!this.isMuted);
   }
 
   sendMessage() {
-    if (this.newMessage.trim()) {
-      this.messages.push({ text: this.newMessage, isMe: true });
-      this.newMessage = '';
-    }
+    if (!this.newMessage.trim()) return;
+    this.messages.push({ text: this.newMessage, isMe: true });
+    this.newMessage = '';
   }
 
-  private startCallTimer() {
-    let seconds = 0;
-    this.callTimer = setInterval(() => {
-      seconds++;
-      const minutes = Math.floor(seconds / 60);
-      const remainingSeconds = seconds % 60;
-      this.callDuration = `${minutes.toString().padStart(2,'0')}:${remainingSeconds.toString().padStart(2,'0')}`;
-    }, 1000);
-  }
-
-  endCall() {
-    this.peerConnection?.close();
-    this.peerConnection = null;
-
-    this.localStream?.getTracks().forEach(track => track.stop());
-    this.remoteStream?.getTracks().forEach(track => track.stop());
-    this.screenStream?.getTracks().forEach(track => track.stop());
-
-    if (this.callTimer) clearInterval(this.callTimer);
-    this.callTimer = null;
-
-    this.isCallActive = false;
-    this.isRemoteConnected = false;
-    this.isSharingScreen = false;
-    this.callDuration = '00:00';
-
-    if (this.localVideo?.nativeElement) this.localVideo.nativeElement.srcObject = null;
-    if (this.remoteVideo?.nativeElement) this.remoteVideo.nativeElement.srcObject = null;
-    if (this.screenVideo?.nativeElement) this.screenVideo.nativeElement.srcObject = null;
-  }
-
-  private handleCallError(error: any) {
-    console.error('Erreur d\'appel:', error);
-    this.endCall();
+  private arrangeVideos() {
+    setTimeout(() => {
+      const count = this.remoteUsers.length + 1;
+      const container = this.videosContainer.nativeElement;
+      if (count <= 2) container.className = 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 flex-grow mb-4';
+      else if (count <= 4) container.className = 'grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 flex-grow mb-4';
+      else container.className = 'grid grid-cols-3 md:grid-cols-3 lg:grid-cols-3 gap-4 flex-grow mb-4';
+    }, 0);
   }
 
   ngOnDestroy() {
     this.endCall();
+  }
+
+  async endCall() {
+    if (this.intervalId) clearInterval(this.intervalId);
+    await this.agoraService.leave();
+    this.remoteUsers = [];
+    this.isCallActive = false;
+    this.isScreenSharing = false;
+    this.isRemoteConnected = false;
+    this.meetingCode = '';
+    this.meetingLink = '';
   }
 }
