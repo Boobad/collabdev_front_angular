@@ -4,15 +4,13 @@ import { firstValueFrom } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class OrangeMoneyService {
-  private backendUrl = 'http://localhost:3000'; // URL backend
+  private backendUrl = 'https://e8c1f9829683.ngrok-free.app';
 
   constructor(private http: HttpClient) {}
 
   async getAccessToken(): Promise<string | null> {
     try {
-      const res: any = await firstValueFrom(
-        this.http.post(`${this.backendUrl}/api/orange-token`, {})
-      );
+      const res: any = await firstValueFrom(this.http.post(`${this.backendUrl}/api/orange-token`, {}));
       return res.access_token;
     } catch (err) {
       console.error('Erreur accès token', err);
@@ -26,10 +24,7 @@ export class OrangeMoneyService {
 
     try {
       const res: any = await firstValueFrom(
-        this.http.post(`${this.backendUrl}/api/orange-transaction`, {
-          token,
-          transactionData: params
-        })
+        this.http.post(`${this.backendUrl}/api/orange-transaction`, { token, transactionData: params })
       );
       return res;
     } catch (err) {

@@ -1,7 +1,7 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
 import { Location } from '@angular/common';  
 import { apiUrl } from '../../../../core/services/api.config';
 
@@ -29,7 +29,6 @@ interface ProgressionResponse {
   tousLesBadges: Badge[];
 }
 
-
 @Component({
   selector: 'app-recompense-badge',
   standalone: true,
@@ -46,19 +45,27 @@ export class RecompenseBadge implements OnInit {
   constructor(
     private location: Location,
     private http: HttpClient,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
-    this.loadBadges(2); // 🔹 Charger les badges pour le contributeur 2
+    // 🔹 Récupérer l'userId depuis localStorage
+    const userId = localStorage.getItem('userId');
+    if (userId) {
+      this.loadBadges(+userId); // Convertir en nombre
+    } else {
+      console.warn('Aucun userId trouvé dans localStorage, redirection vers login');
+      this.router.navigate(['/login']); // Rediriger vers login si userId absent
+    }
   }
 
   goBack(): void {
     this.location.back();
   }
 
-  loadBadges(contributeurId: number): void {
-    this.http.get<ProgressionResponse>(`http://localhost:8080/api/v1/progression/contributeur/${contributeurId}`)
+  loadBadges(userId: number): void {
+    this.http.get<ProgressionResponse>(apiUrl(`/progression/contributeur/${userId}`))
       .subscribe({
         next: (data) => {
           console.log('[API Response]', data);

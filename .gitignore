@@ -41,7 +41,10 @@ testem.log
 .DS_Store
 Thumbs.db
 
-/src/app/core/backend.js
-/src/app/core/server.js
-/src/app/core/googleapi.js
+src/app/core/backend.js
+src/app/core/server.js
+# Node.js backend
+src/app/core/backend.js
+
+src/app/core/googleapi.js
 .env
