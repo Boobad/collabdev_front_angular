@@ -1,17 +1,18 @@
+<!-- src/app/parametrage-coins/parametrage-coins.html -->
 <div class="container">
   <h1>Paramétrage des coins & Badges</h1>
   <div class="badge-config">
     <div class="inputs">
       <label for="badge-name">Nom du Badge :</label>
-      <select id="badge-name" class="gb-name">
+      <select id="badge-name" [(ngModel)]="badgeName" class="gb-name">
         <option value="gold">Gold</option>
         <option value="argent">Argent</option>
         <option value="platine">Platine</option>
       </select>
       <label for="coin-threshold">Seuil des coins :</label>
-      <input type="number" id="coin-threshold" placeholder="Ex : 100">
+      <input type="number" id="coin-threshold" [(ngModel)]="coinThreshold" placeholder="Ex : 100">
     </div>
-    <button id="validate-badge">Valider Seuil du Badge</button>
+    <button id="validate-badge" (click)="validateBadge()">Valider Seuil du Badge</button>
   </div>
   <h2>Gestion des coins par événements</h2>
   <table class="event-table">
@@ -24,35 +25,18 @@
       </tr>
     </thead>
     <tbody>
-      <tr>
-        <td><input type="text" placeholder="Ex : Nom de l'événement"></td>
-        <td><input type="number" placeholder="Ex : 100"></td>
-        <td><input type="number" placeholder="Ex : 200"></td>
-        <td><input type="number" placeholder="Ex : 300"></td>
-      </tr>
-      <tr>
-        <td>Lancement Projet</td>
-        <td><input type="number" placeholder="Ex : 100"></td>
-        <td><input type="number" placeholder="Ex : 200"></td>
-        <td><input type="number" placeholder="Ex : 300"></td>
-      </tr>
-      <tr>
-        <td>Contribution Projet</td>
-        <td><input type="number" placeholder="Ex : 100"></td>
-        <td><input type="number" placeholder="Ex : 200"></td>
-        <td><input type="number" placeholder="Ex : 300"></td>
-      </tr>
-      <tr>
-        <td>Déblocage Projet</td>
-        <td><input type="number" placeholder="Ex : 100"></td>
-        <td><input type="number" placeholder="Ex : 200"></td>
-        <td><input type="number" placeholder="Ex : 300"></td>
+      <tr *ngFor="let event of events; let i = index">
+        <td><input type="text" [(ngModel)]="event.name" placeholder="Ex : Nom de l'événement"></td>
+        <td><input type="number" [(ngModel)]="event.facile" placeholder="Ex : 100"></td>
+        <td><input type="number" [(ngModel)]="event.moyen" placeholder="Ex : 200"></td>
+        <td><input type="number" [(ngModel)]="event.difficile" placeholder="Ex : 300"></td>
       </tr>
     </tbody>
   </table>
+  <button (click)="addEvent()">Ajouter un événement</button>
   <div class="inscription">
     <label for="inscription">Inscription :</label>
-    <input type="number" id="inscription" placeholder="Ex : 100">
+    <input type="number" id="inscription" [(ngModel)]="inscriptionValue" placeholder="Ex : 100">
   </div>
-  <button id="save-values">Enregistrer les valeurs</button>
+  <button id="save-values" (click)="saveValues()">Enregistrer les valeurs</button>
 </div>
