@@ -129,8 +129,7 @@ export class ProjectsRecommander implements OnInit {
             switch (project.niveau?.trim()?.toLowerCase()) {
               case 'debutant': coins = 10; break;
               case 'intermediaire': coins = 20; break;
-              case 'avance': coins = 40; break;
-              case 'difficile': coins = 50; break;
+              case 'avance': coins = 50; break;
               case 'expert': coins = 70; break;
               default: coins = 100;
             }
