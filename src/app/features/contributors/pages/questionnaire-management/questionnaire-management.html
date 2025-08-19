@@ -1,0 +1,133 @@
+<div class="questionnaire-container">
+
+  <!-- Floating Button pour créer -->
+  <button *ngIf="viewMode === 'list'" class="fab-button animate-float" (click)="createQuestionnaire()">
+    <mat-icon>add</mat-icon>
+  </button>
+
+  <!-- LISTE DES QUESTIONNAIRES -->
+  <div *ngIf="viewMode === 'list'" class="fade-in">
+    <div class="header">
+      <h2>Questionnaires</h2>
+      <button mat-icon-button color="primary" (click)="loadQuestionnaires()">
+        <mat-icon>refresh</mat-icon>
+      </button>
+    </div>
+
+    <div *ngIf="questionnaires.length > 0" class="grid-list">
+      <div *ngFor="let q of questionnaires; let i = index" class="card-questionnaire fade-in" [style.animation-delay]="i * 0.05 + 's'">
+        <div class="card-header">
+          <h3>{{ q.titre }}</h3>
+          <span class="badge">{{ q.type }}</span>
+        </div>
+        <p class="card-desc">{{ q.description || 'No description' }}</p>
+        <div class="card-meta">
+          <span>{{ q.dureeEstimee }} min</span>
+          <span>{{ q.questions.length }} questions</span>
+        </div>
+        <div class="card-actions">
+          <button mat-icon-button color="primary" (click)="editQuestionnaire(q)">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button mat-icon-button color="accent" (click)="evaluateQuestionnaire(q)">
+            <mat-icon>quiz</mat-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="!questionnaires.length" class="empty-state fade-in">
+      <mat-icon class="empty-icon animate-float">quiz</mat-icon>
+      <h3>No Questionnaires Yet</h3>
+      <button mat-raised-button color="primary" (click)="createQuestionnaire()">Create Questionnaire</button>
+    </div>
+  </div>
+
+  <!-- FORMULAIRE CREATION/EDIT -->
+  <div *ngIf="viewMode === 'create' || viewMode === 'edit'" class="form-view fade-in">
+    <div class="form-header">
+      <h2>{{ viewMode === 'create' ? 'New Questionnaire' : 'Edit Questionnaire' }}</h2>
+      <p>Fill in the details below</p>
+    </div>
+
+    <form [formGroup]="questionnaireForm" (ngSubmit)="submitQuestionnaire()">
+
+      <div class="form-grid">
+        <mat-form-field appearance="outline">
+          <mat-label>Title</mat-label>
+          <input matInput formControlName="titre">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Type</mat-label>
+          <mat-select formControlName="type">
+            <mat-option value="GESTIONNAIRE">Manager</mat-option>
+            <mat-option value="CONTRIBUTEUR">Contributor</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Duration (min)</mat-label>
+          <input matInput type="number" formControlName="dureeEstimee">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Creator ID</mat-label>
+          <input matInput type="number" formControlName="contributeurId">
+        </mat-form-field>
+      </div>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Description</mat-label>
+        <textarea matInput formControlName="description"></textarea>
+      </mat-form-field>
+
+      <div class="questions-header">
+        <h3>Questions</h3>
+        <button mat-stroked-button color="primary" (click)="addQuestion()">
+          <mat-icon>add</mat-icon> Add Question
+        </button>
+      </div>
+
+      <div formArrayName="questions">
+        <div *ngFor="let question of questions.controls; let i = index" [formGroupName]="i" class="question-card fade-in">
+
+          <div class="question-header">
+            <h4>Question {{ i + 1 }}</h4>
+            <button mat-icon-button color="warn" (click)="removeQuestion(i)">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Question Text</mat-label>
+            <input matInput formControlName="question">
+          </mat-form-field>
+
+          <h5>Options</h5>
+          <div class="options-list">
+            <div *ngFor="let option of questions.at(i).get('options')!.value; let j = index" class="option-item">
+              <mat-checkbox [checked]="questions.at(i).get('indexReponse')!.value.includes(j.toString())"
+                            (change)="toggleOption(i,j,$event)">
+              </mat-checkbox>
+              <mat-form-field appearance="outline" class="flex-grow">
+                <input matInput [value]="option" (input)="updateOption(i,j,$event)">
+              </mat-form-field>
+            </div>
+          </div>
+
+          <button mat-button color="primary" type="button" (click)="addOption(i)">
+            <mat-icon>add</mat-icon> Add Option
+          </button>
+
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button mat-stroked-button type="button" (click)="cancel()">Cancel</button>
+        <button mat-raised-button color="primary" type="submit">Save</button>
+      </div>
+    </form>
+  </div>
+</div>

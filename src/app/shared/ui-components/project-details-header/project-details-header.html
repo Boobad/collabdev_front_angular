@@ -43,14 +43,16 @@
   <div class="project-actions" *ngIf="!loading && !error && project">
 
     <!-- Modifier / Supprimer -->
-    <ng-container *ngIf="project.status === 'EN_ATTENTE'">
-      <button class="btn btn-primary" (click)="openEditModal()">
-        <i class="fas fa-edit"></i> Modifier
-      </button>
-      <button class="btn btn-danger" (click)="openDeleteModal()">
-        <i class="fas fa-trash-alt"></i> Supprimer
-      </button>
-    </ng-container>
+<!-- Modifier / Supprimer -->
+<ng-container *ngIf="project.status === 'EN_ATTENTE'">
+  <button class="btn btn-primary" (click)="openEditModal()">
+    <i class="fas fa-edit"></i> Modifier
+  </button>
+  <button class="btn btn-danger" (click)="openDeleteModal()">
+    <i class="fas fa-trash-alt"></i> Supprimer
+  </button>
+</ng-container>
+
 
     <!-- ✅ Terminer projet -->
     <ng-container *ngIf="(isPorteur() || isGestionnaire()) && project.status === 'EN_COURS'">
@@ -77,16 +79,7 @@
   </div>
 </section>
 
-<!-- ✅ Modal Terminer -->
-<div class="modal-backdrop" *ngIf="showCompleteModal" (click)="closeCompleteModal()"></div>
-<div class="modal" *ngIf="showCompleteModal" (click)="$event.stopPropagation()">
-  <h3 class="modal-title">Terminer le projet ?</h3>
-  <p class="modal-text">Voulez-vous vraiment marquer ce projet comme <b>terminé</b> ?</p>
-  <div class="modal-actions">
-    <button class="btn btn-secondary" (click)="closeCompleteModal()">Annuler</button>
-    <button class="btn btn-success" (click)="completeProject()">Terminer</button>
-  </div>
-</div>
+
 
 
 <!-- Modal Partager -->
@@ -110,3 +103,35 @@
   </div>
   <button class="btn-close" (click)="closeShareModal()">Fermer</button>
 </div>
+
+<!-- ✅ Modal Terminer -->
+<!-- Modal Éditer -->
+<!-- Modal Edit -->
+ 
+<div class="modal-backdrop" *ngIf="showEditModal" (click)="closeEditModal()"></div>
+<div class="modal" *ngIf="showEditModal" (click)="$event.stopPropagation()">
+  <h3 class="modal-title">Modifier le projet</h3>
+  <form (ngSubmit)="updateProject()" #editForm="ngForm" class="modal-form">
+    <input type="text" [(ngModel)]="project.titre" name="titre" placeholder="Titre" required />
+    <textarea [(ngModel)]="project.description" name="description" placeholder="Description" required></textarea>
+    <select [(ngModel)]="project.secteur" name="secteur" required>
+      <option *ngFor="let s of secteurs" [value]="s">{{ s }}</option>
+    </select>
+    <div class="modal-actions">
+      <button type="button" class="btn btn-secondary" (click)="closeEditModal()">Annuler</button>
+      <button type="submit" class="btn btn-primary">Enregistrer</button>
+    </div>
+  </form>
+</div>
+
+<!-- Modal Supprimer -->
+<div class="modal-backdrop" *ngIf="showDeleteModal" (click)="closeDeleteModal()"></div>
+<div class="modal" *ngIf="showDeleteModal" (click)="$event.stopPropagation()">
+  <h3 class="modal-title">Supprimer le projet ?</h3>
+  <p class="modal-text">Voulez-vous vraiment <b>supprimer</b> ce projet ? Cette action est irréversible.</p>
+  <div class="modal-actions">
+    <button class="btn btn-secondary" (click)="closeDeleteModal()">Annuler</button>
+    <button class="btn btn-danger" (click)="deleteProject()">Supprimer</button>
+  </div>
+</div>
+
