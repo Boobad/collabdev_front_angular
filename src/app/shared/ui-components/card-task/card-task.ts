@@ -11,14 +11,7 @@ import { CdkDrag } from '@angular/cdk/drag-drop';
 })
 export class CardTask {
   @Input() task: any;
-  @Output() edit = new EventEmitter<void>();
-  @Output() delete = new EventEmitter<void>();
-  @Output() duplicate = new EventEmitter<void>();
-  @Output() archive = new EventEmitter<void>();
-  @Output() taskReserved = new EventEmitter<any>();
-
-  isDragging = false;
-  showMenu = false;
+  @Output() statusChange = new EventEmitter<{task: any, newStatus: string}>();
 
   getPriorityClass() {
     return {
@@ -28,73 +21,21 @@ export class CardTask {
     };
   }
 
-  getPriorityText() {
-    return this.task?.priority === 'high' ? 'HAUTE PRIORITÉ' :
-           this.task?.priority === 'medium' ? 'MOYENNE PRIORITÉ' : 'BASSE PRIORITÉ';
-  }
-
-  getTagClass(tag: string) {
+  getStatusClass() {
     return {
-      'frontend': tag === 'Frontend',
-      'backend': tag === 'Backend',
-      'ux': tag === 'UI/UX',
-      'design': tag === 'Design',
-      'devops': tag === 'DevOps',
-      'documentation': tag === 'Documentation'
+      'todo': this.task?.status === 'A_FAIRE',
+      'inprogress': this.task?.status === 'EN_COURS',
+      'done': this.task?.status === 'TERMINE'
     };
-  }
-
-  onDragStarted() {
-    this.isDragging = true;
-  }
-
-  onDragEnded() {
-    this.isDragging = false;
   }
 
   formatDate(dateString: string): string {
-    if (!dateString) return '';
-    const options: Intl.DateTimeFormatOptions = {
-      day: '2-digit',
-      month: 'short',
-      year: 'numeric'
+    if (!dateString) return 'Non spécifiée';
+    const options: Intl.DateTimeFormatOptions = { 
+      day: '2-digit', 
+      month: 'short', 
+      year: 'numeric' 
     };
     return new Date(dateString).toLocaleDateString('fr-FR', options);
-  }
-
-  reserveTask() {
-    if (this.task) {
-      this.task.reserved = !this.task.reserved;
-      this.taskReserved.emit(this.task);
-    }
-  }
-
-  toggleMenu(event: Event) {
-    event.stopPropagation();
-    this.showMenu = !this.showMenu;
-  }
-
-  closeMenu() {
-    this.showMenu = false;
-  }
-
-  onEdit() {
-    this.edit.emit();
-    this.closeMenu();
-  }
-
-  onDelete() {
-    this.delete.emit();
-    this.closeMenu();
-  }
-
-  onDuplicate() {
-    this.duplicate.emit();
-    this.closeMenu();
-  }
-
-  onArchive() {
-    this.archive.emit();
-    this.closeMenu();
   }
 }

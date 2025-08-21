@@ -1,9 +1,8 @@
-<!-- Modal d'achat coins -->
-<!-- Modal de paiement -->
+<!-- Modal paiement -->
 <div class="modal" [class.active]="isModalOpen" (click)="closeModal($event)">
   <div class="modal-content" (click)="$event.stopPropagation()">
     <span class="close" (click)="closeModal($event)">&times;</span>
-    
+
     <div class="modal-header">
       <i class="fas fa-coins modal-icon"></i>
       <h2>Acheter des coins</h2>
@@ -11,9 +10,7 @@
     </div>
 
     <div class="form-group">
-      <label for="provider">
-        <i class="fas fa-sim-card"></i> Opérateur
-      </label>
+      <label for="provider"><i class="fas fa-sim-card"></i> Opérateur</label>
       <select id="provider" [(ngModel)]="selectedProvider" class="modern-select">
         <option value="" disabled>-- Sélectionnez --</option>
         <option value="orange">Orange Money</option>
@@ -23,87 +20,43 @@
     </div>
 
     <div class="form-group">
-      <label for="phone">
-        <i class="fas fa-mobile-alt"></i> Numéro de téléphone
-      </label>
-      <input 
-        id="phone"
-        type="tel"
-        placeholder="+223 60 00 00 00"
-        [(ngModel)]="phoneNumber"
-        class="modern-input"
-      >
+      <label for="phone"><i class="fas fa-mobile-alt"></i> Numéro</label>
+      <input id="phone" type="tel" placeholder="+223 60 00 00 00" [(ngModel)]="phoneNumber" class="modern-input">
     </div>
 
     <div class="form-group">
-      <label for="amount">
-        <i class="fas fa-shopping-cart"></i> Quantité de coins
-      </label>
+      <label for="amount"><i class="fas fa-shopping-cart"></i> Quantité de coins</label>
       <div class="coins-selector">
-        <button (click)="adjustCoins(-1)" class="selector-btn">
-          <i class="fas fa-minus"></i>
-        </button>
-        <input 
-          id="amount"
-          type="number"
-          min="1"
-          [(ngModel)]="coinsToBuy"
-          class="coins-input"
-        >
-        <button (click)="adjustCoins(1)" class="selector-btn">
-          <i class="fas fa-plus"></i>
-        </button>
+        <button (click)="adjustCoins(-1)" class="selector-btn"><i class="fas fa-minus"></i></button>
+        <input id="amount" type="number" min="1" [(ngModel)]="coinsToBuy" class="coins-input">
+        <button (click)="adjustCoins(1)" class="selector-btn"><i class="fas fa-plus"></i></button>
       </div>
     </div>
 
     <div class="pricing-info">
-      <div class="price-item">
-        <span>Coins:</span>
-        <span class="coins-value">{{ coinsToBuy }}</span>
-      </div>
-      <div class="price-item">
-        <span>Prix total:</span>
-        <span class="price-value">{{ coinsToBuy * 10 }} FCFA</span>
-      </div>
+      <div class="price-item"><span>Coins:</span> <span class="coins-value">{{ coinsToBuy }}</span></div>
+      <div class="price-item"><span>Prix total:</span> <span class="price-value">{{ coinsToBuy*10 }} FCFA</span></div>
     </div>
 
-    <button class="payment-btn" (click)="submitPayment()">
-      <i class="fas fa-lock"></i> Payer {{ coinsToBuy * 10 }} FCFA
-    </button>
-
-    <div class="security-info">
-      <i class="fas fa-shield-alt"></i>
-      <span>Paiement sécurisé - Vos données sont cryptées</span>
-    </div>
+    <button class="payment-btn" (click)="submitPayment()"><i class="fas fa-lock"></i> Payer {{ coinsToBuy*10 }} FCFA</button>
   </div>
 </div>
 
 <div class="container">
-            <div class="page-header">
-            <div class="page-title">
-                <h1><i class="fas fa-coins"></i> Boutique de coins</h1>
-                <p>Utilisez vos coins pour déverrouiller des projets exclusifs</p>
-            </div>
-            <button class="btn btn-primary" (click)="openModal()">
-                <i class="fas fa-plus"></i> Acheter des coins
-            </button>
-        </div>
+  <div class="page-header">
+    <div class="page-title">
+      <h1><i class="fas fa-coins"></i> Boutique de coins</h1>
+      <p>Utilisez vos coins pour déverrouiller des projets exclusifs</p>
+    </div>
+    <button class="btn btn-primary" (click)="openModal()"><i class="fas fa-plus"></i> Acheter des coins</button>
+  </div>
 
-        <div class="balance-card">
-            <div class="balance-title">
-                <i class="fas fa-wallet"></i> Votre solde
-            </div>
-            <div class="balance-amount">
-                 {{ totalCoins }} <small>coins</small>
-            </div>
-            <div class="balance-actions">
-                <button class="btn btn-secondary" style="background-color: rgba(255, 255, 255, 0.2); color: white; border-color: white;">
-                    <i class="fas fa-gift"></i> Utiliser un code promo
-                </button>
-                <button class="btn btn-secondary" style="background-color: rgba(255, 255, 255, 0.2); color: white; border-color: white;">
-                    <i class="fas fa-history"></i> Historique complet
-                </button>
-            </div>
-        </div>
-        <app-coins-tab></app-coins-tab>
+  <div class="balance-card">
+    <div class="balance-title"><i class="fas fa-wallet"></i> Votre solde</div>
+    <div class="balance-amount">{{ totalCoins }} <small>coins</small></div>
+  </div>
+
+  <app-coins-tab></app-coins-tab>
+
+
 </div>

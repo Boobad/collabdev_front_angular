@@ -1,21 +1,50 @@
-<div class="notification">
-  <div class="titre">
-    <h1>Notifications</h1>
-    <i class="fa fa-times" (click)="closeNotification()"></i>
+<div class="notification-panel">
+  <div class="notification-header">
+    <h1 class="notification-title">Notifications</h1>
+    <div class="notification-actions">
+      <button *ngIf="notifications.length > 0" (click)="markAllAsRead()" class="mark-all-btn">
+        <i class="fas fa-check-double"></i> Tout marquer comme lu
+      </button>
+      <button (click)="closeNotification()" class="close-btn">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
   </div>
 
-  <div class="lines"></div>
+  <div class="divider"></div>
 
-  <ng-container *ngFor="let notif of [1, 2, 3, 4]">
-    <div class="details">
-      <div class="icon">
-        <i class="fa fa-bell"></i>
+  <!-- En cours de chargement -->
+  <div *ngIf="isLoading" class="loading-state">
+    <div class="loading-spinner"></div>
+    <span>Chargement des notifications...</span>
+  </div>
+
+  <!-- Message d'erreur -->
+  <div *ngIf="errorMessage" class="error-message">
+    <i class="fas fa-exclamation-circle"></i>
+    <span>{{ errorMessage }}</span>
+  </div>
+
+  <!-- Liste des notifications -->
+  <div class="notification-list" *ngIf="!isLoading && notifications.length > 0">
+    <div *ngFor="let notif of notifications" class="notification-item" [class.unread]="!notif.read">
+      <div class="notification-icon">
+        <i [class]="getNotificationIcon(notif.type)"></i>
       </div>
-      <div class="info">
-        <h1>Contenu de la notification</h1>
-        <p>Il y a 2 heures</p>
+      <div class="notification-content">
+        <h3 class="notification-subject">{{ notif.sujet }}</h3>
+        <p class="notification-message">{{ notif.message }}</p>
+        <span class="notification-time">{{ notif.time | date:'shortTime' }}</span>
       </div>
+      <button (click)="markAsRead(notif.id)" class="mark-read-btn" title="Marquer comme lu">
+        <i class="fas fa-check"></i>
+      </button>
     </div>
-    <div class="lines"></div>
-  </ng-container>
+  </div>
+
+  <!-- Aucun résultat -->
+  <div *ngIf="!isLoading && notifications.length === 0" class="empty-state">
+    <i class="fas fa-bell-slash"></i>
+    <p>Aucune nouvelle notification</p>
+  </div>
 </div>

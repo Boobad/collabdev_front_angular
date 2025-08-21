@@ -1,89 +1,95 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
+import { Location } from '@angular/common';
 
-import { Router } from '@angular/router';
-import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-
+import { ParticipantsService } from '../../../../core/services/participants.service';
 
 @Component({
   selector: 'app-liste-demande-participation',
-  imports: [CommonModule, FormsModule],
   standalone: true,
+  imports: [CommonModule, FormsModule],
   templateUrl: './liste-demande-participation.html',
   styleUrls: ['./liste-demande-participation.css']
 })
-export class ListeDemandeParticipation {
-   searchQuery = '';
+export class ListeDemandeParticipation implements OnInit {
+  searchQuery = '';
   statusFilter = 'all';
   currentPage = 1;
   itemsPerPage = 5;
   totalPages = 1;
 
-  allCandidates = [
-    {
-      id: 1,
-      name: 'Sogoba Nunu',
-      email: 'ab94604191@gmail.com',
-      date: '15/06/2023',
-      status: 'pending',
-      score: 85,
-      notifications: 0
-    },
-    {
-      id: 2,
-      name: 'Malmartou Nunu',
-      email: 'Malmartou@gmail.com',
-      date: '22/02/2023',
-      status: 'approved',
-      score: 92,
-      notifications: 1
-    },
-    {
-      id: 3,
-      name: 'B2o Nunu',
-      email: 'bakarydiallo312@gmail.com',
-      date: '22/02/2023',
-      status: 'rejected',
-      score: 45,
-      notifications: 0
-    },
-    {
-      id: 4,
-      name: 'Alice Dupont',
-      email: 'alice.dupont@example.com',
-      date: '10/05/2023',
-      status: 'pending',
-      score: 78,
-      notifications: 0
-    },
-    {
-      id: 5,
-      name: 'Jean Martin',
-      email: 'jean.martin@example.com',
-      date: '05/07/2023',
-      status: 'approved',
-      score: 88,
-      notifications: 2
+  allCandidates: any[] = [];
+  filteredCandidates: any[] = [];
+
+  constructor(
+    private router: Router,
+    private route: ActivatedRoute,
+    private participantsService: ParticipantsService,
+    private location: Location,
+    private cdr: ChangeDetectorRef
+  ) {}
+
+  ngOnInit() {
+    const idProjetParam = this.route.snapshot.paramMap.get('idProjet');
+    const idProjet = Number(idProjetParam);
+
+    if (!idProjet || isNaN(idProjet) || idProjet <= 0) {
+      console.error(`❌ ID projet invalide : "${idProjetParam}"`);
+      // On peut rediriger vers une page d'erreur ou le dashboard
+      this.router.navigate(['/dashboard']);
+      return;
     }
-  ];
 
-  filteredCandidates = [...this.allCandidates];
-
-  constructor(private router: Router) {
-    this.calculateTotalPages();
+    console.log(`✅ ID projet détecté : ${idProjet}`);
+    this.loadParticipants(idProjet);
   }
 
-  // Navigation
-  goBack() {
-    this.router.navigate(['/dashboard']); // Adaptez selon votre routing
+  loadParticipants(idProjet: number) {
+    console.log(`📡 Chargement des participants du projet ${idProjet}...`);
+
+    this.participantsService.getParticipantsByProject(idProjet).subscribe({
+      next: (data) => {
+        console.log(`✅ ${data.length} participants reçus depuis l'API`);
+        this.allCandidates = data.map((p) => ({
+          id: p.id,
+          name: `${p.contributeurPrenom} ${p.contributeurNom}`,
+          email: p.contributeurEmail,
+          date: '', // non fourni par l’API
+          profil: p.profil,
+          projetTitre: p.projetTitre,
+          status: this.mapStatut(p.statut),
+          score: parseInt(p.scoreQuiz, 10) || 0,
+          notifications: 0
+        }));
+        this.filteredCandidates = [...this.allCandidates];
+        this.calculateTotalPages();
+        this.cdr.detectChanges(); // Forcer Angular à rafraîchir l'affichage
+      },
+      error: (err) => {
+        console.error('❌ Erreur lors du chargement des participants', err);
+      }
+    });
   }
 
-  // Filtrage et recherche
+  mapStatut(apiStatut: string): string {
+    switch (apiStatut) {
+      case 'ACCEPTE': return 'approved';
+      case 'REFUSE': return 'rejected';
+      case 'EN_ATTENTE': return 'pending';
+      default: return 'pending';
+    }
+  }
+
+ goBack() {
+  this.location.back();
+}
+
   filterCandidates() {
     this.filteredCandidates = this.allCandidates.filter(candidate => {
       const matchesSearch = candidate.name.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
-                          candidate.email.toLowerCase().includes(this.searchQuery.toLowerCase());
+                            candidate.email.toLowerCase().includes(this.searchQuery.toLowerCase());
       const matchesStatus = this.statusFilter === 'all' || candidate.status === this.statusFilter;
       return matchesSearch && matchesStatus;
     });
@@ -91,7 +97,6 @@ export class ListeDemandeParticipation {
     this.calculateTotalPages();
   }
 
-  // Gestion des statuts
   updateStatus(id: number, status: 'approved' | 'rejected') {
     const candidate = this.allCandidates.find(c => c.id === id);
     if (candidate) {
@@ -107,7 +112,6 @@ export class ListeDemandeParticipation {
     }
   }
 
-  // Pagination
   calculateTotalPages() {
     this.totalPages = Math.ceil(this.filteredCandidates.length / this.itemsPerPage) || 1;
   }
@@ -133,7 +137,6 @@ export class ListeDemandeParticipation {
     this.currentPage = page;
   }
 
-  // Helpers
   getStatusText(status: string): string {
     const statusTexts: Record<string, string> = {
       pending: 'En attente',

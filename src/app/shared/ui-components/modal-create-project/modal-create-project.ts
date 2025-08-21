@@ -1,9 +1,11 @@
 import { Component } from '@angular/core';
 import { ProjectPayload, ProjectsService } from '../../../core/projects-service';
 import { Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-modal-create-project',
+  imports: [CommonModule],
   templateUrl: './modal-create-project.html',
   styleUrls: ['./modal-create-project.css']
 })
@@ -32,7 +34,7 @@ export class ModalCreateProject {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length) {
       this.selectedFile = input.files[0];
-      this.fileName = this.selectedFile?.name || 'Fichier sélectionné';
+      this.fileName = this.selectedFile.name;
     } else {
       this.selectedFile = null;
       this.fileName = 'Aucun fichier sélectionné';
@@ -44,13 +46,13 @@ export class ModalCreateProject {
     this.isSubmitting = true;
 
     const form = event.target as HTMLFormElement;
-    const formData = new FormData(form);
 
-    const titre = formData.get('projectTitle') as string;
-    const description = formData.get('projectDescription') as string;
-    const domaine = (formData.get('projectDomain') as string || '').toUpperCase();
-    const secteur = (formData.get('projectSector') as string || '').toUpperCase();
-    const role = (formData.get('projectRole') as string) || 'ideator';
+    // Récupération des valeurs
+    const titre = (form.querySelector('#projectTitle') as HTMLInputElement).value.trim();
+    const description = (form.querySelector('#projectDescription') as HTMLTextAreaElement).value.trim();
+    const domaine = (form.querySelector('#projectDomain') as HTMLSelectElement).value.toUpperCase();
+    const secteur = (form.querySelector('#projectSector') as HTMLSelectElement).value.toUpperCase();
+    const role = (form.querySelector('input[name="projectRole"]:checked') as HTMLInputElement)?.value || 'PORTEUR_DE_PROJET';
 
     if (!titre || !description || !secteur) {
       alert('Veuillez remplir les champs obligatoires');
@@ -69,45 +71,32 @@ export class ModalCreateProject {
       const user = JSON.parse(userStr);
       const userId = user.id;
 
-      let fileUrl: string | undefined;
+      const projectPayload: ProjectPayload = { titre, description, domaine, secteur, role };
+
+      // Création du FormData pour l’upload multipart
+      const formData = new FormData();
+      formData.append('projet', new Blob([JSON.stringify(projectPayload)], { type: 'application/json' }));
       if (this.selectedFile) {
-        try {
-          const uploadResponse = await this.projectsService.uploadFile(this.selectedFile).toPromise();
-          fileUrl = uploadResponse?.fileUrl;
-        } catch (uploadError) {
-          console.error('Erreur lors de l\'upload:', uploadError);
-          alert('Erreur lors de l\'upload du fichier');
-          this.isSubmitting = false;
-          return;
-        }
+        formData.append('cahierDesCharges', this.selectedFile, this.selectedFile.name);
       }
 
-      const projectPayload: ProjectPayload = {
-        titre: titre.trim(),
-        description: description.trim(),
-        domaine,
-        secteur,
-        urlCahierDeCharge: fileUrl,
-        role
-      };
-
-      this.projectsService.createProject(userId, projectPayload).subscribe({
-        next: (response) => {
+      this.projectsService.createProjectMultipart(userId, formData).subscribe({
+        next: (response: any) => {
           this.lastCreatedProjectId = response.id;
           this.showSuccessModal();
           this.resetForm(form);
           this.closeModal();
           this.isSubmitting = false;
         },
-        error: (err) => {
+        error: (err: any) => {
           console.error('Erreur création projet:', err);
-          alert(`Erreur lors de la création: ${err.error?.message || err.message}`);
+          alert(`Erreur lors de la création du projet: ${err.error?.message || err.message}`);
           this.isSubmitting = false;
         }
       });
 
-    } catch (error) {
-      console.error('Error:', error);
+    } catch (error: any) {
+      console.error('Erreur inattendue:', error);
       alert('Une erreur inattendue est survenue');
       this.isSubmitting = false;
     }

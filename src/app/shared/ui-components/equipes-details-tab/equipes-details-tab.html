@@ -1,25 +1,66 @@
 <div id="team" class="tab-content">
   <div class="team-header">
-    <h2>Équipe du Projet</h2>
-    <button class="btn btn-primary"><i class="fas fa-user-plus"></i> Inviter un membre</button>
-  </div>
-
-  <div class="team-stats">
-    <div class="stat-card">
-      <div class="stat-value">{{ participants.length }}</div>
-      <div class="stat-label">Membres</div>
+    <div class="header-content">
+      <h2><i class="fas fa-users"></i> Équipe du Projet</h2>
+      <p class="subtitle">Gérez les membres et leurs contributions au projet</p>
     </div>
-    <!-- Autres stats si nécessaire -->
   </div>
 
-  <div class="participants-list">
-    <h3>Liste des participants</h3>
-    <ul>
-      <li *ngFor="let p of participants">
-        <strong>{{ p.contributeurPrenom }} {{ p.contributeurNom }}</strong> -
-        {{ p.profil }} - Statut: {{ p.statut }} - Score Quiz: {{ p.scoreQuiz }}
-        <span *ngIf="p.estDebloque">✔️ Débloqué</span>
-      </li>
-    </ul>
+  <div class="team-grid">
+    <!-- Section Participants Acceptés -->
+    <div class="participants-section">
+      <div class="section-header">
+        <h3><i class="fas fa-check-circle"></i> Participants Acceptés</h3>
+        <div class="search-box">
+          <i class="fas fa-search"></i>
+          <input type="text" placeholder="Rechercher un membre..." (input)="filterParticipants($event)">
+        </div>
+      </div>
+      <div class="participants-list">
+        <div class="participant-card" *ngFor="let p of acceptedParticipants">
+          <div class="participant-avatar">
+            <img [src]="getAvatarUrl(p)" alt="{{ p.contributeurPrenom }} {{ p.contributeurNom }}">
+          </div>
+          <div class="participant-info">
+            <h4>{{ p.contributeurPrenom }} {{ p.contributeurNom }}</h4>
+            <div class="participant-meta">
+              <span class="badge role-badge">{{ p.profil }}</span>
+              <!-- <span class="badge status-badge" [ngClass]="getStatusClass(p.statut)">{{ p.statut }}</span> -->
+            </div>
+            <div class="participant-details">
+              <div class="detail-item"><i class="fas fa-envelope"></i>{{ p.contributeurEmail }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section Participants En Attente -->
+    <div class="participants-section">
+      <div class="section-header">
+        <h3><i class="fas fa-hourglass-half"></i> Demandes en attente</h3>
+      </div>
+      <div class="participants-list">
+        <div class="participant-card" *ngFor="let p of pendingParticipants">
+          <div class="participant-avatar">
+            <img [src]="getAvatarUrl(p)" alt="{{ p.contributeurPrenom }} {{ p.contributeurNom }}">
+          </div>
+          <div class="participant-info">
+            <h4>{{ p.contributeurPrenom }} {{ p.contributeurNom }}</h4>
+            <div class="participant-meta">
+              <span class="badge role-badge">{{ p.profil }}</span>
+              <!-- <span class="badge status-badge" [ngClass]="getStatusClass(p.statut)">{{ p.statut }}</span> -->
+            </div>
+            <div class="participant-details">
+              <div class="detail-item"><i class="fas fa-envelope"></i>{{ p.contributeurEmail }}</div>
+            </div>
+          </div>
+          <div class="participant-actions">
+            <button class="btn-accept" (click)="acceptParticipant(p.id)">Accepter</button>
+            <button class="btn-reject" (click)="rejectParticipant(p.id)">Refuser</button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>

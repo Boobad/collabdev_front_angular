@@ -1,61 +1,293 @@
 <!-- workspace-project.html -->
-<app-wspace-page-header></app-wspace-page-header>
+<header class="project-header">
+  <div class="header-content">
+    <button class="btn btn-back" (click)="goBack()">
+      <i class="fas fa-arrow-left"></i> Retour
+    </button>
 
-<main class="modern-page-layout">
-  <!-- Colonne gauche : Kanban -->
+    <h1>{{ projectDetails.titre || 'Chargement...' }}</h1>
+    <p class="project-description">{{ projectDetails.description }}</p>
+
+    <div class="project-meta">
+      <span class="meta-item">
+        <i class="fas fa-users"></i>
+        {{ projectDetails.nombreParticipants || 0 }} participants
+      </span>
+
+      <span class="meta-item">
+        <i class="fas fa-tasks"></i>
+        {{ tachesTerminees }}/{{ totalTaches }} tâches terminées
+        ({{ getProgressPercentage() }}%)
+      </span>
+
+      <span class="meta-item">
+        <i class="fas fa-calendar"></i>
+        Créé le {{ projectDetails.dateCreation | date:'dd/MM/yyyy' }}
+      </span>
+    </div>
+
+    <div class="progress-container">
+      <div class="progress-bar">
+        <div class="progress-fill"
+             [style.width]="getProgressPercentage() + '%'"
+             [style.background-color]="getProgressPercentage() === 100 ? '#43a047' :
+                                        getProgressPercentage() >= 50 ? '#fb8c00' :
+                                        getProgressPercentage() > 0 ? '#1e88e5' : '#9e9e9e'">
+        </div>
+      </div>
+    </div>
+  </div>
+
+ <div class="header-actions" *ngIf="hasManager">
+  <button class="btn btn-primary" (click)="toggleNewFeatureForm()">
+    <i class="fas fa-plus"></i> Nouvelle fonctionnalité
+  </button>
+</div>
+
+</header>
+
+<!-- Modal pour nouvelle fonctionnalité -->
+<div class="modal-overlay" [class.active]="showNewFeatureForm" (click)="handleOverlayClick($event)">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3>Créer une nouvelle fonctionnalité</h3>
+      <button class="modal-close" (click)="toggleNewFeatureForm()">&times;</button>
+    </div>
+    <div class="modal-body">
+      <form (ngSubmit)="createFeature()" #featureForm="ngForm">
+        <div class="form-group">
+          <label for="titre">Titre *</label>
+          <input type="text" id="titre" name="titre" class="form-control"
+                 required [(ngModel)]="newFeature.titre">
+        </div>
+
+        <div class="form-group">
+          <label for="contenu">Description *</label>
+          <textarea id="contenu" name="contenu" class="form-control"
+                    required [(ngModel)]="newFeature.contenu"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="dateEcheance">Date d'échéance *</label>
+          <input type="date" id="dateEcheance" name="dateEcheance" class="form-control"
+                 required [(ngModel)]="newFeature.dateEcheance">
+        </div>
+
+        <div class="form-group">
+          <label for="participant">Assigner à (optionnel)</label>
+          <div class="participant-select">
+            <select id="participant" name="participant" class="form-control"
+                    [(ngModel)]="newFeature.participantId">
+              <option [ngValue]="null">Non assigné</option>
+              <option *ngFor="let p of projectParticipants" [ngValue]="p.id">
+                {{ p.contributeurPrenom }} {{ p.contributeurNom }} - {{ p.profil }}
+              </option>
+            </select>
+            <div class="participant-avatar">
+              <i class="fas fa-user-circle"></i>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="importance">Importance *</label>
+          <select id="importance" name="importance" class="form-control"
+                  required [(ngModel)]="newFeature.importance">
+            <option value="HAUTE">Haute</option>
+            <option value="MOYENNE" selected>Moyenne</option>
+            <option value="FAIBLE">Faible</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="statusFeatures">Statut initial *</label>
+          <select id="statusFeatures" name="statusFeatures" class="form-control"
+                  required [(ngModel)]="newFeature.statusFeatures">
+            <option value="A_FAIRE" selected>À faire</option>
+            <option value="EN_COURS">En cours</option>
+            <option value="TERMINE">Terminé</option>
+          </select>
+        </div>
+        <!-- Exigences -->
+        <div class="form-group">
+          <label>Exigences</label>
+          <div *ngFor="let exigence of newFeature.exigences; let i = index; trackBy: trackByIndex" class="multi-value-item">
+            <input type="text"
+              [(ngModel)]="newFeature.exigences[i]"
+              name="exigence{{i}}"
+              class="form-control"
+              placeholder="Saisir une exigence"
+              required
+              >
+            <button type="button" class="btn btn-danger btn-sm" (click)="removeExigence(i)">✕</button>
+          </div>
+          <button type="button" class="btn btn-secondary btn-sm mt-1" (click)="addExigence()">+ Ajouter une exigence</button>
+        </div>
+
+        <!-- Critères d'acceptation -->
+        <div class="form-group">
+          <label>Critères d'acceptation</label>
+          <div *ngFor="let critere of newFeature.criteresAcceptation; let j = index; trackBy: trackByIndex" class="multi-value-item">
+            <input type="text"
+              [(ngModel)]="newFeature.criteresAcceptation[j]"
+              name="critere{{j}}"
+              class="form-control"
+              placeholder="Saisir un critère"
+              required
+              >
+            <button type="button" class="btn btn-danger btn-sm" (click)="removeCritere(j)">✕</button>
+          </div>
+          <button type="button" class="btn btn-secondary btn-sm mt-1" (click)="addCritere()">+ Ajouter un critère</button>
+        </div>
+
+        <div class="form-group">
+          <label for="motsCles">Mots-clés (séparés par virgule)</label>
+          <input type="text" id="motsCles" name="motsCles" class="form-control"
+                 [(ngModel)]="newFeature.motsClesStr" placeholder="ex: login, sécurité">
+        </div>
+
+        <div class="form-footer">
+          <button type="button" class="btn btn-secondary" (click)="toggleNewFeatureForm()">
+            Annuler
+          </button>
+          <button type="submit" class="btn btn-primary" [disabled]="featureForm.invalid || isCreating">
+            <span *ngIf="!isCreating">Créer</span>
+            <span *ngIf="isCreating">
+              <i class="fas fa-spinner fa-spin"></i> Création...
+            </span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de feedback pour création de fonctionnalité -->
+<div class="modal-overlay" [class.active]="showFeedbackModal" (click)="closeFeedbackModal()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3>{{ feedbackTitle }}</h3>
+      <button class="modal-close" (click)="closeFeedbackModal()">&times;</button>
+    </div>
+
+    <div class="modal-body">
+      <div class="feedback-content">
+        <div class="feedback-icon" [ngClass]="{'success': isFeedbackSuccess, 'error': !isFeedbackSuccess}">
+          <i *ngIf="isFeedbackSuccess" class="fas fa-check-circle"></i>
+          <i *ngIf="!isFeedbackSuccess" class="fas fa-exclamation-circle"></i>
+        </div>
+
+        <p>{{ feedbackMessage }}</p>
+
+        <div class="feedback-actions">
+          <button *ngIf="isFeedbackSuccess" class="btn btn-view" (click)="viewCreatedFeature()">
+            <i class="fas fa-eye"></i> Voir la fonctionnalité
+          </button>
+          <button class="btn btn-close" (click)="closeFeedbackModal()">
+            Fermer
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Navigation Tabs -->
+<nav class="project-tabs">
+  <button class="tab-btn"
+          [class.active]="activeTab === 'kanban'"
+          (click)="changeTab('kanban')">
+    <i class="fas fa-table-columns"></i> Kanban
+  </button>
+
+  <button class="tab-btn"
+          [class.active]="activeTab === 'documents'"
+          (click)="changeTab('documents')">
+    <i class="fas fa-folder"></i> Documents
+  </button>
+</nav>
+
+<!-- Kanban Tab Content -->
+<main class="modern-page-layout" *ngIf="activeTab === 'kanban'">
   <section class="modern-kanban" cdkDropListGroup>
-    <!-- Colonne À faire -->
-    <div class="kanban-column todo"
+    <!-- Todo Column -->
+    <div id="todo-column" class="kanban-column todo"
          cdkDropList
          [cdkDropListData]="todoTasks"
-         (cdkDropListDropped)="drop($event)">
+         (cdkDropListDropped)="drop($event)"
+         [id]="'cdk-drop-list-0'">
       <div class="column-header">
         <h2>À faire <span class="count-bubble">{{todoTasks.length}}</span></h2>
-        <button class="add-task-btn" (click)="addTask('todo')">+</button>
       </div>
       <div class="cards-container">
         <app-card-task *ngFor="let task of todoTasks; trackBy: trackById"
                       cdkDrag
-                      [task]="task">
+                      [task]="task"
+                      [id]="'task-' + task.id">
         </app-card-task>
       </div>
     </div>
 
-    <!-- Colonne En cours -->
-    <div class="kanban-column in-progress"
+    <!-- In Progress Column -->
+    <div id="inprogress-column" class="kanban-column in-progress"
          cdkDropList
          [cdkDropListData]="inProgressTasks"
-         (cdkDropListDropped)="drop($event)">
+         (cdkDropListDropped)="drop($event)"
+         [id]="'cdk-drop-list-1'">
       <div class="column-header">
         <h2>En cours <span class="count-bubble">{{inProgressTasks.length}}</span></h2>
-        <button class="add-task-btn" (click)="addTask('inProgress')">+</button>
       </div>
       <div class="cards-container">
         <app-card-task *ngFor="let task of inProgressTasks; trackBy: trackById"
                       cdkDrag
-                      [task]="task">
+                      [task]="task"
+                      [id]="'task-' + task.id">
         </app-card-task>
       </div>
     </div>
 
-    <!-- Colonne Terminé -->
-    <div class="kanban-column done"
+    <!-- Done Column -->
+    <div id="done-column" class="kanban-column done"
          cdkDropList
          [cdkDropListData]="doneTasks"
-         (cdkDropListDropped)="drop($event)">
+         (cdkDropListDropped)="drop($event)"
+         [id]="'cdk-drop-list-2'">
       <div class="column-header">
         <h2>Terminé <span class="count-bubble">{{doneTasks.length}}</span></h2>
-        <button class="add-task-btn" (click)="addTask('done')">+</button>
       </div>
       <div class="cards-container">
         <app-card-task *ngFor="let task of doneTasks; trackBy: trackById"
                       cdkDrag
-                      [task]="task">
+                      [task]="task"
+                      [id]="'task-' + task.id">
         </app-card-task>
       </div>
     </div>
   </section>
-
-  <!-- Colonne droite : Discussion -->
-  <!-- <app-wspace-page-right-side></app-wspace-page-right-side> -->
 </main>
+
+<!-- Discussion Tab Content -->
+<div *ngIf="activeTab === 'discussion'" class="discussion-tab">
+  <div class="empty-state">
+    <i class="fas fa-comments"></i>
+    <h3>Discussion du projet</h3>
+    <p>Cette fonctionnalité sera disponible prochainement</p>
+  </div>
+</div>
+
+<!-- Documents Tab Content -->
+<div *ngIf="activeTab === 'documents'" class="documents-tab">
+  <div class="empty-state">
+    <i class="fas fa-folder-open"></i>
+    <h3>Documents du projet</h3>
+    <p>Cette fonctionnalité sera disponible prochainement</p>
+  </div>
+</div>
+
+<!-- Loading Overlay -->
+<div *ngIf="isLoading" class="loading-overlay">
+  <div class="loading-spinner">
+    <i class="fas fa-spinner fa-spin"></i>
+    <span>Chargement des données...</span>
+  </div>
+</div>

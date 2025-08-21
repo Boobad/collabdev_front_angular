@@ -29,6 +29,10 @@ export class ProjectsService {
     return this.http.get<Project>(apiUrl(`/projets/${id}`))
   }
 
+    completeProject(id: string) {
+  return this.http.patch<any>(`http://localhost:8080/api/v1/projets/${id}/complete`, {});
+}
+
   create(payload: ProjectCreateRequest): Observable<Project> {
     if (payload.cahierDesChargesFile) {
       const fd = new FormData()
@@ -46,13 +50,23 @@ export class ProjectsService {
     return this.http.post<Project>(apiUrl("/projets"), payload)
   }
 
-  update(id: ID, patch: Partial<Project>): Observable<Project> {
-    return this.http.put<Project>(apiUrl(`/projets/${id}`), patch)
-  }
 
   remove(id: ID): Observable<MessageResponse> {
     return this.http.delete<MessageResponse>(apiUrl(`/projets/${id}`))
   }
+
+private baseUrl = apiUrl(`/projets`);
+
+deleteProject(id: number): Observable<void> {
+  // Exemple pour la route sécurisée avec idCreateur
+  const userId = localStorage.getItem('userId');
+  return this.http.delete<void>(`${this.baseUrl}/${id}/createur/${userId}`);
+}
+
+update(id: number, project: any): Observable<any> {
+  const userId = localStorage.getItem('userId');
+  return this.http.put<any>(`${this.baseUrl}/${id}/createur/${userId}`, project);
+}
 
   // Share idea endpoint (projects/partager)
   shareIdea(payload: ProjectCreateRequest): Observable<Project> {
@@ -68,4 +82,9 @@ export class ProjectsService {
     if (payload.cahierDesChargesFile) fd.set("cahierDesCharges", payload.cahierDesChargesFile)
     return this.http.post<Project>(apiUrl("/projets/partager"), fd)
   }
+
+  getParticipants(projectId: string) {
+  return this.http.get<any[]>(apiUrl(`/participants/projet/${projectId}`));
+}
+
 }

@@ -1,4 +1,8 @@
 <div class="container">
+  <button type="button" class="btn btn-secondary" (click)="goBack()">
+    Retour
+</button>
+
   <form
     id="participationForm"
     (ngSubmit)="onSubmit()"
@@ -10,52 +14,43 @@
       <p>Remplissez ce formulaire pour contribuer à ce projet collaboratif</p>
     </div>
 
-    <!-- Informations personnelles -->
-    <div class="form-group">
-      <label for="fullname" class="form-label required-field"
-        >Nom complet</label
-      >
-      <input
-        type="text"
-        id="fullname"
-        class="form-control"
-        [(ngModel)]="formData.fullname"
-        name="fullname"
-        required
-        #fullname="ngModel"
-      />
-      <div
-        *ngIf="fullname.invalid && (fullname.dirty || fullname.touched)"
-        class="error"
-      >
-        Le nom complet est requis.
-      </div>
-    </div>
+    <!-- Nom complet -->
+  <!-- Nom complet -->
+<div class="form-group">
+  <label for="fullname" class="form-label required-field">Nom complet</label>
+  <input
+    type="text"
+    id="fullname"
+    class="form-control readonly-field"
+    [(ngModel)]="formData.fullname"
+    name="fullname"
+    required
+    #fullname="ngModel"
+    readonly
+  />
+</div>
 
-    <div class="form-group">
-      <label for="email" class="form-label required-field">Email</label>
-      <input
-        type="email"
-        id="email"
-        class="form-control"
-        [(ngModel)]="formData.email"
-        name="email"
-        required
-        email
-        #email="ngModel"
-      />
-      <div
-        *ngIf="email.invalid && (email.dirty || email.touched)"
-        class="error"
-      >
-        Veuillez entrer un email valide.
-      </div>
-    </div>
+<!-- Email -->
+<div class="form-group">
+  <label for="email" class="form-label required-field">Email</label>
+  <input
+    type="email"
+    id="email"
+    class="form-control readonly-field"
+    [(ngModel)]="formData.email"
+    name="email"
+    required
+    email
+    #email="ngModel"
+    readonly
+  />
+</div>
 
-    <div class="form-group">
-      <label for="portfolio" class="form-label"
-        >Lien vers portfolio/profil (GitHub, Behance, etc.)</label
-      >
+    <!-- Portfolio -->
+    <!-- <div class="form-group">
+      <label for="portfolio" class="form-label">
+        Lien vers portfolio/profil (GitHub, Behance, etc.)
+      </label>
       <input
         type="url"
         id="portfolio"
@@ -63,13 +58,11 @@
         [(ngModel)]="formData.portfolio"
         name="portfolio"
       />
-    </div>
+    </div> -->
 
     <!-- Rôle souhaité -->
     <div class="form-group">
-      <label class="form-label required-field"
-        >Je souhaite contribuer en tant que :</label
-      >
+      <label class="form-label required-field">Je souhaite contribuer en tant que :</label>
       <div class="role-options">
         <label
           class="role-card"
@@ -132,35 +125,46 @@
       </div>
     </div>
 
-    <!-- Motivations -->
-    <div class="form-group">
-      <label for="motivation" class="form-label required-field"
-        >Vos motivations</label
-      >
-      <textarea
-        id="motivation"
-        class="form-control"
-        [(ngModel)]="formData.motivation"
-        name="motivation"
-        required
-        minlength="200"
-        #motivation="ngModel"
-        (input)="updateMotivationCount()"
-      ></textarea>
-      <small>{{ motivationMessage }}</small>
-      <div
-        *ngIf="motivation.invalid && (motivation.dirty || motivation.touched)"
-        class="error"
-      >
-        Veuillez décrire vos motivations en au moins 200 caractères.
-      </div>
-    </div>
+<!-- Motivations -->
+<div class="form-group">
+  <label for="motivation" class="form-label required-field">Vos motivations</label>
+  <textarea
+    id="motivation"
+    class="form-control"
+    [ngClass]="{ 'valid-input': formData.motivation.length >= 200 }"
+    [(ngModel)]="formData.motivation"
+    name="motivation"
+    required
+    minlength="200"
+    maxlength="500"
+    #motivation="ngModel"
+    (input)="updateMotivationCount()"
+  ></textarea>
+  <small>{{ motivationMessage }}</small>
+</div>
+
 
     <!-- Expérience -->
     <div class="form-group">
-      <label for="experience" class="form-label required-field"
-        >Votre expérience pertinente</label
-      >
+      <label for="experience" class="form-label required-field">Votre expérience pertinente</label>
+      <textarea
+        id="experience"
+        class="form-control"
+        [ngClass]="{ 'valid-input': formData.experience.length >= 200 }"
+        [(ngModel)]="formData.experience"
+        name="experience"
+        required
+        minlength="200"
+        maxlength="500"
+        #experience="ngModel"
+        (input)="updateExperienceCount()"
+      ></textarea>
+      <small>{{ experienceMessage }}</small>
+    </div>
+    <!-- <div class="form-group">
+      <label for="experience" class="form-label required-field">
+        Votre expérience pertinente
+      </label>
       <textarea
         id="experience"
         class="form-control"
@@ -169,30 +173,14 @@
         required
         #experience="ngModel"
       ></textarea>
-      <small
-        >Décrivez vos compétences et expériences en lien avec ce projet</small
-      >
+      <small>Décrivez vos compétences et expériences en lien avec ce projet</small>
       <div
         *ngIf="experience.invalid && (experience.dirty || experience.touched)"
         class="error"
       >
         L'expérience est requise.
       </div>
-    </div>
-
-    <!-- Test de compétences -->
-    <div class="test-info">
-      <h3><i class="fas fa-clipboard-check"></i> Test de compétences</h3>
-      <p>
-        Après soumission de ce formulaire, vous serez redirigé vers un test
-        technique adapté au rôle que vous avez sélectionné. Ce test prend
-        environ 20-30 minutes.
-      </p>
-      <p>
-        <strong>Préparation conseillée :</strong> Soyez prêt à démontrer vos
-        compétences pratiques.
-      </p>
-    </div>
+    </div> -->
 
     <!-- Soumission -->
     <button
@@ -203,4 +191,17 @@
       <i class="fas fa-paper-plane"></i> Soumettre ma candidature
     </button>
   </form>
+</div>
+<!-- Modal d'erreur "déjà postulé" -->
+<div
+  class="modal-backdrop"
+  *ngIf="duplicateError"
+  (click)="duplicateError = false"
+></div>
+<div class="modal" *ngIf="duplicateError">
+  <div class="modal-content">
+    <h2>Attention</h2>
+    <p>{{ errorMessage }}</p>
+    <button class="btn-close" (click)="duplicateError = false">Fermer</button>
+  </div>
 </div>

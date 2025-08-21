@@ -5,17 +5,19 @@ import { EquipesDetailsTab } from '../equipes-details-tab/equipes-details-tab';
 import { DiscussionDetailsTab } from '../discussion-details-tab/discussion-details-tab';
 import { ApercuTab } from '../apercu-tab/apercu-tab';
 import { SettingsTab } from "../settings-tab/settings-tab";
+import { QuestionnaireManagement } from '../../../features/contributors/pages/questionnaire-management/questionnaire-management';
 
 type UserRole = 'ideateur' | 'gestionnaire';
 
 @Component({
   selector: 'app-project-details-tabs',
   standalone: true,
-  imports: [CommonModule, TachesTab, ApercuTab, EquipesDetailsTab, DiscussionDetailsTab, SettingsTab],
+  imports: [CommonModule, TachesTab, ApercuTab, EquipesDetailsTab, DiscussionDetailsTab,QuestionnaireManagement],
   templateUrl: './project-details-tabs.html',
   styleUrls: ['./project-details-tabs.css']
 })
 export class ProjectDetailsTabs {
+  
   @Input() userRole: UserRole = 'gestionnaire'; // Rôle par défaut
   activeTab: string = 'overview';
 

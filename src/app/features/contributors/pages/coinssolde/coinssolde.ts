@@ -3,8 +3,9 @@ import { CoinsTab } from '../../../../shared/ui-components/coins-tab/coins-tab';
 import { CoinsService } from '../../../../core/coins-service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-
-
+import { OrangeMoneyService } from '../../../../core/OrangeMoneyService';
+import { HttpClient } from '@angular/common/http';
+import { TransactionsService } from '../../../../core/transactions.service';
 
 @Component({
   selector: 'app-coinssolde',
@@ -14,88 +15,87 @@ import { CommonModule } from '@angular/common';
   styleUrls: ['./coinssolde.css']
 })
 export class Coinssolde implements OnInit {
-  // Icônes
- 
-
-  totalCoins: number = 0;
+  totalCoins = 0;
   isModalOpen = false;
-  coinsToBuy: number = 1;
-  selectedProvider: string = '';
-  phoneNumber: string = '';
-  pricePerCoin: number = 10; // Prix en FCFA par coin
+  coinsToBuy = 1;
+  selectedProvider = '';
+  phoneNumber = '';
+  pricePerCoin = 10;
+  transactions: any[] = [];
 
-  constructor(private coinsService: CoinsService, private cdr: ChangeDetectorRef) {}
+  constructor(
+    private orangeMoneyService: OrangeMoneyService, 
+    private coinsService: CoinsService, 
+    private cdr: ChangeDetectorRef, 
+    private http: HttpClient,
+    private transactionsService: TransactionsService
+  ) {}
 
   ngOnInit(): void {
-    this.coinsService.coinsValue$.subscribe(value => {
-      this.totalCoins = value;
-      this.cdr.detectChanges();
-    });
+    const userId = Number(localStorage.getItem('userId')) || 0;
+    this.coinsService.coinsValue$.subscribe(v => { this.totalCoins = v; this.cdr.detectChanges(); });
+    this.loadTransactions(userId);
   }
 
-  // Ouvrir la modal
-  openModal() {
-    this.isModalOpen = true;
-  }
+  openModal() { this.isModalOpen = true; }
+  closeModal(event?: Event) { if(event) event.stopPropagation(); this.isModalOpen=false; this.resetForm(); }
+  resetForm() { this.coinsToBuy=1; this.selectedProvider=''; this.phoneNumber=''; }
+  adjustCoins(change: number) { if(this.coinsToBuy+change >= 1) this.coinsToBuy += change; }
 
-  // Fermer la modal
-  closeModal(event?: Event) {
-    if (event) event.stopPropagation();
-    this.isModalOpen = false;
-    this.resetForm();
-  }
+ loadTransactions(userId: number) {
+  this.transactionsService.getUserTransactions(userId).subscribe(
+    res => { 
+      this.transactions = res; 
+      this.cdr.detectChanges(); 
+    },
+    err => console.error('Erreur chargement historique', err)
+  );
+}
 
-  // Réinitialiser le formulaire
-  resetForm() {
-    this.coinsToBuy = 1;
-    this.selectedProvider = '';
-    this.phoneNumber = '';
-  }
 
-  // Ajuster la quantité de coins
-  adjustCoins(change: number): void {
-    const newValue = this.coinsToBuy + change;
-    if (newValue >= 1) {
-      this.coinsToBuy = newValue;
+  async submitPayment() {
+    if(!this.selectedProvider){ alert('Sélectionnez un opérateur.'); return; }
+    if(!this.phoneNumber.match(/^\+?[0-9]{8,15}$/)){ alert('Numéro invalide.'); return; }
+
+    const amount = this.coinsToBuy * this.pricePerCoin;
+    const orderId = 'ORDER_' + Date.now();
+    const userId = Number(localStorage.getItem('userId')) || 0;
+
+    try {
+      // Créer transaction dans DB
+      const response: any = await this.http.post('https://e8c1f9829683.ngrok-free.app/api/transactions', {
+        user_id: userId,
+        provider: this.selectedProvider,
+        phone_number: this.phoneNumber,
+        coins: this.coinsToBuy,
+        amount,
+        order_id: orderId
+      }).toPromise();
+
+      console.log('Transaction enregistrée', response);
+      this.loadTransactions(userId);
+
+      // Orange Money
+      if(this.selectedProvider==='orange'){
+        const transaction = await this.orangeMoneyService.createTransaction({
+          merchant_key: '99410dd1',
+          currency: 'XOF',
+          order_id: orderId,
+          amount,
+          return_url: 'https://tonsite.com/success',
+          cancel_url: 'https://tonsite.com/cancel',
+          notif_url: 'https://e8c1f9829683.ngrok-free.app/api/orange-notification',
+          lang: 'fr',
+          reference: 'DoReMi Mali'
+        });
+
+        if(transaction?.payment_url) window.open(transaction.payment_url,'_blank');
+        else alert('Erreur création transaction Orange Money.');
+      }
+
+    } catch(err) {
+      console.error('Erreur transaction', err);
+      alert('Impossible d’enregistrer la transaction.');
     }
-  }
-
-  // Soumettre le paiement
-  submitPayment() {
-    // Validation
-    if (!this.selectedProvider) {
-      alert('Veuillez sélectionner un opérateur.');
-      return;
-    }
-    
-    if (!this.phoneNumber.match(/^\+?[0-9]{8,15}$/)) {
-      alert('Veuillez entrer un numéro de téléphone valide.');
-      return;
-    }
-    
-    if (this.coinsToBuy <= 0) {
-      alert('Veuillez entrer un montant valide.');
-      return;
-    }
-
-    // Simulation de paiement
-    const paymentData = {
-      provider: this.selectedProvider,
-      phone: this.phoneNumber,
-      coins: this.coinsToBuy,
-      amount: this.coinsToBuy * this.pricePerCoin
-    };
-
-    console.log('Paiement en cours:', paymentData);
-    
-    // Après un paiement réussi
-    this.totalCoins += this.coinsToBuy;
-    this.coinsService.setCoinsValue(this.totalCoins);
-    
-    // Réinitialisation
-    this.resetForm();
-    this.closeModal();
-    
-    alert(`Paiement réussi! Vous avez acheté ${paymentData.coins} coins.`);
   }
 }

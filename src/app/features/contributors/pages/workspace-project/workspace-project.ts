@@ -1,122 +1,400 @@
 // workspace-project.ts
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Location } from '@angular/common';
 import { CdkDragDrop, DragDropModule, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
-import { WspacePageHeader } from '../../../../shared/wspace-page-header/wspace-page-header';
-import { WspacePageRightSide } from '../../../../shared/wspace-page-right-side/wspace-page-right-side';
 import { CardTask } from '../../../../shared/ui-components/card-task/card-task';
+import { FonctionnalitesService } from '../../../../core/services/fonctionnalites.service';
+import { ProjectsService } from '../../../../core/projects-service';
+import { ActivatedRoute } from '@angular/router';
+import { FormsModule } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
+import { apiUrl } from '../../../../core/services/api.config';
 
 @Component({
   selector: 'app-workspace-project',
   standalone: true,
-  imports: [
-    CommonModule,
-    DragDropModule,
-    WspacePageHeader,
-    WspacePageRightSide,
-    CardTask
-  ],
+  imports: [CommonModule, FormsModule, DragDropModule, CardTask],
   templateUrl: './workspace-project.html',
   styleUrls: ['./workspace-project.css']
 })
 export class WorkspaceProject implements OnInit {
-  // Tableaux pour les différentes colonnes
   todoTasks: any[] = [];
   inProgressTasks: any[] = [];
   doneTasks: any[] = [];
 
-  ngOnInit() {
-    this.loadTasks();
+  projectId: number = 1;
+  projectDetails: any = {};
+  isLoading: boolean = true;
+  activeTab: string = 'kanban';
+
+  totalTaches: number = 0;
+  tachesTerminees: number = 0;
+
+  showNewFeatureForm: boolean = false;
+  isCreating: boolean = false;
+
+  projectParticipants: any[] = [];
+  hasManager: boolean = false;
+  projectManager: any = null;
+
+  newFeature: any = {
+    titre: '',
+    contenu: '',
+    statusFeatures: 'A_FAIRE',
+    dateEcheance: '',
+    exigences: [''],
+    criteresAcceptation: [''],
+    importance: 'MOYENNE',
+    motsCles: [],
+    motsClesStr: '',
+    projetId: 0,
+    participantId: null
+  };
+
+  showFeedbackModal: boolean = false;
+  feedbackTitle: string = '';
+  feedbackMessage: string = '';
+  isFeedbackSuccess: boolean = false;
+  createdFeatureId: number | null = null;
+
+  constructor(
+    private fonctService: FonctionnalitesService,
+    private projetsService: ProjectsService,
+    private location : Location,
+    private route: ActivatedRoute,
+    private cdr: ChangeDetectorRef,
+    private http: HttpClient
+  ) {}
+
+  goBack(): void {
+    this.location.back();
   }
 
-  // Charge les tâches depuis le localStorage
-  loadTasks() {
-    const savedTasks = localStorage.getItem('kanbanTasks');
-    if (savedTasks) {
-      const tasks = JSON.parse(savedTasks);
-      this.todoTasks = tasks.todo || [];
-      this.inProgressTasks = tasks.inProgress || [];
-      this.doneTasks = tasks.done || [];
-    } else {
-      // Valeurs par défaut si aucune donnée sauvegardée
-      this.todoTasks = [
-        { id: 1, title: 'Interface de connexion patient', description: 'Créer l\'interface de connexion pour les patients', tags: ['Frontend', 'UI/UX'], priority: 'high' },
-        { id: 2, title: 'API Authentification', description: 'Développer le endpoint d\'authentification', tags: ['Backend'], priority: 'medium' },
-        { id: 3, title: 'Maquettes dashboard', description: 'Finaliser les maquettes Figma', tags: ['Design'], priority: 'low' }
-      ];
+  ngOnInit() {
+    this.route.params.subscribe(params => {
+      this.projectId = +params['id'];
+      this.newFeature.projetId = this.projectId;
+      this.loadProjectData();
+      this.loadProjectDetails();
+      this.loadProjectParticipants();
+    });
+  }
 
-      this.inProgressTasks = [
-        { id: 4, title: 'Base de données patients', description: 'Modéliser la structure de la DB', tags: ['Backend'], priority: 'high' },
-        { id: 5, title: 'Component header', description: 'Intégrer le header responsive', tags: ['Frontend'], priority: 'medium' }
-      ];
-
-      this.doneTasks = [
-        { id: 6, title: 'Setup projet', description: 'Initialiser le repository Git', tags: ['DevOps'], priority: 'low' },
-        { id: 7, title: 'User stories', description: 'Rédiger toutes les user stories', tags: ['Documentation'], priority: 'medium' }
-      ];
-
-      this.saveTasks(); // Sauvegarde les tâches par défaut
+  handleOverlayClick(event: MouseEvent) {
+    const target = event.target as HTMLElement;
+    if (target.classList.contains('modal-overlay')) {
+      this.toggleNewFeatureForm();
     }
   }
 
-  // Sauvegarde les tâches dans le localStorage
-  saveTasks() {
-    const tasks = {
-      todo: this.todoTasks,
-      inProgress: this.inProgressTasks,
-      done: this.doneTasks
-    };
-    localStorage.setItem('kanbanTasks', JSON.stringify(tasks));
+  toggleNewFeatureForm() {
+    this.showNewFeatureForm = !this.showNewFeatureForm;
+
+    if (this.showNewFeatureForm) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+      this.resetNewFeatureForm();
+    }
   }
 
-  // Gestion du drag and drop
+  resetNewFeatureForm() {
+    this.newFeature = {
+      titre: '',
+      contenu: '',
+      statusFeatures: 'A_FAIRE',
+      dateEcheance: '',
+      exigences: [''],
+      criteresAcceptation: [''],
+      importance: 'MOYENNE',
+      motsCles: [],
+      motsClesStr: '',
+      projetId: this.projectId,
+      participantId: null
+    };
+  }
+
+  loadProjectDetails() {
+    this.projetsService.getProjetById(this.projectId).subscribe({
+      next: (details) => {
+        this.projectDetails = details;
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error('Erreur chargement détails projet:', err);
+      }
+    });
+  }
+
+  loadProjectParticipants() {
+  this.http.get<any[]>(apiUrl(`/participants/projet/${this.projectId}`))
+  .subscribe({
+    next: (participants) => {
+      this.projectParticipants = participants;
+
+      console.log('Participants récupérés :', participants); // <-- ajoute ça pour debug
+
+      // Cherche le gestionnaire
+     this.projectManager = participants.find(p => p.profil?.toUpperCase() === 'GESTIONNAIRE') || null;
+this.hasManager = !!this.projectManager;
+
+
+      console.log('Has manager :', this.hasManager); // <-- debug ici aussi
+
+      this.cdr.detectChanges();
+    },
+    error: (err) => console.error('Erreur chargement participants:', err)
+  });
+
+
+  }
+
+  loadProjectData() {
+    this.isLoading = true;
+    this.fonctService.getFonctionnalitesByProjet(this.projectId).subscribe({
+      next: (fonctionnalites) => {
+        this.organizeTasks(fonctionnalites);
+        this.updateTaskCounters();
+        this.isLoading = false;
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error('Erreur de chargement:', err);
+        this.isLoading = false;
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
+  updateTaskCounters() {
+    this.totalTaches = this.todoTasks.length + this.inProgressTasks.length + this.doneTasks.length;
+    this.tachesTerminees = this.doneTasks.length;
+  }
+
+  organizeTasks(fonctionnalites: any[]) {
+    this.todoTasks = [];
+    this.inProgressTasks = [];
+    this.doneTasks = [];
+
+    fonctionnalites.forEach(f => {
+      const task = this.convertToTask(f);
+      switch(f.statusFeatures) {
+        case 'A_FAIRE': this.todoTasks.push(task); break;
+        case 'EN_COURS': this.inProgressTasks.push(task); break;
+        case 'TERMINE': this.doneTasks.push(task); break;
+        default: this.todoTasks.push(task);
+      }
+    });
+    this.cdr.detectChanges();
+  }
+
+  convertToTask(fonctionnalite: any): any {
+    return {
+      id: fonctionnalite.id ?? 0,
+      title: fonctionnalite.titre,
+      description: fonctionnalite.contenu,
+      status: fonctionnalite.statusFeatures,
+      assignee: fonctionnalite.participantNomComplet || 'Non assigné',
+      assigneeEmail: fonctionnalite.participantEmail || '',
+      tags: fonctionnalite.motsCles || [],
+      priority: this.getPriority(fonctionnalite.importance),
+      progress: this.getProgress(fonctionnalite.statusFeatures),
+      deadline: fonctionnalite.dateEcheance,
+      isOverdue: this.checkIfOverdue(fonctionnalite.dateEcheance)
+    };
+  }
+
+  getPriority(importance: string): string {
+    switch(importance) {
+      case 'HAUTE': return 'high';
+      case 'MOYENNE': return 'medium';
+      default: return 'low';
+    }
+  }
+
+  getProgress(status: string): number {
+    switch(status) {
+      case 'A_FAIRE': return 0;
+      case 'EN_COURS': return 50;
+      case 'TERMINE': return 100;
+      default: return 0;
+    }
+  }
+
+  checkIfOverdue(dateEcheance: string): boolean {
+    if (!dateEcheance) return false;
+    return new Date(dateEcheance) < new Date();
+  }
+
   drop(event: CdkDragDrop<any[]>) {
     if (event.previousContainer === event.container) {
-      // Déplacement dans la même colonne
-      moveItemInArray(
-        event.container.data,
-        event.previousIndex,
-        event.currentIndex
-      );
+      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
     } else {
-      // Transfert entre colonnes
       transferArrayItem(
         event.previousContainer.data,
         event.container.data,
         event.previousIndex,
         event.currentIndex
       );
+
+      const task = event.container.data[event.currentIndex];
+      const newStatus = this.getStatusFromContainerId(event.container.id);
+
+      task.status = newStatus;
+      task.progress = this.getProgress(newStatus);
+
+      this.fonctService.updateStatus(task.id, newStatus).subscribe({
+        next: () => {
+          console.log(`Statut de la fonctionnalité ${task.id} mis à jour avec succès.`);
+          this.updateTaskCounters();
+        },
+        error: (err) => {
+          console.error(`Erreur lors de la mise à jour du statut de la fonctionnalité ${task.id}:`, err);
+        }
+      });
     }
-    this.saveTasks(); // Sauvegarde après chaque modification
+    this.cdr.detectChanges();
   }
 
-  // Ajoute une nouvelle tâche
-  addTask(column: string) {
-    const newTask = {
-      id: Date.now(), // ID unique basé sur le timestamp
-      title: 'Nouvelle tâche',
-      description: 'Description de la tâche',
-      tags: [],
-      priority: 'medium'
+  changeTab(tab: string) {
+    this.activeTab = tab;
+    this.cdr.detectChanges();
+  }
+
+  getStatusFromContainerId(containerId: string): string {
+    switch(containerId) {
+      case 'cdk-drop-list-0': return 'A_FAIRE';
+      case 'cdk-drop-list-1': return 'EN_COURS';
+      case 'cdk-drop-list-2': return 'TERMINE';
+      default: return 'A_FAIRE';
+    }
+  }
+
+  trackById(index: number, item: any): number {
+    return item.id ?? index;
+  }
+
+  createFeature() {
+    if (!this.newFeature.titre || this.newFeature.titre.trim() === '') {
+      alert('Le titre est obligatoire');
+      return;
+    }
+
+    this.isCreating = true;
+
+    if (this.newFeature.motsClesStr) {
+      this.newFeature.motsCles = this.newFeature.motsClesStr
+        .split(',')
+        .map((m: string) => m.trim())
+        .filter((m: string) => m.length > 0);
+    } else {
+      this.newFeature.motsCles = [];
+    }
+
+    const payload = {
+      ...this.newFeature,
+      exigences: this.newFeature.exigences.filter((e: string) => e.trim() !== ''),
+      criteresAcceptation: this.newFeature.criteresAcceptation.filter((c: string) => c.trim() !== ''),
+      participantId: this.newFeature.participantId || null
     };
 
-    switch (column) {
-      case 'todo':
-        this.todoTasks.unshift(newTask);
-        break;
-      case 'inProgress':
-        this.inProgressTasks.unshift(newTask);
-        break;
-      case 'done':
-        this.doneTasks.unshift(newTask);
-        break;
+    console.log(payload)
+    this.fonctService.createFeature(payload).subscribe({
+      next: (createdFeature) => {
+        const task = this.convertToTask(createdFeature);
+        switch (createdFeature.statusFeatures) {
+          case 'A_FAIRE': this.todoTasks.unshift(task); break;
+          case 'EN_COURS': this.inProgressTasks.unshift(task); break;
+          case 'TERMINE': this.doneTasks.unshift(task); break;
+          default: this.todoTasks.unshift(task);
+        }
+        this.isCreating = false;
+        this.toggleNewFeatureForm();
+        this.updateTaskCounters();
+        this.cdr.detectChanges();
+        // Afficher le modal de succès
+        this.showFeedback(
+          'Fonctionnalité créée !',
+          `La fonctionnalité "${this.newFeature.titre}" a été ajoutée avec succès.`,
+          true,
+          createdFeature.id
+        );
+      },
+      error: (err) => {
+        console.error('Erreur création fonctionnalité:', err);
+        this.isCreating = false;
+        this.cdr.detectChanges();
+        // Afficher le modal d'erreur
+        this.showFeedback(
+          'Erreur de création',
+          'Une erreur est survenue lors de la création de la fonctionnalité. Veuillez réessayer.',
+          false
+        );
+      }
+    });
+  }
+
+  getProgressPercentage(): number {
+    if (this.totalTaches === 0) return 0;
+    return Math.round((this.tachesTerminees / this.totalTaches) * 100);
+  }
+
+  showFeedback(title: string, message: string, isSuccess: boolean, featureId: number | null = null) {
+    this.feedbackTitle = title;
+    this.feedbackMessage = message;
+    this.isFeedbackSuccess = isSuccess;
+    this.createdFeatureId = featureId;
+    this.showFeedbackModal = true;
+    document.body.style.overflow = 'hidden';
+  }
+
+  closeFeedbackModal() {
+    this.showFeedbackModal = false;
+    document.body.style.overflow = '';
+  }
+
+  viewCreatedFeature() {
+    if (this.createdFeatureId) {
+      const element = document.getElementById(`task-${this.createdFeatureId}`);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        element.classList.add('highlight-task');
+        setTimeout(() => element.classList.remove('highlight-task'), 2000);
+      }
+    }
+    this.closeFeedbackModal();
+  }
+  addExigence() {
+    this.newFeature.exigences.push('');
+  }
+
+  removeExigence(index: number) {
+      if (this.newFeature.exigences.length > 1) {  // toujours garder au moins une ligne
+        this.newFeature.exigences.splice(index, 1);
+      } else {
+        this.newFeature.exigences[0] = '';
+      }
     }
 
-    this.saveTasks();
+  addCritere() {
+    this.newFeature.criteresAcceptation.push('');
   }
 
-  // Fonction de suivi pour ngFor
-  trackById(index: number, task: any): number {
-    return task.id;
+  removeCritere(index: number) {
+    if (this.newFeature.criteresAcceptation.length > 1) {
+      this.newFeature.criteresAcceptation.splice(index, 1);
+    } else {
+      this.newFeature.criteresAcceptation[0] = '';
+    }
   }
+
+  onInputChange() {
+    this.cdr.detectChanges();
+  }
+
+  trackByIndex(index: number, item: any): number {
+  return index;
+}
+
 }

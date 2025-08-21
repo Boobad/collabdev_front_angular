@@ -1,5 +1,5 @@
 .projects-container {
-  max-width: 1200px;
+  width: 100%;
   margin: auto;
   
 }
@@ -147,4 +147,102 @@
   .projects-grid {
     justify-content: center;
   }
+}
+
+
+/* Animation douce pour l'apparition */
+.fade-in {
+  animation: fadeIn 0.5s ease-in-out;
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Animation rebond */
+.bounce-in {
+  animation: bounceIn 0.5s ease-in-out;
+}
+@keyframes bounceIn {
+  0% { transform: scale(0.9); opacity: 0; }
+  50% { transform: scale(1.05); opacity: 1; }
+  100% { transform: scale(1); }
+}
+
+/* Icône qui tourne */
+.spin {
+  animation: spin 1s linear infinite;
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Message de chargement */
+.loading-message {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: var(--primary-color);
+  margin: 30px 0;
+}
+.loading-icon {
+  font-size: 40px;
+  margin-bottom: 10px;
+}
+
+/* Message d'erreur */
+.error-message {
+  background: #fdecea;
+  color: #d32f2f;
+  padding: 15px;
+  margin: 20px auto;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  max-width: 400px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+.error-message mat-icon {
+  font-size: 24px;
+}
+.error-message button {
+  margin-left: auto;
+}
+/* Conteneur centré pour tout */
+.center-wrapper {
+  display: flex;
+  justify-content: center;  /* centre horizontalement */
+  align-items: center;      /* centre verticalement */
+  flex-direction: column;
+           /* hauteur pour centrer au milieu de la page */
+  text-align: center;
+}
+
+/* Icône qui tourne */
+.spin {
+  animation: spin 1s linear infinite;
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Message de chargement */
+.loading-message {
+  color: var(--primary-color);
+  font-size: 1.1rem;
+}
+
+/* Message d'erreur */
+.error-message {
+  background: #fdecea;
+  color: #d32f2f;
+  padding: 15px 20px;
+  border-radius: 8px;
+  max-width: 400px;
+  gap: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }

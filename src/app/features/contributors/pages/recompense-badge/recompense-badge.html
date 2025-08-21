@@ -1,138 +1,48 @@
-
 <main>
-
   <section>
     <div class="container">
       <div class="content-area">
         <div class="badges-header">
-          <a href="#" class="back-link">
+          <a (click)="goBack()" class="back-link">
             <i class="material-icons-outlined">arrow_back</i>
           </a>
           <h2>Badges Obtenus</h2>
         </div>
 
+        <!-- Section des badges -->
         <div class="badges-grid">
-          <div class="badge-card">
+          <div *ngFor="let badge of badges" class="badge-card"
+               [class.atteint]="badge.dejaObtenu"
+               [class.platinum]="badge.typeBadge === 'PLATINE'">
+            
             <div class="badge-image-container">
-              <img src="BadgeBronze.png" alt="Badge Bronze" />
+              <!-- Image du badge -->
+              <img [src]="getBadgeImage(badge.typeBadge)" [alt]="'Badge ' + badge.typeBadge">
+              
+              <!-- Cadenas si NON obtenu -->
+              <i *ngIf="!badge.dejaObtenu" 
+                 class="material-icons-outlined lock-icon">
+                lock
+              </i>
             </div>
-            <span class="badge-title">Badge Bronze</span>
-          </div>
-          <div class="badge-card">
-            <div class="badge-image-container">
-              <img src="BadgeArgent.png" alt="Badge Argent" />
-            </div>
-            <span class="badge-title">Badge Argent</span>
-          </div>
-          <div class="badge-card">
-            <div class="badge-image-container">
-              <img src="BadgeOr.png" alt="Badge en Or" />
-            </div>
-            <span class="badge-title">Badge en Or</span>
-          </div>
-          <div class="badge-card platinum">
-            <div class="badge-image-container">
-              <img src="platine.png" alt="Badge Platine" />
-              <i class="material-icons-outlined download-icon">file_download</i>
-            </div>
-            <span class="badge-title">Badge Platine</span>
+
+            <span class="badge-title">Badge {{ getBadgeName(badge.typeBadge) }}</span>
+            <span *ngIf="badge.dejaObtenu" class="badge-date">Obtenu</span>
           </div>
         </div>
 
+        <!-- Section progression -->
         <div class="progression-section">
           <h3>Progression vers les prochains badges</h3>
-          <p>Badge "Platine" -70%</p>
-          <div class="progress-bar-container">
-            <div class="progress-bar" style="width: 70%"></div>
-          </div>
-        </div>
-
-        <div class="reward-details-section">
-          <div class="reward-header">
-            <h3>Détails des récompenses</h3>
-            <a href="#" class="view-all-link">Voir tout</a>
-          </div>
-          <div class="reward-cards">
-            <div class="reward-card argent">
-              <div class="reward-badge-icon">
-                <img src="BadgeArgent.png" alt="Badge Argent" />
-              </div>
-              <div class="reward-info">
-                <span class="reward-title">Badge Argent</span>
-                <span class="reward-description"
-                  >Attribué après la soumission de 5 contributions valide</span
-                >
-                <span class="reward-date">Gagné le 15/07/2025</span>
-              </div>
+          <div *ngFor="let badge of nextBadges" class="badge-progression">
+            <p>Badge "{{ getBadgeName(badge.typeBadge) }}" - {{ getProgressPercentage(badge) }}%</p>
+            <div class="progress-bar-container">
+              <div class="progress-bar" [style.width.%]="getProgressPercentage(badge)"></div>
             </div>
-            <div class="reward-card or">
-              <div class="reward-badge-icon">
-                <img src="BadgeOr.png" alt="Badge en Or" />
-              </div>
-              <div class="reward-info">
-                <span class="reward-title">Badge en Or</span>
-                <span class="reward-description"
-                  >Attribué après la soumission de 15 contributions valide</span
-                >
-                <span class="reward-date">Gagné le 10/08/2025</span>
-              </div>
-            </div>
-
-            <div class="reward-card bronze">
-              <div class="reward-badge-icon">
-                <img src="BadgeBronze.png" alt="Badge Bronze" />
-              </div>
-              <div class="reward-info">
-                <span class="reward-title">Badge Bronze</span>
-                <span class="reward-description"
-                  >Attribué après la soumission de 25 contributions valide</span
-                >
-                <span class="reward-date">En cours</span>
-              </div>
-            </div>
-          </div>
-          <div class="reward-cards" style="margin-top: 20px;">
-            <div class="reward-card argent">
-              <div class="reward-badge-icon">
-                <img src="BadgeArgent.png" alt="Badge Argent" />
-              </div>
-              <div class="reward-info">
-                <span class="reward-title">Badge Argent</span>
-                <span class="reward-description"
-                  >Attribué après la soumission de 5 contributions valide</span
-                >
-                <span class="reward-date">Gagné le 15/07/2025</span>
-              </div>
-            </div>
-            <div class="reward-card or">
-              <div class="reward-badge-icon">
-                <img src="BadgeOr.png" alt="Badge en Or" />
-              </div>
-              <div class="reward-info">
-                <span class="reward-title">Badge en Or</span>
-                <span class="reward-description"
-                  >Attribué après la soumission de 15 contributions valide</span
-                >
-                <span class="reward-date">Gagné le 10/08/2025</span>
-              </div>
-            </div>
-
-            <div class="reward-card bronze">
-              <div class="reward-badge-icon">
-                <img src="BadgeBronze.png" alt="Badge Bronze" />
-              </div>
-              <div class="reward-info">
-                <span class="reward-title">Badge Bronze</span>
-                <span class="reward-description"
-                  >Attribué après la soumission de 25 contributions valide</span
-                >
-                <span class="reward-date">En cours</span>
-              </div>
-            </div>
+            <small>{{ getContributionText(badge) }}</small>
           </div>
         </div>
       </div>
     </div>
   </section>
 </main>
-

@@ -1,7 +1,10 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { CommonModule, DatePipe } from '@angular/common';
+import { MatIconModule } from '@angular/material/icon';
+import { animate, style, transition, trigger } from '@angular/animations';
+import { apiUrl } from '../../../core/services/api.config';
 
 export interface Project {
   id: number;
@@ -13,32 +16,83 @@ export interface Project {
   niveau?: string;
   dateCreation?: string;
   coinsRequired?: number;
+  exigences?: string; // ajouté pour la modal
+}
+
+export interface Participant {
+  id: number;
+  profil: string;
+  statut: string;
+  scoreQuiz: string;
+  estDebloque: boolean;
+  contributeurNom: string;
+  contributeurPrenom: string;
+  contributeurEmail: string;
+  projetTitre: string;
 }
 
 @Component({
   selector: 'app-mes-card-project',
   standalone: true,
-  imports: [RouterLink, DatePipe, CommonModule],
+  imports: [CommonModule, DatePipe, MatIconModule],
   templateUrl: './mes-card-project.html',
-  styleUrls: ['./mes-card-project.css']
+  styleUrls: ['./mes-card-project.css'],
+  animations: [
+    trigger('fadeInOut', [
+      transition(':enter', [
+        style({ opacity: 0 }),
+        animate('300ms var(--modal-transition)', style({ opacity: 1 }))
+      ]),
+      transition(':leave', [
+        animate('200ms var(--modal-transition)', style({ opacity: 0 }))
+      ])
+    ]),
+    trigger('scaleInOut', [
+      transition(':enter', [
+        style({ transform: 'scale(0.95)', opacity: 0 }),
+        animate('300ms var(--modal-transition)', style({ transform: 'scale(1)', opacity: 1 }))
+      ]),
+      transition(':leave', [
+        animate('200ms var(--modal-transition)', style({ transform: 'scale(0.95)', opacity: 0 }))
+      ])
+    ])
+  ]
 })
 export class MesCardProject implements OnInit {
   projects: Project[] = [];
   filteredProjects: Project[] = [];
+  participants: { [projectId: number]: Participant[] } = {};
+  selectedProject: Project | null = null; // pour modal
   isLoading = false;
   error: string | null = null;
 
-  constructor(private http: HttpClient, private cdRef: ChangeDetectorRef) {}
+  constructor(
+    private http: HttpClient,
+    private cdRef: ChangeDetectorRef,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.fetchProjects();
+  }
+
+  getDomainColor(domain?: string): string {
+    const colors: {[key: string]: string} = {
+      'web': '#1565C0',
+      'mobile': '#7B1FA2',
+      'santé': '#C62828',
+      'finance': '#2E7D32',
+      'cybersécurité': '#0277BD',
+      'default': '#3f51b5'
+    };
+    return colors[domain?.toLowerCase() || 'default'];
   }
 
   fetchProjects(): void {
     this.isLoading = true;
     this.error = null;
 
-    this.http.get<Project[]>('http://localhost:8080/api/v1/projets').subscribe({
+    this.http.get<Project[]>(apiUrl(`/projets`)).subscribe({
       next: (data: Project[]) => {
         this.projects = data.map(project => {
           let coins = 100;
@@ -52,9 +106,13 @@ export class MesCardProject implements OnInit {
           return { ...project, coinsRequired: coins };
         });
 
-        this.filteredProjects = this.projects.filter(
-          project => project.status?.trim().toUpperCase() === 'EN_ATTENTE'
-        );
+        this.filteredProjects = this.projects.filter(project => {
+  const status = project.status?.trim()?.toUpperCase();
+  return status === 'OUVERT' || status === 'EN_COURS';
+});
+
+
+        this.filteredProjects.forEach(project => this.fetchParticipants(project.id));
 
         if (this.filteredProjects.length === 0) {
           this.error = 'Aucun projet en attente disponible';
@@ -72,9 +130,51 @@ export class MesCardProject implements OnInit {
     });
   }
 
+  fetchParticipants(projectId: number): void {
+    this.http.get<Participant[]>(apiUrl(`/participants/projet/${projectId}`))
+      .subscribe({
+        next: data => {
+          this.participants[projectId] = data;
+          this.cdRef.detectChanges();
+        },
+        error: err => console.error(`Erreur chargement participants du projet ${projectId}:`, err)
+      });
+  }
+
+  isUserParticipant(projectId: number): boolean {
+    const userStr = localStorage.getItem('user');
+    if (!userStr) return false;
+
+    const userEmail = JSON.parse(userStr).email;
+    return (this.participants[projectId] || []).some(p => p.contributeurEmail === userEmail);
+  }
+
+  goToProject(project: Project): void {
+    if (this.isUserParticipant(project.id)) {
+      this.router.navigate(['/details', project.id]);
+    } else {
+      this.selectedProject = project; // ouvrir modal si non participant
+    }
+  }
+
+  closeModal(): void {
+    this.selectedProject = null;
+  }
+
+  getDomainClass(domain?: string): string {
+    if (!domain) return 'default';
+    const domainMap: { [key: string]: string } = {
+      'web': 'web',
+      'mobile': 'mobile',
+      'santé': 'sante',
+      'finance': 'finance',
+      'cybersécurité': 'cybersecurite'
+    };
+    return domainMap[domain.toLowerCase()] || 'default';
+  }
+
   toCssClass(value?: string): string {
     if (!value) return 'default';
     return value.trim().toLowerCase().replace(/ /g, '-');
   }
 }
-

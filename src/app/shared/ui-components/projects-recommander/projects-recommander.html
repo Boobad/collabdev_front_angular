@@ -1,15 +1,20 @@
 <div class="projects-container">
-  <!-- Message de chargement -->
-  <div *ngIf="isLoading" class="loading-message">
-    <mat-spinner diameter="50"></mat-spinner>
-    <p>Chargement des projets en attente...</p>
-  </div>
+  <div class="center-wrapper">
+    
+    <!-- Message de chargement -->
+    <div *ngIf="isLoading" class="loading-message fade-in">
+      <mat-icon class="loading-icon spin">sync</mat-icon>
+      <p>Chargement des projets en attente...</p>
+    </div>
 
-  <!-- Message d'erreur -->
-  <div *ngIf="error" class="error-message">
-    <mat-icon>error_outline</mat-icon>
-    <p>{{ error }}</p>
-    <button mat-button (click)="fetchProjects()">Réessayer</button>
+    <!-- Message d'erreur -->
+    <div *ngIf="error" class="error-message bounce-in">
+      <mat-icon>error_outline</mat-icon>
+      <p>{{ error }}</p>
+      <button mat-raised-button color="warn" (click)="fetchProjects()">
+        <mat-icon>refresh</mat-icon> Réessayer
+      </button>
+    </div>
   </div>
 
   <!-- Liste des projets -->
@@ -54,10 +59,14 @@
 
       <!-- Bouton -->
       <div class="buttons">
-        <button (click)="onJoinProject(project.id, project.coinsRequired || 700)">
-          Rejoindre le projet
-        </button>
+        <button
+  (click)="onProjectButtonClick(project.id, project.coinsRequired || 100)"
+  [disabled]="isUserPendingParticipant(project.id)">
+  {{ getProjectButtonLabel(project.id, project.coinsRequired || 100) }}
+</button>
+
       </div>
+
     </div>
 
     <!-- Aucun projet -->

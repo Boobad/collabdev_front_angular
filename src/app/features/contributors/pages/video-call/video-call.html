@@ -1,0 +1,101 @@
+<div #videoContainer class="video-container" [class.active-call]="isCallActive">
+  <div class="header">
+    <div class="logo">MeetGroupe</div>
+    <div class="call-duration" *ngIf="isCallActive">{{ callDuration }}</div>
+    <div class="spacer"></div>
+    <button class="header-btn" (click)="toggleFullscreen()" *ngIf="isCallActive">
+      <span class="material-icons">fullscreen</span>
+    </button>
+  </div>
+
+  <div class="main-content">
+    <div class="video-content">
+      <!-- Remote Video - Version corrigée -->
+      <div class="remote-video-wrapper" [class.connected]="isRemoteConnected">
+        <video #remoteVideo autoplay playsinline class="video-element"></video>
+        <div class="connection-status" *ngIf="!isRemoteConnected">
+          <div class="status-message">
+            <mat-spinner diameter="24"></mat-spinner>
+            <span>Connexion en cours...</span>
+          </div>
+        </div>
+        <div class="remote-user-info" *ngIf="isCallActive">
+          <div class="user-avatar">JD</div>
+          <div class="user-name">Jean Dupont</div>
+        </div>
+      </div>
+
+      <!-- Screen Share -->
+      <video #screenVideo autoplay playsinline class="screen-share" *ngIf="isSharingScreen"></video>
+
+      <!-- Local Video -->
+      <div class="local-video-wrapper">
+        <video #localVideo autoplay playsinline muted class="video-element"></video>
+        <div class="local-video-overlay" *ngIf="isVideoOff">
+          <span class="material-icons">videocam_off</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Chat Sidebar -->
+    <div class="chat-sidebar" [class.active]="showChat">
+      <div class="chat-header">
+        <h3>Chat</h3>
+        <button class="close-chat" (click)="showChat = false">
+          <span class="material-icons">close</span>
+        </button>
+      </div>
+      <div class="messages-container">
+        <div *ngFor="let msg of messages" [class.my-message]="msg.isMe" class="message">
+          {{ msg.text }}
+        </div>
+      </div>
+      <div class="message-input">
+        <input [(ngModel)]="newMessage" placeholder="Écrire un message..." (keyup.enter)="sendMessage()">
+        <button (click)="sendMessage()">
+          <span class="material-icons">send</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Controls -->
+  <div class="controls-bar" *ngIf="isCallActive">
+    <button class="control-btn" (click)="toggleMute()" [class.active]="isMuted">
+      <span class="material-icons">{{ isMuted ? 'mic_off' : 'mic' }}</span>
+      <span>{{ isMuted ? 'Micro off' : 'Micro on' }}</span>
+    </button>
+    
+    <button class="control-btn" (click)="toggleVideo()" [class.active]="isVideoOff">
+      <span class="material-icons">{{ isVideoOff ? 'videocam_off' : 'videocam' }}</span>
+      <span>{{ isVideoOff ? 'Caméra off' : 'Caméra on' }}</span>
+    </button>
+
+    <button class="control-btn" (click)="toggleScreenShare()" [class.active]="isSharingScreen">
+      <span class="material-icons">screen_share</span>
+      <span>{{ isSharingScreen ? 'Arrêter partage' : 'Partager écran' }}</span>
+    </button>
+    
+    <button class="control-btn" (click)="showChat = !showChat">
+      <span class="material-icons">chat</span>
+      <span>Chat</span>
+    </button>
+    
+    <button class="control-btn end-call" (click)="endCall()">
+      <span class="material-icons">call_end</span>
+      <span>Quitter</span>
+    </button>
+  </div>
+
+  <!-- Start Screen -->
+  <div class="start-screen" *ngIf="!isCallActive">
+    <div class="welcome-card">
+      <h1>MeetGroupe Pro</h1>
+      <p>Vidéoconférence professionnelle en haute qualité</p>
+      <button class="start-btn" (click)="startCall()">
+        <span class="material-icons">video_call</span>
+        <span>Nouvelle réunion</span>
+      </button>
+    </div>
+  </div>
+</div>

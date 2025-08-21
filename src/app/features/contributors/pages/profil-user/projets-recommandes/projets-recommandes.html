@@ -1,0 +1,7 @@
+<div class="titles">
+  <i class="fa fa-arrow-left" (click)="backToHome()"></i>
+    <h1>Projets Recommandes</h1>
+</div>
+<div class="project_active">
+  <app-projects-recommander *ngIf="!isLoading"></app-projects-recommander>
+</div>

@@ -7,7 +7,6 @@
     <form class="profile-form" (ngSubmit)="saveProfile()">
       <h2 class="form-title">Modifier mon profil</h2>
 
-      <!-- Messages d'état avec animations -->
       <div *ngIf="errorMessage" class="alert alert-error animate__animated animate__fadeInDown">
         <i class="fas fa-exclamation-circle"></i> {{ errorMessage }}
       </div>
@@ -16,12 +15,10 @@
         <i class="fas fa-check-circle"></i> {{ successMessage }}
       </div>
 
-      <!-- Indicateur de modifications non sauvegardées -->
       <div *ngIf="isFormDirty && !isSaving" class="unsaved-changes">
         <i class="fas fa-exclamation-circle"></i> Vous avez des modifications non sauvegardées
       </div>
 
-      <!-- Animation de chargement améliorée -->
       <div *ngIf="isLoading" class="loading-overlay">
         <div class="spinner-container">
           <div class="spinner"></div>
@@ -31,7 +28,6 @@
       </div>
 
       <div class="form-grid" [class.blur]="isLoading">
-        <!-- Animation d'entrée pour les champs -->
         <div class="form-group animate__animated animate__fadeInUp" [style.animation-delay]="'0.1s'">
           <label for="nom">Nom</label>
           <div class="input-container">
@@ -84,7 +80,6 @@
                class="password-toggle" (click)="togglePasswordVisibility('password')"></i>
           </div>
           
-          <!-- Indicateur de force du mot de passe -->
           <div *ngIf="profileData.password" class="password-strength">
             <div class="strength-bar">
               <div class="strength-fill" [ngClass]="getPasswordStrengthClass()" 
@@ -113,10 +108,20 @@
           </div>
           <p class="password-hint">Laissez vide pour conserver le mot de passe actuel</p>
           
-          <!-- Message d'erreur pour la correspondance -->
           <div *ngIf="passwordError" class="password-error">
             <i class="fas fa-exclamation-triangle"></i> {{ passwordError }}
           </div>
+        </div>
+
+        <div class="form-group full-width animate__animated animate__fadeInUp" [style.animation-delay]="'0.7s'">
+          <label for="biographie">Biographie</label>
+          <div class="input-container textarea-container">
+            <i class="fas fa-pen input-icon"></i>
+            <textarea id="biographie" [(ngModel)]="profileData.biographie" name="biographie" 
+                     class="modern-input" rows="4" maxlength="500"
+                     (input)="onInputChange()"></textarea>
+          </div>
+          <p class="password-hint">Décrivez-vous en quelques mots (max 500 caractères)</p>
         </div>
       </div>
 

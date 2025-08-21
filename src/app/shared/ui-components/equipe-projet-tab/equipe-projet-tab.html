@@ -1,106 +1,115 @@
- <div class="project-team">
-                            <h2><i class="fas fa-users"></i> Équipe du Projet</h2>
-                            <div class="team-members">
-                                <div class="member-card manager">
-                                    <div class="member-avatar">
-                                        <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="User">
-                                        <span class="member-role"><i class="fas fa-crown"></i> Gestionnaire</span>
-                                    </div>
-                                    <div class="member-info">
-                                        <h3>Mohamed Traore</h3>
-                                        <p>Développeuse Fullstack</p>
-                                        <div class="member-stats">
-                                            <div class="stat">
-                                                <i class="fas fa-tasks"></i>
-                                                <span>8 tâches</span>
-                                            </div>
-                                            <div class="stat">
-                                                <i class="fas fa-coins"></i>
-                                                <span>120 coins</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="member-actions">
-                                        <span class="btn btn-icon"><i class="fas fa-envelope"></i></span>
-                                        <span class="btn btn-icon"><i class="fas fa-user-cog"></i></span>
-                                    </div>
-                                </div>
-                                
-                                <div class="member-card">
-                                    <div class="member-avatar">
-                                        <img src="https://randomuser.me/api/portraits/men/22.jpg" alt="User">
-                                        <span class="member-role">Développeur</span>
-                                    </div>
-                                    <div class="member-info">
-                                        <h3>Boubou Toure</h3>
-                                        <p>Développeur Backend</p>
-                                        <div class="member-stats">
-                                            <div class="stat">
-                                                <i class="fas fa-tasks"></i>
-                                                <span>5 tâches</span>
-                                            </div>
-                                            <div class="stat">
-                                                <i class="fas fa-coins"></i>
-                                                <span>75 coins</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="member-actions">
-                                        <span class="btn btn-icon"><i class="fas fa-envelope"></i></span>
-                                        <span class="btn btn-icon"><i class="fas fa-user-cog"></i></span>
-                                    </div>
-                                </div>
-                                
-                                <div class="member-card">
-                                    <div class="member-avatar">
-                                        <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="User">
-                                        <span class="member-role">Designer</span>
-                                    </div>
-                                    <div class="member-info">
-                                        <h3>Adama Dembele</h3>
-                                        <p>Designer UI/UX</p>
-                                        <div class="member-stats">
-                                            <div class="stat">
-                                                <i class="fas fa-tasks"></i>
-                                                <span>3 tâches</span>
-                                            </div>
-                                            <div class="stat">
-                                                <i class="fas fa-coins"></i>
-                                                <span>45 coins</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="member-actions">
-                                        <span class="btn btn-icon"><i class="fas fa-envelope"></i></span>
-                                        <span class="btn btn-icon"><i class="fas fa-user-cog"></i></span>
-                                    </div>
-                                </div>
-                                
-                                <div class="member-card">
-                                    <div class="member-avatar">
-                                        <img src="https://randomuser.me/api/portraits/men/45.jpg" alt="User">
-                                        <span class="member-role">Développeur</span>
-                                    </div>
-                                    <div class="member-info">
-                                        <h3>Djibril Maiga</h3>
-                                        <p>Développeur Mobile</p>
-                                        <div class="member-stats">
-                                            <div class="stat">
-                                                <i class="fas fa-tasks"></i>
-                                                <span>4 tâches</span>
-                                            </div>
-                                            <div class="stat">
-                                                <i class="fas fa-coins"></i>
-                                                <span>60 coins</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="member-actions">
-                                        <span class="btn btn-icon"><i class="fas fa-envelope"></i></span>
-                                        <span class="btn btn-icon"><i class="fas fa-user-cog"></i></span>
-                                    </div>
-                                </div>
-                                
-                               
-                            </div>
-                        </div>
+<div class="project-team">
+  <h2><i class="fas fa-users"></i> Équipe du Projet</h2>
+  
+  <!-- État de chargement -->
+  <div *ngIf="isLoading" class="loading-state">
+    <i class="fas fa-spinner fa-spin"></i>
+    <span>Chargement des participants...</span>
+  </div>
+
+  <!-- Message d'erreur -->
+  <div *ngIf="errorMessage" class="error-state">
+    <i class="fas fa-exclamation-triangle"></i>
+    <span>{{ errorMessage }}</span>
+    <button (click)="loadParticipants()" class="retry-btn">
+      <i class="fas fa-sync-alt"></i> Réessayer
+    </button>
+  </div>
+
+  <!-- Contenu principal -->
+  <div *ngIf="!isLoading && !errorMessage">
+    <!-- <div class="team-stats">
+      <div class="stat-card members-card">
+        <div class="stat-icon">
+          <i class="fas fa-users"></i>
+        </div>
+        <div class="stat-content">
+          <div class="stat-value">{{ participants.length }}</div>
+          <div class="stat-label">Membres</div>
+        </div>
+      </div>
+      
+      <div class="stat-card active-card">
+        <div class="stat-icon">
+          <i class="fas fa-check-circle"></i>
+        </div>
+        <div class="stat-content">
+          <div class="stat-value">{{ getActiveParticipantsCount() }}</div>
+          <div class="stat-label">Actifs</div>
+        </div>
+      </div>
+      
+      <div class="stat-card quiz-card">
+        <div class="stat-icon">
+          <i class="fas fa-star"></i>
+        </div>
+        <div class="stat-content">
+          <div class="stat-value">{{ getAverageQuizScore() }}</div>
+          <div class="stat-label">Score moyen</div>
+        </div>
+      </div>
+    </div> -->
+
+    <div class="search-box">
+      <i class="fas fa-search"></i>
+      <input type="text" 
+             placeholder="Rechercher un membre..." 
+             [(ngModel)]="searchTerm" 
+             (input)="filterParticipants()"
+             [disabled]="participants.length === 0">
+    </div>
+
+    <!-- Liste des membres -->
+    <div *ngIf="filteredParticipants.length > 0" class="team-members">
+      <div class="member-card" 
+           *ngFor="let p of filteredParticipants" 
+           [class.manager]="p.contributeurEmail === user?.email">
+        <div class="member-avatar">
+          <img [src]="getAvatarUrl(p)" 
+               alt="{{ p.contributeurPrenom }} {{ p.contributeurNom }}"
+               onerror="this.src='assets/images/default-avatar.png'">
+          <!-- <span class="member-role" *ngIf="p.contributeurEmail === user?.email">
+            <i class="fas fa-crown"></i> Gestionnaire
+          </span>
+          <span class="member-role" *ngIf="p.contributeurEmail !== user?.email">
+            {{ p.profil || 'Membre' }}
+          </span> -->
+        </div>
+        <div class="member-info">
+          <h3>{{ p.contributeurPrenom }} {{ p.contributeurNom }}</h3>
+          <p>{{ p.profil }}</p>
+          <!-- <div class="member-stats">
+            <div class="stat">
+              <i class="fas fa-tasks"></i>
+              <span>{{ getTaskCount(p) }} tâche(s)</span>
+            </div>
+            <div class="stat">
+              <i class="fas fa-coins"></i>
+              <span>{{ p.scoreQuiz || 0 }} points</span>
+            </div>
+          </div> -->
+        </div>
+        <div class="member-actions">
+          <button class="btn btn-icon" title="Envoyer un message">
+            <i class="fas fa-envelope"></i>
+          </button>
+          <button class="btn btn-icon" title="Paramètres" *ngIf="p.contributeurEmail === user?.email">
+            <i class="fas fa-user-cog"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Aucun résultat -->
+    <div *ngIf="filteredParticipants.length === 0 && participants.length > 0" class="no-results">
+      <i class="fas fa-search"></i>
+      <p>Aucun membre ne correspond à votre recherche</p>
+    </div>
+
+    <!-- Aucun participant -->
+    <div *ngIf="participants.length === 0" class="no-participants">
+      <i class="fas fa-info-circle"></i>
+      <p>Aucun participant dans ce projet</p>
+    </div>
+  </div>
+</div>

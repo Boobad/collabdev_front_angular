@@ -2,7 +2,11 @@
   <!-- Section gauche -->
   <div class="profile-sidebar">
     <div class="profile-avatar-container">
-      <img [src]="profileImage" alt="Photo de profil" class="profile-avatar">
+      <img 
+  [src]="profileImage" 
+  alt="Photo de profil" 
+  class="profile-avatar"
+  (error)="profileImage = 'profil.png'">
       <button class="avatar-edit-btn" (click)="triggerFileInput()">
         <i class="fa-solid fa-camera"></i>
       </button>
